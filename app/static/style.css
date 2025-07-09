@@ -1,0 +1,15 @@
+.health_affected {
+    padding: 15px;
+    background-color: #ea868f;
+    margin-left: 10px;
+    margin-right: 10px;
+    border-radius: 20px;
+}
+
+.health_carrier {
+    padding: 15px;
+    background-color: #feb272;
+    margin-left: 10px;
+    margin-right: 10px;
+    border-radius: 20px;
+}

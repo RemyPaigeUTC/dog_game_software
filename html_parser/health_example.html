@@ -1,0 +1,1612 @@
+
+<html>
+
+<html xmlns="http://www.w3.org/19999/xhtml" xml:lang="en-gb" class="en-gb">
+<head>
+	<title>Dog Breeder Game</title>
+	<link rel="stylesheet" type="text/css" media="all" href="css/core.css">
+	<link rel="stylesheet" type="text/css" media="all" href="css/line/green.css">
+	<link rel="stylesheet" href="css/tipso.css">
+	<link rel="stylesheet" href="css/animate.css">
+	<link rel="icon" href="media/frame/favicon.png">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="kit/tipso.js"></script>
+	<script src="kit/icheck.js"></script>
+
+<style>
+	body,html {
+		/*background-image:url(media/frame/autumnbg.jpg);*/
+		/*background-image:url(media/frame/core_bg_halloween.jpg);*/
+		background-image:url(media/frame/core_bg2.jpg);
+		/*background-image:url(media/frame/easter_bg2.jpg);*/
+		/*background-image:url(media/frame/summer_bg.jpg);*/
+		/*background-image:url(media/frame/core_bg_xmasnew.jpg);*/
+		/*background-color: #560001;*/
+	}
+
+</style>
+
+<div id='tutorial-container' style='display: none; background-color: #c8c2ab; border: 5px solid #e6e3d5; bottom: 0px; padding: 10px 10px 55px 10px; right: 0px; font-size: 1.05em;'>
+			<div class='close-toggle toggle-hide' style='bottom: 8px; right: 8px;'><input type='button' value='Hide'></div>
+			<div id='tutorial-body'></div>
+			<div id='prevstage' style='position: absolute; height: 20px; bottom: 8px; left: 115px; cursor: pointer; display: none;'><b><u>< Previous stage</u></b></div>
+			<div id='showindex' style='position: absolute; height: 20px; bottom: 8px; left: 255px; cursor: pointer; display: none;'>|&nbsp;&nbsp;&nbsp; <b><u>Show Index</u></b> &nbsp;&nbsp;&nbsp;|</div>
+			<div id='nextstage' style='position: absolute; float: right; height: 20px; bottom: 8px; right: 140px; cursor: pointer; display: none;'><b><u>Next stage ></u></b></div>
+			</div><div class='close-toggle toggle-show'><input type='button' value='Show Tutorial'></div><div style='position: fixed; top: 0px; right: 0px; width:70px height:100px; z-index: 99999;'><a href='https://rarebreedgames.com/index.php?f=account&p=tokens' target='_blank'><img src='media/shortontokens.png'></a></div><br /><div style='position: relative; margin: 0 auto 90px auto; top: 120px; background-color: transparent; width: 895px; text-align: center;'>
+	</div><div id='bottomtipbar' style='position: relative; display: table; width: 880px; background-color: #595443; color: #ede1bb; padding: 8px; z-index: 9999; text-align: center; top: 25px; margin: 0 auto; border-radius: 6px; font-size: 1.05em;'>Subscribers get 20 max turns instead of 5. To subscribe, <a href='index.php?f=subscribe&p=main'>click here!</a></div><div id='popup-bg-shadow' style='display: none;'></div><div id='popup-dialog-small' style='display: none;'>
+                        <div id='popup-dialog-content'></div>
+                        <div id='close-button'></div>
+                        </div><div id='popup-dialog-large' style='display: none;'>
+                        <div id='popup-dialog-content'></div>
+                        <div id='close-button'></div>
+                        </div><div id='quickpanel' style='position: fixed; top: 130px; left: -380px; width: 370px; background-color: #988e75; color: #272020; height: 200px; cursor: pointer; z-index: 9999;'>
+                                <div style='position: relative; float: left; padding: 8px 15px 0 20px; width: 360px;'>
+                                        <form method='post'>
+                                                <h3>Search for...</h3>
+                                                <p style='padding: 3px; font-size: 1.1em;'>
+                                                <select name='searchfortype' style='position: relative; margin-bottom: 3px; width: 300px;'>
+                                                    <option value='dog_id'>Dog, ID</option>
+                                                    <option value='dog_registeredname'>Dog, Registered Name</option>
+                                                    <option value='dog_kennelname'>Dog, Kennel Prefix</option>
+                                                    <option value='dog_breeder'>Dog, Breeder ID</option>
+                                                    <option value='player_id'>Player, ID</option>
+                                                    <option value='player_name'>Player, Name</option>
+                                                    <option value='player_kennelname'>Player, Kennel Prefix</option>
+                                                </select>
+                                                <br /><input type='text' name='searchforthis' placeholder='Enter search id/name/etc.' style='width: 240px; text-align: center;'> <input type='submit' name='searchfor' value='Go' style='position: relative; top: -1px;'><br />
+                                                </p>
+                                        </form>
+                                        <form method='post' action='index.php?f=kennels&p=main'>
+                                                <h3>Quick breed...</h3>
+                                                <p style='padding: 3px; font-size: 1.1em;'><input type='text' placeholder='Dog ID' name='origin_id' style='width: 80px; text-align: center;' autocomplete='off'> with <input type='text' name='selected_id' placeholder='Dog ID' style='width: 80px; text-align: center;' autocomplete='off'> <input type='submit' name='breed_prompt' value='Breed Now' style='margin-top: 5px;'></p>
+                                        </form>
+                                </div>
+                                <div id='quickpanel-button' style='position: absolute; right: -60px; height: 200px; background-color: #4d483b; width: 70px; text-align: right; border:1px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; z-index: 99999;'><img src='media/frame/icon-search.png' style='position: absolute; top: 60px; right: 5px;'></div>
+                        </div><div class='content'><style>
+.header-cell {
+	position:relative;
+	float: left;
+	width:300px;
+}
+.trait-cell {
+	position: relative;
+	width: 136px;
+	height: 110px;
+	display: inline-block;
+	background-color: #ada488;
+	margin: 2px;
+	padding: 4px;
+}
+.trait-icon {
+	position: absolute;
+	top: 5px;
+	width: 135px;
+	height: 65px;
+	font-size: 0.9em;
+	background-color: #c5bda2;
+}
+.trait-name {
+	position: absolute;
+	bottom: 2px;
+	width: 130px;
+	height: 32px;
+	font-size: 0.75em;
+	background-color: #b9b094;
+	padding: 8px 0px 0px 0px;
+}
+#energy-bar {
+	position: relative;
+	width: 290px;
+	padding: 2px;
+	top: -33px;
+	display: inline-block;
+}
+#xp-bar {
+	position: relative;
+	width: 290px;
+	float: left;
+	background-color: #bfbaa9;
+	margin: 2px;
+	padding: 2px;
+	border: 1px solid #aba592;
+}
+#prev-dog {
+	position: fixed;
+	top: 320px;
+	left: -2px;
+	border-top-right-radius: 0.7em;
+	border-bottom-right-radius: 1em;
+	background-color: #736d53;
+	border: 2px solid #736d53;
+	padding: 8px 0px;
+	text-align: center;
+	width: 85px;
+	z-index: 9999;
+	color: #d5ceb5;
+	cursor: pointer;
+}
+#next-dog {
+	position: fixed;
+	top: 320px;
+	right: -2px;
+	border-top-left-radius: 0.7em;
+	border-bottom-left-radius: 1em;
+	background-color: #736d53;
+	border: 2px solid #736d53;
+	padding: 8px 0px;
+	text-align: center;
+	width: 85px;
+	z-index: 9999;
+	color: #d5ceb5;
+	cursor: pointer;
+}
+#prev-dog:hover {
+	background-color: #afa993;
+}
+#next-dog:hover {
+	background-color: #afa993;
+}
+</style>
+
+<div style='position: fixed; font-size: 1.25em; overflow: auto; top: 101px; left: 0px; width: 100%; display: block; overflow: hidden; text-align: center; background-color: #e6dab5; color: #413a24; padding: 3px 0 3px 0; border-top: 1px solid #f3eacd; border-bottom: 1px solid #f3eacd; z-index:9999;'>
+			<div style='position: relative; width: 900px; margin: 0 auto; text-align: left; font-weight: bold; display: block; z-index:9999;'>
+			<div class='header-cell' style='width: 620px;'><div class='bottom tipso_style rename_registered_name' style='position: relative; float: left; margin-right: 10px; border: 0px; cursor: pointer;' data-tipso-title='Registered Name' data-tipso='Click to edit this dogs registered name. <b><br />Note:</b> Cannot be changed after it has been set.</b>'><img src='media/frame/icon-alert.png'></div>   <div class='bottom tipso_style' style='position: relative; float: left; margin-right: 10px;'  data-tipso-title='Registered Name' data-tipso='This is the registered name.'><i>Unnamed</i></div>  <div class='bottom tipso_style' style='position: relative; float: left; margin-right: 10px;'  data-tipso-title='Suffix' data-tipso='This is the suffix.'></div> <div style='position: relative; float: left;'>(Puppy #2)</div><div class='bottom tipso_style rename_callname' style='position: relative; float: left; margin-left: 10px; border: 0px; top: 2px;  cursor: pointer;' data-tipso-title='Adjust Callname' data-tipso='This is the dogs casual callname.'><img src='media/frame/icon-edit.png'></div> </div> <div class='header-cell' style='float: right; text-align: right; width: 120px;'>ID #6859258</div>
+			</div>
+			</div><div style='position: relative; width: 930px; top: 25px; padding: 5px; font-size: 1.1em; display: table;'><div class='bottom tipso_style' style='position: relative; background-color: #b8af90; width: 230px; height: 215px; float: left; margin: 5px; text-align: center; border: 0px; border-radius: 8px;' data-tipso-title='Coat Type' data-tipso='Displays the natural-state coat this dog has. Groomed breeds change in the Conformation tab only when groomed'>
+				<p style='position: relative; top: -10px;'><b>Coat Type Mannequin</b></p><style>
+.layer {position: absolute; width: 183px; height: 149px; top: 40px; left: 20px;}
+</style>
+
+<div class='layer' style='background-image: url(../media/breeds/coattypemannequin/outline.png);'></div><div class='layer' style='background-image: url(../media/breeds/coattypemannequin/legfeathering/straightflatfeathered3.png);'></div><div class='layer' style='background-image: url(../media/breeds/coattypemannequin/bodycoat/straightflat1.png);'></div><div class='layer' style='background-image: url(../media/breeds/coattypemannequin/tailplume/straightflat3.png);'></div><div class='layer' style='background-image: url(../media/breeds/coattypemannequin/earfringe/straightflatfringe4.png);'></div><div class='layer' style='background-image: url(../media/breeds/coattypemannequin/furnishings/none0.5.png);'></div><div class='layer' style='background-image: url(../media/breeds/coattypemannequin/topknot/straightflat1.png);'></div></div><div id=6859258 style='position: relative; float: left; margin: 5px; top: -5px; border-radius: 8px; width: 405px; height: 190px; text-align: center; background-image: url(../media/breeds/cavalierkingcharlesspaniel/frame_1.png);; background-repeat: no-repeat; background-color: #b8af8f; background-position: center top;' draggable=true ondragstart='item_drag(event);'><div style='position: absolute; top: 5px; right: 75px; border: 0px;' class='bottom tipso_style' data-tipso-title='Not Groomed' data-tipso='This dog has not been groomed for showing this turn.<br /><b>To groom this dog, set auto-groom to "on" via the actions drop-down</b>'>
+						<img src='media/frame/icon-action-groomed-0.png' width=65></div><div class='bottom tipso_style' style='position: absolute; right: 6px; bottom: 28px; border: 0px; cursor: pointer;' data-tipso-title='Copy to Clipboard' data-tipso='Clicking this icon copies this dogs direct link to your clipboard, ready for you to paste.'><img id='copytoclipboard' src='media/frame/icon-copytoclipboard.png' onclick="copyTextToClipboard('https://dogbreedergame.com/index.php?f=kennels&p=view&dogid=6859258');"></div><form method='post' value='margin: 0px; padding: 0px;'>
+                        <input type='hidden' name='dog_id' value='6859258'>
+                        <input type='submit' style='position: absolute; right: 6px; bottom: 6px; font-size: 0.6em;' name='advertise_in_chat' value='Advertise in chat'></form><img src='media/frame/icon-gender-1.png' style='position: absolute; top: 10px; right: 10px; border: 0px;' class='bottom tipso_style' data-tipso-title='Sex' data-tipso='Male '></div><div class='bottom tipso_style' style='position: relative; border-radius: 8px; background-color: #b8af90; width: 230px; height: 215px; float: left; margin: 5px; text-align: center; border: 0px;' data-tipso-title='Coat Colour' data-tipso='Displays the coat colour and pattern of this dog.<br /><br />black & red points'>
+				<p style='position: relative; top: -10px;'><b>Colour Mannequin</b></p><style>
+.layer {position: absolute; width: 183px; height: 149px; top: 40px; left: 20px;}
+</style>
+
+<div class='layer' style='background-image: url(../media/breeds/mannequin/pheomelanin/red.png);'></div><div class='layer' style='background-image: url(../media/breeds/mannequin/eumelanin/tanpointsblack.png);'></div><div class='layer' style='background-image: url(../media/breeds/mannequin/eyecolour/amber.png);'></div><div class='layer' style='background-image: url(../media/breeds/mannequin/nosecolour/black.png);'></div><div class='layer' style='background-image: url(../media/breeds/mannequin/pigment/black.png);'></div><div class='layer' style='background-image: url(../media/breeds/mannequin/outline.png);'></div></div><a href='index.php?f=kennels&p=view&dogid=6863400'><div id='next-dog'>Next<br />Dog</div></a></div><div style='position: relative; width: 900px; margin: 25px auto -15px auto; height: 25px; text-align: center;'><div id='energy-bar' style='position: relative; width: 180px; height: 18px; background-color: #514b38; display: inline-block;'><div id='energy-bar-data' style='background-color: #77c1ff; height: 18px; width: 180px;'></div><div id='energy-text' style='position: relative; display: inline-block; width: 180px; text-align: center; top: -16px; font-size: 0.8em; color: #000;'>Energy (100)</div>
+				</div><div style='position: relative; width: 150px; display: inline-block; top: -33px; right: -20px;'>
+						<a href='index.php?f=kennels&p=view&dogid=6859258&customimage=true&breedselect=18'><input type='button' value='Custom Image' style='position: relative; font-size: 0.75em; top: -16px; z-index: 995;'></a>
+					</div></div><div style='position: relative; float: left; margin-left: 5px; width: 900px; top: -15px;z-index: 100;'>
+				<table>
+				<tr>
+
+					<td width=70 align=center style='background-color: #d5cba9; color: #29230e;'><b>Owner</b></td>
+					<td width=200><a href='index.php?f=profile&p=view&playerid=31996'>bucket</a></td>
+
+					<td width=125 align=center style='background-color: #d5cba9; color: #29230e;'><b>Born</b></td>
+					<td width=180>19 Jun 2025, 8:41 pm</td>
+
+					<td width=90 align=center style='background-color: #d5cba9; color: #29230e;'><b>Height</b></td><td width=180>11.39 inch / 28.93 cm</td>
+
+				</tr>
+				<tr>
+					<td width=70 align=center style='background-color: #d5cba9; color: #29230e;'><b>Breeder</b></td>
+					<td width=180><a href='index.php?f=profile&p=view&playerid=31996'>bucket</a></td>
+
+					<td width=125 align=center style='background-color: #d5cba9; color: #29230e;'><b>Age</b></td>
+					<td width=180>7 years, 6 months</td>
+
+					<td width=70 align=center style='background-color: #d5cba9; color: #29230e;'><b>Weight</b></td><td width=180>19.55 lb / 8.87 kg</td>
+
+				</tr><tr>
+                    <td width=70 align=center style='background-color: #d5cba9; color: #29230e;'><b>Breed2</b></td>
+                    <td width=180><a href='index.php?f=town&p=breedregister&viewbreedinfo=true&breed_id=18' target='_blank'><u>Cavalier King Charles Spaniel</u></a></td>
+					<td width=125 align=center style='background-color: #d5cba9; color: #29230e;'><b>Lifestage</b></td>
+					<td width=180>Adult</td>
+
+					<td width=70 align=center style='background-color: #d5cba9; color: #29230e;'><b>COI</b></td>
+					<td width=180>0.00 %</td>
+				</tr><tr>
+					<td width=70 align=center style='background-color: #d5cba9; color: #29230e;'><b>Ages next turn</b></td>
+					<td width=200>No</td>
+
+					<td width=125 align=center style='background-color: #d5cba9; color: #29230e;'><b>Worked?</b></td>
+					<td width=180>No</td>
+
+					<td width=90 align=center style='background-color: #d5cba9; color: #29230e;'><b>Tested?</b></td>
+					<td width=180>No </td>
+				</tr><tr>
+					<td width=70 align=center style='background-color: #d5cba9; color: #29230e;'><b>Neutered</b></td>
+					<td width=200>No</td>
+
+					<td width=125 align=center style='background-color: #d5cba9; color: #29230e;'><b>Generation</b></td>
+					<td width=180>3</td>
+
+					<td width=70 align=center style='background-color: #d5cba9; color: #29230e;'><b>Feed Cost</b></td>
+					<td width=180>6 Barks per turn</td>
+				</tr><tr>
+		                    <td colspan=3 align=center style='background-color: #d5cba9; color: #29230e;'>
+		                        <b>Assigned to tab:</b> <a href='index.php?f=kennels&p=main&tabaction=change&tabid=33038' target='_blank'>Puppies</a>
+		                    </td>
+		                    <td colspan=3 width=70 align=center style='background-color: #d5cba9; color: #29230e;'><form method=post style='margin: 0px;'>
+		                    <b>Change tab:</b> <select name='select_new_tab_id'><option value='37483'>wait for season</option><option value='37484'>Gen 1 F</option><option value='37500'>Gen 1 M</option><option value='37501'>Gen 2 F</option><option value='37607'>Gen 2 M</option><option value='37676'>Gen 3 F</option><option value='37677'>Gen 3 M</option><option value='37703'>bred 1</option></select> <input type='submit' name='assign_to_new_tab' value='Assign'></form>
+		                    </td>
+		                </tr><tr>
+					   <td valign=top colspan=3 style='text-align: center;'><form method='post' style='margin: 0px;' action='index.php?f=kennels&p=view&dogid=6859258'>
+							<select name='action_select' style='position: relative; width: 300px;'><option value='stud'>Put on Stud Listings</option><option value='place_on_sale'>Put on Market</option><option value='sell_to_dealer'>Sell to Dog Dealer (50 Barks)</option><option value='send_to_shelter'>Abandon</option><option value='hide_from_sale'>Hide From Sale</option><option value='hide_from_breeding'>Hide From Breeding</option></select> <input type='submit' name='action' value='Go'><br />
+					<select name='breed_with_id' style='position: relative; width: 240px;'><option value='5809097'>Tip Opou (Cavalier King Charles Spaniel)(#5809097)</option><option value='5812181'>Tiq Wqiq (Cavalier King Charles Spaniel)(#5812181)</option><option value='5859867'>Tit Oiyu (Cavalier King Charles Spaniel)(#5859867)</option><option value='5904987'>Top Roiu (Cavalier King Charles Spaniel)(#5904987)</option><option value='5904996'>Top Rooy Deaf (Cavalier King Charles Spaniel)(#5904996)</option><option value='5902547'>Top Wtru E (Cavalier King Charles Spaniel)(#5902547)</option><option value='6801740'>Yip Qurp (Cavalier King Charles Spaniel)(#6801740)</option><option value='6801741'>Yip Qurq (Cavalier King Charles Spaniel)(#6801741)</option></select> <input type='submit' name='breed_now_check' value='Breed With'  ><br />
+							<input type='submit' name='fertility' value='Fertility Test (30 Barks)' style='margin-top: 8px; background-color: #FF69B4; border: 2px solid #811331;'> 
+							<input type='hidden' name='dogid' value='6859258'></form>
+						</td>
+						<td colspan=3 valign=top><form method='post' style='margin: 0px;' action='index.php?f=kennels&p=view&dogid=6859258'>
+							<textarea style='width: 400px; font-size: 1.1em; height: 60px;' name='note_content' placeholder='Dog notes'></textarea> <input type='submit' name='save_note' value='Update' style='position: relative;'>
+							<input type='hidden' name='dogid' value='6859258'></form>
+						</td>
+					</tr></table>
+			</div><div style='position: relative; z-index: 88;'><center><form method='post'><a href='index.php?f=kennels&p=view&dogid=6859258&viewsection=conformation'><input type='button' class='selectpage' value='Conformation' style=''></a>
+				<a href='index.php?f=kennels&p=view&dogid=6859258&viewsection=temperament'><input type='button' class='selectpage' value='Personality' style=''></a>
+				<a href='index.php?f=kennels&p=view&dogid=6859258&viewsection=health'><input type='button' class='selectpage' value='Health' style='background-color: #af9a51;'></a>
+				<a href='index.php?f=kennels&p=view&dogid=6859258&viewsection=activities'><input type='button' class='selectpage' value='Activities' style=''></a>
+				<a href='index.php?f=kennels&p=view&dogid=6859258&viewsection=pedigree'><input type='button' class='selectpage' value='Pedigree' style=''></a>
+				<a href='index.php?f=kennels&p=view&dogid=6859258&viewsection=offspring'><input type='button' class='selectpage' value='Offspring' style=''></a>
+				<a href='index.php?f=kennels&p=view&dogid=6859258&viewsection=history'><input type='button' class='selectpage' value='History' style=''></a> <br /><input type='submit' name='revealall' class='selectpage' value='Test All Traits' style='background-color: orange; color: #000; margin-top: 5px;' onclick="return confirm('This will use 1 Full Test Kit item. Are you sure you want to do this?')"><input type='hidden' name='dogid' value='6859258'></form></center></div><div style='position: relative; width: 908px; top: 8px; height: 40px; text-align: center; display: table; overflow: auto;'><div style='position: relative; float: left; display: table; width: 908px; padding: 5px 0; top: 5px; margin: 5px 0 10px 0; background-color: #524d38; color: #bbe6b1; text-align: center;'><h3 style='margin-bottom: 6px;'>Diagnosed Diseases</h3></div><div style='clear: both;'></div><small><h3 style='margin-bottom: 5px;'>No diagnosis at this time. Visit the <a href='index.php?f=town&p=vet'>Veterinarian</a> to check your dog for diseases.</h3></small><br>This dog's last check by the Veterinarian: Never</div><div style='position: relative; width: 908px; display: table; top: 8px; background-color: #524d38; margin-top: 10px; height: 40px; text-align: center; color: #bbe6b1;'>
+		<h3 style='position: relative; margin-bottom: 10px; color: #bbe6b1; top: 8px;'>Genetic Diseases</h3></div><div style='position: relative; width: 900px; padding: 5px; font-size: 1.1em; text-align: center; display: table;'><div style='position: relative; float: left; width: 900px; padding: 5px 0; margin: 5px 0; background-color: #695f47; color: #bbe6b1;'>Blood Disorders</div><div style='clear: both;'></div><div class='trait-cell bottom tipso_style action-cell conformation-trait-immune_mediated_haemolytic_anaemia' style='width: 205px; height: 74px; border: 6px solid #695f47; padding: 2px;' data-tipso-title='Immune Mediated Haemolytic Anaemia' data-tipso='<p style=margin:4px;><i>Phenotype</i></p>A blood disorder where the dogs own immune system attacks the red blood cells, leading to severe anaemia and death if not treated, and even with treatment, 50% of dogs will die anyway. Sudden onset, occurs mostly in middle aged dogs. Screen between 1-10 years of age'>
+
+								<input type='button' class='action-button conformation-image-immune_mediated_haemolytic_anaemia' style='cursor: pointer; font-size: 0.8em; padding: 3px; width: 190px;' value='Screen Phenotype'>
+
+								<div style='display: none;' class='trait-name-div'>immune_mediated_haemolytic_anaemia</div>
+								<div style='display: none;' class='action-type'>reveal_disease</div>
+
+								<!--<div class='trait-icon bottom tipso_style conformation-image-immune_mediated_haemolytic_anaemia' data-tipso-title='Immune Mediated Haemolytic Anaemia' data-tipso='<p style=margin:4px;><i>Phenotype</i></p>A blood disorder where the dogs own immune system attacks the red blood cells, leading to severe anaemia and death if not treated, and even with treatment, 50% of dogs will die anyway. Sudden onset, occurs mostly in middle aged dogs. Screen between 1-10 years of age' style='border: 0px; cursor: pointer; height: 23px; width: 205px; padding-top: 9px;'>
+									<img src='media/frame/icon-test-disease.png' align=left style='position: relative; top: -7px; left: 16px; margin-right: -10px;'> Screen Phenotype
+								</div>-->
+								<div class='trait-name conformation-name-immune_mediated_haemolytic_anaemia' style='width: 205px; height: 41px;'><font color='#000'>Immune Mediated Haemolytic Anaemia</font></div>
+							</div><div style='position: relative; float: left; width: 900px; padding: 5px 0; margin: 5px 0; background-color: #695f47; color: #bbe6b1;'>Cardiovascular Disorders</div><div style='clear: both;'></div><div class='trait-cell bottom tipso_style action-cell conformation-trait-dilated_cardiomyopathy' style='width: 205px; height: 74px; border: 6px solid #00c300; padding: 2px;' data-tipso-title='Dilated Cardiomyopathy' data-tipso='Dominant, incomplete penetrance - not all dogs with the gene will exhibit symptoms. A disease of the heart muscle that is characterised by an enlarged heart that does not function properly. Eventually it leads to heart failure by the time the dog is middle aged. Onset of symptoms is between 3-7 years'>
+
+							<div style='display: none;' class='trait-name-div'>dilated_cardiomyopathy</div>
+							<div style='display: none;' class='action-type'>reveal_disease</div>
+
+							<input type='button' class='action-button conformation-image-dilated_cardiomyopathy' style='cursor: not-allowed; font-size: 0.8em; padding: 3px; width: 190px; background-color:#998d68; border-color: #8c7c44; color: #b4aa8c;' value='Test Genotype' disabled>
+
+							<div class='trait-name' style='width: 205px; height: 41px;'><font color='#000'>Dilated Cardiomyopathy</font><br />Genotype Clear</div>
+						</div><div class='trait-cell bottom tipso_style action-cell conformation-trait-endocardiosis' style='width: 205px; height: 74px; border: 6px solid #695f47; padding: 2px;' data-tipso-title='Endocardiosis' data-tipso='<p style=margin:4px;><i>Phenotype</i></p>the degeneration of the heart mitral valve. A normal mitral valve functions as a one-way valve, which flows blood from the left atrium to the left ventricle. Dogs with this condition die from heart failure any time between 1.5 to 15 years of age, however treating the condition with medication prolongs the dogs lifespan by 2-3 years. This condition can be cured with surgery. Severity level (age of onset) is inherited, so breeding for lower grades is recommended. Screen between ages of 18 months to 10 years'>
+
+								<input type='button' class='action-button conformation-image-endocardiosis' style='cursor: pointer; font-size: 0.8em; padding: 3px; width: 190px;' value='Screen Phenotype'>
+
+								<div style='display: none;' class='trait-name-div'>endocardiosis</div>
+								<div style='display: none;' class='action-type'>reveal_disease</div>
+
+								<!--<div class='trait-icon bottom tipso_style conformation-image-endocardiosis' data-tipso-title='Endocardiosis' data-tipso='<p style=margin:4px;><i>Phenotype</i></p>the degeneration of the heart mitral valve. A normal mitral valve functions as a one-way valve, which flows blood from the left atrium to the left ventricle. Dogs with this condition die from heart failure any time between 1.5 to 15 years of age, however treating the condition with medication prolongs the dogs lifespan by 2-3 years. This condition can be cured with surgery. Severity level (age of onset) is inherited, so breeding for lower grades is recommended. Screen between ages of 18 months to 10 years' style='border: 0px; cursor: pointer; height: 23px; width: 205px; padding-top: 9px;'>
+									<img src='media/frame/icon-test-disease.png' align=left style='position: relative; top: -7px; left: 16px; margin-right: -10px;'> Screen Phenotype
+								</div>-->
+								<div class='trait-name conformation-name-endocardiosis' style='width: 205px; height: 41px;'><font color='#000'>Endocardiosis</font></div>
+							</div><div class='trait-cell bottom tipso_style action-cell conformation-trait-mitral_valve_dysplasia' style='width: 205px; height: 74px; border: 6px solid #695f47; padding: 2px;' data-tipso-title='Mitral Valve Dysplasia' data-tipso='<p style=margin:4px;><i>Phenotype</i></p>the congenital malformation of the heart mitral valve. A normal mitral valve functions as a one-way valve, which flows blood from the left atrium to the left ventricle. Dogs with this condition die from heart failure any time between puppyhood and 5 years of age, however treating the condition with medication prolongs the dogs lifespan by 2-3 years. This condition can be cured with surgery'>
+
+								<input type='button' class='action-button conformation-image-mitral_valve_dysplasia' style='cursor: pointer; font-size: 0.8em; padding: 3px; width: 190px;' value='Test Phenotype'>
+
+								<div style='display: none;' class='trait-name-div'>mitral_valve_dysplasia</div>
+								<div style='display: none;' class='action-type'>reveal_disease</div>
+
+								<!--<div class='trait-icon bottom tipso_style conformation-image-mitral_valve_dysplasia' data-tipso-title='Mitral Valve Dysplasia' data-tipso='<p style=margin:4px;><i>Phenotype</i></p>the congenital malformation of the heart mitral valve. A normal mitral valve functions as a one-way valve, which flows blood from the left atrium to the left ventricle. Dogs with this condition die from heart failure any time between puppyhood and 5 years of age, however treating the condition with medication prolongs the dogs lifespan by 2-3 years. This condition can be cured with surgery' style='border: 0px; cursor: pointer; height: 23px; width: 205px; padding-top: 9px;'>
+									<img src='media/frame/icon-test-disease.png' align=left style='position: relative; top: -7px; left: 26px; margin-right: -10px;'> Test Phenotype
+								</div>-->
+								<div class='trait-name conformation-name-mitral_valve_dysplasia' style='width: 205px; height: 41px;'><font color='#000'>Mitral Valve Dysplasia</font></div>
+							</div><div class='trait-cell bottom tipso_style action-cell conformation-trait-patent_ductus_arteriosus' style='width: 205px; height: 74px; border: 6px solid #00c300; padding: 2px;' data-tipso-title='Patent Ductus Arteriosus' data-tipso='a congenital malformation caused by the failure of the ductus arteriosus muscle to constrict, leaving a passageway for blood flow and resulting in heart failure. In most cases heart failure develops by 1 year of age, but mildly affected dogs may live a full lifespan, however treating the condition with medication prolongs the dogs lifespan by 1-2 years. This condition can be cured with surgery except when severe'>
+
+							<div style='display: none;' class='trait-name-div'>patent_ductus_arteriosus</div>
+							<div style='display: none;' class='action-type'>reveal_disease</div>
+
+							<input type='button' class='action-button conformation-image-patent_ductus_arteriosus' style='cursor: not-allowed; font-size: 0.8em; padding: 3px; width: 190px; background-color:#998d68; border-color: #8c7c44; color: #b4aa8c;' value='Test Phenotype' disabled>
+
+							<div class='trait-name' style='width: 205px; height: 41px;'><font color='#000'>Patent Ductus Arteriosus</font><br />Phenotype Clear</div>
+						</div><div class='trait-cell bottom tipso_style action-cell conformation-trait-pulmonic_stenosis' style='width: 205px; height: 74px; border: 6px solid #695f47; padding: 2px;' data-tipso-title='Pulmonic Stenosis' data-tipso='<p style=margin:4px;><i>Phenotype</i></p>A congenital heart defect of the semilunar valve between the right ventricle and the pulmonary artery. Mild or moderately affected dogs dont need any treatment and will live most of their lifespan, however there is a small chance the dog may die suddenly from heart failure. In severely affected dogs, without surgery the majority of dogs will die young. This condition can be cured with surgery'>
+
+								<input type='button' class='action-button conformation-image-pulmonic_stenosis' style='cursor: pointer; font-size: 0.8em; padding: 3px; width: 190px;' value='Test Phenotype'>
+
+								<div style='display: none;' class='trait-name-div'>pulmonic_stenosis</div>
+								<div style='display: none;' class='action-type'>reveal_disease</div>
+
+								<!--<div class='trait-icon bottom tipso_style conformation-image-pulmonic_stenosis' data-tipso-title='Pulmonic Stenosis' data-tipso='<p style=margin:4px;><i>Phenotype</i></p>A congenital heart defect of the semilunar valve between the right ventricle and the pulmonary artery. Mild or moderately affected dogs dont need any treatment and will live most of their lifespan, however there is a small chance the dog may die suddenly from heart failure. In severely affected dogs, without surgery the majority of dogs will die young. This condition can be cured with surgery' style='border: 0px; cursor: pointer; height: 23px; width: 205px; padding-top: 9px;'>
+									<img src='media/frame/icon-test-disease.png' align=left style='position: relative; top: -7px; left: 26px; margin-right: -10px;'> Test Phenotype
+								</div>-->
+								<div class='trait-name conformation-name-pulmonic_stenosis' style='width: 205px; height: 41px;'><font color='#000'>Pulmonic Stenosis</font></div>
+							</div><div class='trait-cell bottom tipso_style action-cell conformation-trait-ventricular_septal_defect' style='width: 205px; height: 74px; border: 6px solid #695f47; padding: 2px;' data-tipso-title='Ventricular Septal Defect' data-tipso='<p style=margin:4px;><i>Phenotype</i></p>A hole in the interventricular septum that allows blood to flow from one ventricle to the other. Mild cases do not require any treatment. Moderate or severely affected dogs will die young without treatment. Medications can extend lifespan by 2-3 years. This condition can be cured with surgery'>
+
+								<input type='button' class='action-button conformation-image-ventricular_septal_defect' style='cursor: pointer; font-size: 0.8em; padding: 3px; width: 190px;' value='Test Phenotype'>
+
+								<div style='display: none;' class='trait-name-div'>ventricular_septal_defect</div>
+								<div style='display: none;' class='action-type'>reveal_disease</div>
+
+								<!--<div class='trait-icon bottom tipso_style conformation-image-ventricular_septal_defect' data-tipso-title='Ventricular Septal Defect' data-tipso='<p style=margin:4px;><i>Phenotype</i></p>A hole in the interventricular septum that allows blood to flow from one ventricle to the other. Mild cases do not require any treatment. Moderate or severely affected dogs will die young without treatment. Medications can extend lifespan by 2-3 years. This condition can be cured with surgery' style='border: 0px; cursor: pointer; height: 23px; width: 205px; padding-top: 9px;'>
+									<img src='media/frame/icon-test-disease.png' align=left style='position: relative; top: -7px; left: 26px; margin-right: -10px;'> Test Phenotype
+								</div>-->
+								<div class='trait-name conformation-name-ventricular_septal_defect' style='width: 205px; height: 41px;'><font color='#000'>Ventricular Septal Defect</font></div>
+							</div><div style='position: relative; float: left; width: 900px; padding: 5px 0; margin: 5px 0; background-color: #695f47; color: #bbe6b1;'>Endocrine Disorders</div><div style='clear: both;'></div><div class='trait-cell bottom tipso_style action-cell conformation-trait-addisons_disease' style='width: 205px; height: 74px; border: 6px solid #695f47; padding: 2px;' data-tipso-title='Addisons Disease' data-tipso='<p style=margin:4px;><i>Phenotype</i></p>Also known as hypoadrenocorticism. This disease results from the reduction in corticosteroid secretion from the adrenal gland. The adrenal gland is a small gland located near the kidney that secretes several different substances that help regulate normal body functions. If left untreated this condition is fatal. Medication cures all symptoms. Screen between 1-5 years of age'>
+
+								<input type='button' class='action-button conformation-image-addisons_disease' style='cursor: pointer; font-size: 0.8em; padding: 3px; width: 190px;' value='Screen Phenotype'>
+
+								<div style='display: none;' class='trait-name-div'>addisons_disease</div>
+								<div style='display: none;' class='action-type'>reveal_disease</div>
+
+								<!--<div class='trait-icon bottom tipso_style conformation-image-addisons_disease' data-tipso-title='Addisons Disease' data-tipso='<p style=margin:4px;><i>Phenotype</i></p>Also known as hypoadrenocorticism. This disease results from the reduction in corticosteroid secretion from the adrenal gland. The adrenal gland is a small gland located near the kidney that secretes several different substances that help regulate normal body functions. If left untreated this condition is fatal. Medication cures all symptoms. Screen between 1-5 years of age' style='border: 0px; cursor: pointer; height: 23px; width: 205px; padding-top: 9px;'>
+									<img src='media/frame/icon-test-disease.png' align=left style='position: relative; top: -7px; left: 16px; margin-right: -10px;'> Screen Phenotype
+								</div>-->
+								<div class='trait-name conformation-name-addisons_disease' style='width: 205px; height: 41px;'><font color='#000'>Addisons Disease</font></div>
+							</div><div class='trait-cell bottom tipso_style action-cell conformation-trait-autoimmune_thyroid_disease' style='width: 205px; height: 74px; border: 6px solid #695f47; padding: 2px;' data-tipso-title='Autoimmune Thyroid Disease' data-tipso='<p style=margin:4px;><i>Phenotype</i></p>Also known as hypothyroidism. This type of hypothyroidism is caused when the immune system breaks down the thyroid gland. Fatal if left untreated, but with medications the dog is relieved of all symptoms. Screen between 2-8 years of age'>
+
+								<input type='button' class='action-button conformation-image-autoimmune_thyroid_disease' style='cursor: pointer; font-size: 0.8em; padding: 3px; width: 190px;' value='Screen Phenotype'>
+
+								<div style='display: none;' class='trait-name-div'>autoimmune_thyroid_disease</div>
+								<div style='display: none;' class='action-type'>reveal_disease</div>
+
+								<!--<div class='trait-icon bottom tipso_style conformation-image-autoimmune_thyroid_disease' data-tipso-title='Autoimmune Thyroid Disease' data-tipso='<p style=margin:4px;><i>Phenotype</i></p>Also known as hypothyroidism. This type of hypothyroidism is caused when the immune system breaks down the thyroid gland. Fatal if left untreated, but with medications the dog is relieved of all symptoms. Screen between 2-8 years of age' style='border: 0px; cursor: pointer; height: 23px; width: 205px; padding-top: 9px;'>
+									<img src='media/frame/icon-test-disease.png' align=left style='position: relative; top: -7px; left: 16px; margin-right: -10px;'> Screen Phenotype
+								</div>-->
+								<div class='trait-name conformation-name-autoimmune_thyroid_disease' style='width: 205px; height: 41px;'><font color='#000'>Autoimmune Thyroid Disease</font></div>
+							</div><div class='trait-cell bottom tipso_style action-cell conformation-trait-diabetes_mellitus' style='width: 205px; height: 74px; border: 6px solid #695f47; padding: 2px;' data-tipso-title='Diabetes Mellitus' data-tipso='<p style=margin:4px;><i>Phenotype</i></p>A persistently high level of glucose in the blood, and the presence of glucose in the urine. If left untreated this condition is fatal. Medication cures all symptoms. Screen between 5-10 years of age'>
+
+								<input type='button' class='action-button conformation-image-diabetes_mellitus' style='cursor: pointer; font-size: 0.8em; padding: 3px; width: 190px;' value='Screen Phenotype'>
+
+								<div style='display: none;' class='trait-name-div'>diabetes_mellitus</div>
+								<div style='display: none;' class='action-type'>reveal_disease</div>
+
+								<!--<div class='trait-icon bottom tipso_style conformation-image-diabetes_mellitus' data-tipso-title='Diabetes Mellitus' data-tipso='<p style=margin:4px;><i>Phenotype</i></p>A persistently high level of glucose in the blood, and the presence of glucose in the urine. If left untreated this condition is fatal. Medication cures all symptoms. Screen between 5-10 years of age' style='border: 0px; cursor: pointer; height: 23px; width: 205px; padding-top: 9px;'>
+									<img src='media/frame/icon-test-disease.png' align=left style='position: relative; top: -7px; left: 16px; margin-right: -10px;'> Screen Phenotype
+								</div>-->
+								<div class='trait-name conformation-name-diabetes_mellitus' style='width: 205px; height: 41px;'><font color='#000'>Diabetes Mellitus</font></div>
+							</div><div style='position: relative; float: left; width: 900px; padding: 5px 0; margin: 5px 0; background-color: #695f47; color: #bbe6b1;'>Eye Disorders</div><div style='clear: both;'></div><div class='trait-cell bottom tipso_style action-cell conformation-trait-cataracts_hereditary' style='width: 205px; height: 74px; border: 6px solid #ffff00; padding: 2px;' data-tipso-title='Cataracts Hereditary' data-tipso='Recessive. A clouding of the lens of the eye caused by a breakdown of tissue in the eye. This condition generally results in an inability to see clearly and can cause total blindness. This condition can be cured with surgery'>
+
+							<div style='display: none;' class='trait-name-div'>cataracts_hereditary</div>
+							<div style='display: none;' class='action-type'>reveal_disease</div>
+
+							<input type='button' class='action-button conformation-image-cataracts_hereditary' style='cursor: not-allowed; font-size: 0.8em; padding: 3px; width: 190px; background-color:#998d68; border-color: #8c7c44; color: #b4aa8c;' value='Test Genotype' disabled>
+
+							<div class='trait-name' style='width: 205px; height: 41px;'><font color='#000'>Cataracts Hereditary</font><br />Genotype Carrier</div>
+						</div><div class='trait-cell bottom tipso_style action-cell conformation-trait-corneal_dystrophy' style='width: 205px; height: 74px; border: 6px solid #695f47; padding: 2px;' data-tipso-title='Corneal Dystrophy' data-tipso='<p style=margin:4px;><i>Phenotype</i></p>A clouding of the cornea of the eye, leading to impaired vision. Screen between 3-7 years of age'>
+
+								<input type='button' class='action-button conformation-image-corneal_dystrophy' style='cursor: pointer; font-size: 0.8em; padding: 3px; width: 190px;' value='Screen Phenotype'>
+
+								<div style='display: none;' class='trait-name-div'>corneal_dystrophy</div>
+								<div style='display: none;' class='action-type'>reveal_disease</div>
+
+								<!--<div class='trait-icon bottom tipso_style conformation-image-corneal_dystrophy' data-tipso-title='Corneal Dystrophy' data-tipso='<p style=margin:4px;><i>Phenotype</i></p>A clouding of the cornea of the eye, leading to impaired vision. Screen between 3-7 years of age' style='border: 0px; cursor: pointer; height: 23px; width: 205px; padding-top: 9px;'>
+									<img src='media/frame/icon-test-disease.png' align=left style='position: relative; top: -7px; left: 16px; margin-right: -10px;'> Screen Phenotype
+								</div>-->
+								<div class='trait-name conformation-name-corneal_dystrophy' style='width: 205px; height: 41px;'><font color='#000'>Corneal Dystrophy</font></div>
+							</div><div class='trait-cell bottom tipso_style action-cell conformation-trait-distichiasis' style='width: 205px; height: 74px; border: 6px solid #00c300; padding: 2px;' data-tipso-title='Distichiasis' data-tipso='Abnormal eyelash growth, where eyelashes can rub against the eyes causing ulcers, irritation and impaired vision. Surgery cures this disease'>
+
+							<div style='display: none;' class='trait-name-div'>distichiasis</div>
+							<div style='display: none;' class='action-type'>reveal_disease</div>
+
+							<input type='button' class='action-button conformation-image-distichiasis' style='cursor: not-allowed; font-size: 0.8em; padding: 3px; width: 190px; background-color:#998d68; border-color: #8c7c44; color: #b4aa8c;' value='Test Phenotype' disabled>
+
+							<div class='trait-name' style='width: 205px; height: 41px;'><font color='#000'>Distichiasis</font><br />Phenotype Clear</div>
+						</div><div class='trait-cell bottom tipso_style action-cell conformation-trait-entropion' style='width: 205px; height: 74px; border: 6px solid #695f47; padding: 2px;' data-tipso-title='Entropion' data-tipso='<p style=margin:4px;><i>Phenotype</i></p>An inherited inward rolling of the eyelids due to genetic weakness in eyelid structure. This condition can be cured with surgery'>
+
+								<input type='button' class='action-button conformation-image-entropion' style='cursor: pointer; font-size: 0.8em; padding: 3px; width: 190px;' value='Test Phenotype'>
+
+								<div style='display: none;' class='trait-name-div'>entropion</div>
+								<div style='display: none;' class='action-type'>reveal_disease</div>
+
+								<!--<div class='trait-icon bottom tipso_style conformation-image-entropion' data-tipso-title='Entropion' data-tipso='<p style=margin:4px;><i>Phenotype</i></p>An inherited inward rolling of the eyelids due to genetic weakness in eyelid structure. This condition can be cured with surgery' style='border: 0px; cursor: pointer; height: 23px; width: 205px; padding-top: 9px;'>
+									<img src='media/frame/icon-test-disease.png' align=left style='position: relative; top: -7px; left: 26px; margin-right: -10px;'> Test Phenotype
+								</div>-->
+								<div class='trait-name conformation-name-entropion' style='width: 205px; height: 41px;'><font color='#000'>Entropion</font></div>
+							</div><div class='trait-cell bottom tipso_style action-cell conformation-trait-keratoconjunctivitis_sicca' style='width: 205px; height: 74px; border: 6px solid #695f47; padding: 2px;' data-tipso-title='Keratoconjunctivitis Sicca' data-tipso='<p style=margin:4px;><i>Phenotype</i></p>Also known as dry eye. This is caused by inadequate tear production due to autoimmune destruction of tear glands. Dogs affected by this condition need to be on lifelong eye drop medication. Left untreated, the dog will develop permanent vision loss. Screen between 2-4 years of age'>
+
+								<input type='button' class='action-button conformation-image-keratoconjunctivitis_sicca' style='cursor: pointer; font-size: 0.8em; padding: 3px; width: 190px;' value='Screen Phenotype'>
+
+								<div style='display: none;' class='trait-name-div'>keratoconjunctivitis_sicca</div>
+								<div style='display: none;' class='action-type'>reveal_disease</div>
+
+								<!--<div class='trait-icon bottom tipso_style conformation-image-keratoconjunctivitis_sicca' data-tipso-title='Keratoconjunctivitis Sicca' data-tipso='<p style=margin:4px;><i>Phenotype</i></p>Also known as dry eye. This is caused by inadequate tear production due to autoimmune destruction of tear glands. Dogs affected by this condition need to be on lifelong eye drop medication. Left untreated, the dog will develop permanent vision loss. Screen between 2-4 years of age' style='border: 0px; cursor: pointer; height: 23px; width: 205px; padding-top: 9px;'>
+									<img src='media/frame/icon-test-disease.png' align=left style='position: relative; top: -7px; left: 16px; margin-right: -10px;'> Screen Phenotype
+								</div>-->
+								<div class='trait-name conformation-name-keratoconjunctivitis_sicca' style='width: 205px; height: 41px;'><font color='#000'>Keratoconjunctivitis Sicca</font></div>
+							</div><div class='trait-cell bottom tipso_style action-cell conformation-trait-microphthalmia' style='width: 205px; height: 74px; border: 6px solid #695f47; padding: 2px;' data-tipso-title='Microphthalmia' data-tipso='<p style=margin:4px;><i>Phenotype</i></p>A congenital eye disease of dogs characterized by a unilateral or bilateral shrunken eye which causes blindness'>
+
+								<input type='button' class='action-button conformation-image-microphthalmia' style='cursor: pointer; font-size: 0.8em; padding: 3px; width: 190px;' value='Test Phenotype'>
+
+								<div style='display: none;' class='trait-name-div'>microphthalmia</div>
+								<div style='display: none;' class='action-type'>reveal_disease</div>
+
+								<!--<div class='trait-icon bottom tipso_style conformation-image-microphthalmia' data-tipso-title='Microphthalmia' data-tipso='<p style=margin:4px;><i>Phenotype</i></p>A congenital eye disease of dogs characterized by a unilateral or bilateral shrunken eye which causes blindness' style='border: 0px; cursor: pointer; height: 23px; width: 205px; padding-top: 9px;'>
+									<img src='media/frame/icon-test-disease.png' align=left style='position: relative; top: -7px; left: 26px; margin-right: -10px;'> Test Phenotype
+								</div>-->
+								<div class='trait-name conformation-name-microphthalmia' style='width: 205px; height: 41px;'><font color='#000'>Microphthalmia</font></div>
+							</div><div class='trait-cell bottom tipso_style action-cell conformation-trait-persistent_pupillary_membranes' style='width: 205px; height: 74px; border: 6px solid #695f47; padding: 2px;' data-tipso-title='Persistent Pupillary Membranes' data-tipso='<p style=margin:4px;><i>Phenotype</i></p>Persistent pupillary membranes, or PPM, are strands of pigmented tissue which arise from the iris collarette which attaches to another surface of the iris, or lens or cornea of the eye, causing problems with the normal functioning of those parts. They may bridge from iris to iris across the pupil, iris to cornea (may cause corneal opacities), or iris to lens (may cause cataracts), or they may form sheets of tissue in the anterior chamber of the eye (iris sheets). Iris-iris type causes no problems. Iris-lens type which may cause cataracts can be cured with surgery. Iris-cornea may cause progressive blindness, no cure. Iris sheets cause mild to severe problems. However in most cases this disease does not cause visual impairment'>
+
+								<input type='button' class='action-button conformation-image-persistent_pupillary_membranes' style='cursor: pointer; font-size: 0.8em; padding: 3px; width: 190px;' value='Test Phenotype'>
+
+								<div style='display: none;' class='trait-name-div'>persistent_pupillary_membranes</div>
+								<div style='display: none;' class='action-type'>reveal_disease</div>
+
+								<!--<div class='trait-icon bottom tipso_style conformation-image-persistent_pupillary_membranes' data-tipso-title='Persistent Pupillary Membranes' data-tipso='<p style=margin:4px;><i>Phenotype</i></p>Persistent pupillary membranes, or PPM, are strands of pigmented tissue which arise from the iris collarette which attaches to another surface of the iris, or lens or cornea of the eye, causing problems with the normal functioning of those parts. They may bridge from iris to iris across the pupil, iris to cornea (may cause corneal opacities), or iris to lens (may cause cataracts), or they may form sheets of tissue in the anterior chamber of the eye (iris sheets). Iris-iris type causes no problems. Iris-lens type which may cause cataracts can be cured with surgery. Iris-cornea may cause progressive blindness, no cure. Iris sheets cause mild to severe problems. However in most cases this disease does not cause visual impairment' style='border: 0px; cursor: pointer; height: 23px; width: 205px; padding-top: 9px;'>
+									<img src='media/frame/icon-test-disease.png' align=left style='position: relative; top: -7px; left: 26px; margin-right: -10px;'> Test Phenotype
+								</div>-->
+								<div class='trait-name conformation-name-persistent_pupillary_membranes' style='width: 205px; height: 41px;'><font color='#000'>Persistent Pupillary Membranes</font></div>
+							</div><div class='trait-cell bottom tipso_style action-cell conformation-trait-progressive_retinal_atrophy' style='width: 205px; height: 74px; border: 6px solid #00c300; padding: 2px;' data-tipso-title='Progressive Retinal Atrophy' data-tipso='Recessive. Also known as progressive rod and cone degeneration, this causes the rod and cone cells to be programmed to die, causing eventual blindness. Onset of symptoms is between 3-6 years'>
+
+							<div style='display: none;' class='trait-name-div'>progressive_retinal_atrophy</div>
+							<div style='display: none;' class='action-type'>reveal_disease</div>
+
+							<input type='button' class='action-button conformation-image-progressive_retinal_atrophy' style='cursor: not-allowed; font-size: 0.8em; padding: 3px; width: 190px; background-color:#998d68; border-color: #8c7c44; color: #b4aa8c;' value='Test Genotype' disabled>
+
+							<div class='trait-name' style='width: 205px; height: 41px;'><font color='#000'>Progressive Retinal Atrophy</font><br />Genotype Clear</div>
+						</div><div class='trait-cell bottom tipso_style action-cell conformation-trait-retinal_dysplasia' style='width: 205px; height: 74px; border: 6px solid #00c300; padding: 2px;' data-tipso-title='Retinal Dysplasia' data-tipso='Recessive. A disease which causes raised lesions to form on the retina which alters the appearance of the eye but usually does not affect sight, however in some cases it causes blindness'>
+
+							<div style='display: none;' class='trait-name-div'>retinal_dysplasia</div>
+							<div style='display: none;' class='action-type'>reveal_disease</div>
+
+							<input type='button' class='action-button conformation-image-retinal_dysplasia' style='cursor: not-allowed; font-size: 0.8em; padding: 3px; width: 190px; background-color:#998d68; border-color: #8c7c44; color: #b4aa8c;' value='Test Genotype' disabled>
+
+							<div class='trait-name' style='width: 205px; height: 41px;'><font color='#000'>Retinal Dysplasia</font><br />Genotype Clear</div>
+						</div><div class='trait-cell bottom tipso_style action-cell conformation-trait-vitreous_degeneration' style='width: 205px; height: 74px; border: 6px solid #695f47; padding: 2px;' data-tipso-title='Vitreous Degeneration' data-tipso='<p style=margin:4px;><i>Phenotype</i></p>A disease which causes liquefication of the vitreous gel in the eye, which in some cases causes impaired vision or blindness but in most cases causes no symptoms. Most cases happen in older dogs 7+ years of age, but dogs of any age may be affected. Screen between 2 months to 10 years'>
+
+								<input type='button' class='action-button conformation-image-vitreous_degeneration' style='cursor: pointer; font-size: 0.8em; padding: 3px; width: 190px;' value='Screen Phenotype'>
+
+								<div style='display: none;' class='trait-name-div'>vitreous_degeneration</div>
+								<div style='display: none;' class='action-type'>reveal_disease</div>
+
+								<!--<div class='trait-icon bottom tipso_style conformation-image-vitreous_degeneration' data-tipso-title='Vitreous Degeneration' data-tipso='<p style=margin:4px;><i>Phenotype</i></p>A disease which causes liquefication of the vitreous gel in the eye, which in some cases causes impaired vision or blindness but in most cases causes no symptoms. Most cases happen in older dogs 7+ years of age, but dogs of any age may be affected. Screen between 2 months to 10 years' style='border: 0px; cursor: pointer; height: 23px; width: 205px; padding-top: 9px;'>
+									<img src='media/frame/icon-test-disease.png' align=left style='position: relative; top: -7px; left: 16px; margin-right: -10px;'> Screen Phenotype
+								</div>-->
+								<div class='trait-name conformation-name-vitreous_degeneration' style='width: 205px; height: 41px;'><font color='#000'>Vitreous Degeneration</font></div>
+							</div><div style='position: relative; float: left; width: 900px; padding: 5px 0; margin: 5px 0; background-color: #695f47; color: #bbe6b1;'>Gastrointestinal Disorders</div><div style='clear: both;'></div><div class='trait-cell bottom tipso_style action-cell conformation-trait-chronic_hepatitis' style='width: 205px; height: 74px; border: 6px solid #695f47; padding: 2px;' data-tipso-title='Chronic Hepatitis' data-tipso='<p style=margin:4px;><i>Phenotype</i></p>A progressive disease characterised by inflammation, irreversible scarring and death of liver tissue. Medications help relieve symptoms, however this condition is fatal. Onset of symptoms is 4-7 years'>
+
+								<input type='button' class='action-button conformation-image-chronic_hepatitis' style='cursor: pointer; font-size: 0.8em; padding: 3px; width: 190px;' value='Test Phenotype'>
+
+								<div style='display: none;' class='trait-name-div'>chronic_hepatitis</div>
+								<div style='display: none;' class='action-type'>reveal_disease</div>
+
+								<!--<div class='trait-icon bottom tipso_style conformation-image-chronic_hepatitis' data-tipso-title='Chronic Hepatitis' data-tipso='<p style=margin:4px;><i>Phenotype</i></p>A progressive disease characterised by inflammation, irreversible scarring and death of liver tissue. Medications help relieve symptoms, however this condition is fatal. Onset of symptoms is 4-7 years' style='border: 0px; cursor: pointer; height: 23px; width: 205px; padding-top: 9px;'>
+									<img src='media/frame/icon-test-disease.png' align=left style='position: relative; top: -7px; left: 26px; margin-right: -10px;'> Test Phenotype
+								</div>-->
+								<div class='trait-name conformation-name-chronic_hepatitis' style='width: 205px; height: 41px;'><font color='#000'>Chronic Hepatitis</font></div>
+							</div><div class='trait-cell bottom tipso_style action-cell conformation-trait-exocrine_pancreatic_insufficiency' style='width: 205px; height: 74px; border: 6px solid #695f47; padding: 2px;' data-tipso-title='Exocrine Pancreatic Insufficiency' data-tipso='<p style=margin:4px;><i>Phenotype</i></p>A digestive disorder resulting from the insufficient secretion of enzymes from the pancreas due to destruction of the enzyme-producing acinar cells by a hereditary autoimmune process. Left untreated the dog will develop irreversible chronic B12 deficiency, eventually leading to death. Treatment is available and the dog will live a normal life on medication. Screen between 6-18 months'>
+
+								<input type='button' class='action-button conformation-image-exocrine_pancreatic_insufficiency' style='cursor: pointer; font-size: 0.8em; padding: 3px; width: 190px;' value='Screen Phenotype'>
+
+								<div style='display: none;' class='trait-name-div'>exocrine_pancreatic_insufficiency</div>
+								<div style='display: none;' class='action-type'>reveal_disease</div>
+
+								<!--<div class='trait-icon bottom tipso_style conformation-image-exocrine_pancreatic_insufficiency' data-tipso-title='Exocrine Pancreatic Insufficiency' data-tipso='<p style=margin:4px;><i>Phenotype</i></p>A digestive disorder resulting from the insufficient secretion of enzymes from the pancreas due to destruction of the enzyme-producing acinar cells by a hereditary autoimmune process. Left untreated the dog will develop irreversible chronic B12 deficiency, eventually leading to death. Treatment is available and the dog will live a normal life on medication. Screen between 6-18 months' style='border: 0px; cursor: pointer; height: 23px; width: 205px; padding-top: 9px;'>
+									<img src='media/frame/icon-test-disease.png' align=left style='position: relative; top: -7px; left: 16px; margin-right: -10px;'> Screen Phenotype
+								</div>-->
+								<div class='trait-name conformation-name-exocrine_pancreatic_insufficiency' style='width: 205px; height: 41px;'><font color='#000'>Exocrine Pancreatic Insufficiency</font></div>
+							</div><div class='trait-cell bottom tipso_style action-cell conformation-trait-protein_losing_enteropathy' style='width: 205px; height: 74px; border: 6px solid #695f47; padding: 2px;' data-tipso-title='Protein Losing Enteropathy' data-tipso='<p style=margin:4px;><i>Phenotype</i></p>Also known as Irritable Bowel Disease. Excessive loss of protein from the gastrointestinal tract. This disease is ultimately fatal. Medicated dogs have relief of symptoms until the disease causes death. Onset of symptoms is 3-5 years'>
+
+								<input type='button' class='action-button conformation-image-protein_losing_enteropathy' style='cursor: pointer; font-size: 0.8em; padding: 3px; width: 190px;' value='Test Phenotype'>
+
+								<div style='display: none;' class='trait-name-div'>protein_losing_enteropathy</div>
+								<div style='display: none;' class='action-type'>reveal_disease</div>
+
+								<!--<div class='trait-icon bottom tipso_style conformation-image-protein_losing_enteropathy' data-tipso-title='Protein Losing Enteropathy' data-tipso='<p style=margin:4px;><i>Phenotype</i></p>Also known as Irritable Bowel Disease. Excessive loss of protein from the gastrointestinal tract. This disease is ultimately fatal. Medicated dogs have relief of symptoms until the disease causes death. Onset of symptoms is 3-5 years' style='border: 0px; cursor: pointer; height: 23px; width: 205px; padding-top: 9px;'>
+									<img src='media/frame/icon-test-disease.png' align=left style='position: relative; top: -7px; left: 26px; margin-right: -10px;'> Test Phenotype
+								</div>-->
+								<div class='trait-name conformation-name-protein_losing_enteropathy' style='width: 205px; height: 41px;'><font color='#000'>Protein Losing Enteropathy</font></div>
+							</div><div style='position: relative; float: left; width: 900px; padding: 5px 0; margin: 5px 0; background-color: #695f47; color: #bbe6b1;'>Immune Disorders</div><div style='clear: both;'></div><div style='position: relative; float: left; width: 900px; padding: 5px 0; margin: 5px 0; background-color: #695f47; color: #bbe6b1;'>Musculoskeletal Disorders</div><div style='clear: both;'></div><div class='trait-cell bottom tipso_style action-cell conformation-trait-cervical_spondylomyelopathy' style='width: 205px; height: 74px; border: 6px solid #00c300; padding: 2px;' data-tipso-title='Cervical Spondylomyelopathy' data-tipso='Also known as Wobbler Syndrome or Cervical Vertebral Instability. This disease is characterized by compression of the spinal cord and/or nerve roots, which leads to neurological signs and/or neck pain at around 4-8 years of age. Symptoms left untreated eventually lead to paralysis which is fatal after about 4-5 years from onset. This condition can be cured with surgery'>
+
+							<div style='display: none;' class='trait-name-div'>cervical_spondylomyelopathy</div>
+							<div style='display: none;' class='action-type'>reveal_disease</div>
+
+							<input type='button' class='action-button conformation-image-cervical_spondylomyelopathy' style='cursor: not-allowed; font-size: 0.8em; padding: 3px; width: 190px; background-color:#998d68; border-color: #8c7c44; color: #b4aa8c;' value='Test Phenotype' disabled>
+
+							<div class='trait-name' style='width: 205px; height: 41px;'><font color='#000'>Cervical Spondylomyelopathy</font><br />Phenotype Clear</div>
+						</div><div class='trait-cell bottom tipso_style action-cell conformation-trait-chondrodystrophy' style='width: 205px; height: 74px; border: 6px solid #ff0000; padding: 2px;' data-tipso-title='Chondrodystrophy' data-tipso='Dominant. Causes short legs and predisposes the dog to intervertebral disc disease. Most of the time, this gene is harmless. The vet will only report if it has caused IVDD at 2+ years of age. Onset of symptoms is between 3-6 years'>
+
+							<div style='display: none;' class='trait-name-div'>chondrodystrophy</div>
+							<div style='display: none;' class='action-type'>reveal_disease</div>
+
+							<input type='button' class='action-button conformation-image-chondrodystrophy' style='cursor: not-allowed; font-size: 0.8em; padding: 3px; width: 190px; background-color:#998d68; border-color: #8c7c44; color: #b4aa8c;' value='Test Genotype' disabled>
+
+							<div class='trait-name' style='width: 205px; height: 41px;'><font color='#000'>Chondrodystrophy</font><br />Genotype Affected</div>
+						</div><div class='trait-cell bottom tipso_style action-cell conformation-trait-elbow_dysplasia' style='width: 205px; height: 74px; border: 6px solid #00c300; padding: 2px;' data-tipso-title='Elbow Dysplasia' data-tipso='A disease of the elbows of dogs caused by growth disturbances in the elbow joint, causing a malformed elbow. This causes pain, lameness and arthritis. This condition can be cured with surgery. Grades go from grade 1 (mild), grade 2 (moderate), grade 3 (severe)'>
+
+							<div style='display: none;' class='trait-name-div'>elbow_dysplasia</div>
+							<div style='display: none;' class='action-type'>reveal_disease</div>
+
+							<input type='button' class='action-button conformation-image-elbow_dysplasia' style='cursor: not-allowed; font-size: 0.8em; padding: 3px; width: 190px; background-color:#998d68; border-color: #8c7c44; color: #b4aa8c;' value='Test Phenotype' disabled>
+
+							<div class='trait-name' style='width: 205px; height: 41px;'><font color='#000'>Elbow Dysplasia</font><br />Phenotype Clear</div>
+						</div><div class='trait-cell bottom tipso_style action-cell conformation-trait-hip_dysplasia' style='width: 205px; height: 74px; border: 6px solid #00c300; padding: 2px;' data-tipso-title='Hip Dysplasia' data-tipso='Abnormal formation of the hip socket which in its more severe form can eventually cause lameness and painful arthritis of the joints. This condition can be cured with surgery'>
+
+							<div style='display: none;' class='trait-name-div'>hip_dysplasia</div>
+							<div style='display: none;' class='action-type'>reveal_disease</div>
+
+							<input type='button' class='action-button conformation-image-hip_dysplasia' style='cursor: not-allowed; font-size: 0.8em; padding: 3px; width: 190px; background-color:#998d68; border-color: #8c7c44; color: #b4aa8c;' value='Test Phenotype' disabled>
+
+							<div class='trait-name' style='width: 205px; height: 41px;'><font color='#000'>Hip Dysplasia</font><br />Phenotype Clear</div>
+						</div><div class='trait-cell bottom tipso_style action-cell conformation-trait-legg_calve_perthes_disease' style='width: 205px; height: 74px; border: 6px solid #695f47; padding: 2px;' data-tipso-title='Legg Calve Perthes Disease' data-tipso='<p style=margin:4px;><i>Phenotype</i></p>Poor blood supply to the ball part of the hip joint causes the bone to die and crumble. This leads to a stiff, painful hip joint which causes a limp, and eventually arthritis. Develops at 5-8 months old, mostly in small breeds. This condition causes lameness and painful arthritis. This condition can be cured with surgery'>
+
+								<input type='button' class='action-button conformation-image-legg_calve_perthes_disease' style='cursor: pointer; font-size: 0.8em; padding: 3px; width: 190px;' value='Test Phenotype'>
+
+								<div style='display: none;' class='trait-name-div'>legg_calve_perthes_disease</div>
+								<div style='display: none;' class='action-type'>reveal_disease</div>
+
+								<!--<div class='trait-icon bottom tipso_style conformation-image-legg_calve_perthes_disease' data-tipso-title='Legg Calve Perthes Disease' data-tipso='<p style=margin:4px;><i>Phenotype</i></p>Poor blood supply to the ball part of the hip joint causes the bone to die and crumble. This leads to a stiff, painful hip joint which causes a limp, and eventually arthritis. Develops at 5-8 months old, mostly in small breeds. This condition causes lameness and painful arthritis. This condition can be cured with surgery' style='border: 0px; cursor: pointer; height: 23px; width: 205px; padding-top: 9px;'>
+									<img src='media/frame/icon-test-disease.png' align=left style='position: relative; top: -7px; left: 26px; margin-right: -10px;'> Test Phenotype
+								</div>-->
+								<div class='trait-name conformation-name-legg_calve_perthes_disease' style='width: 205px; height: 41px;'><font color='#000'>Legg Calve Perthes Disease</font></div>
+							</div><div class='trait-cell bottom tipso_style action-cell conformation-trait-muscular_dystrophy' style='width: 205px; height: 74px; border: 6px solid #00c300; padding: 2px;' data-tipso-title='Muscular Dystrophy' data-tipso='A sex-linked disease which is a progressive, non-inflammatory degenerative muscular disease caused by a deficiency of dystrophyin, a muscle-membrane protein. Half of affected dogs will die as young puppies, the other half will die later around 9-12 months of age'>
+
+							<div style='display: none;' class='trait-name-div'>muscular_dystrophy</div>
+							<div style='display: none;' class='action-type'>reveal_disease</div>
+
+							<input type='button' class='action-button conformation-image-muscular_dystrophy' style='cursor: not-allowed; font-size: 0.8em; padding: 3px; width: 190px; background-color:#998d68; border-color: #8c7c44; color: #b4aa8c;' value='Test Genotype' disabled>
+
+							<div class='trait-name' style='width: 205px; height: 41px;'><font color='#000'>Muscular Dystrophy</font><br />Genotype Clear</div>
+						</div><div class='trait-cell bottom tipso_style action-cell conformation-trait-myotonia_congenita' style='width: 205px; height: 74px; border: 6px solid #00c300; padding: 2px;' data-tipso-title='Myotonia Congenita' data-tipso='Recessive. A disease characterized by skeletal muscular hypertrophy. Myotonia is caused by delayed skeletal muscle relaxation following activity as a result of poor skeletal muscle voltage-dependent chloride channel conductance. This causes muscle stiffness and spasms. Medication relieves all symptoms'>
+
+							<div style='display: none;' class='trait-name-div'>myotonia_congenita</div>
+							<div style='display: none;' class='action-type'>reveal_disease</div>
+
+							<input type='button' class='action-button conformation-image-myotonia_congenita' style='cursor: not-allowed; font-size: 0.8em; padding: 3px; width: 190px; background-color:#998d68; border-color: #8c7c44; color: #b4aa8c;' value='Test Genotype' disabled>
+
+							<div class='trait-name' style='width: 205px; height: 41px;'><font color='#000'>Myotonia Congenita</font><br />Genotype Clear</div>
+						</div><div class='trait-cell bottom tipso_style action-cell conformation-trait-patellar_luxation' style='width: 205px; height: 74px; border: 6px solid #695f47; padding: 2px;' data-tipso-title='Patellar Luxation' data-tipso='<p style=margin:4px;><i>Phenotype</i></p>Also known as slipping kneecap, this disease occurs when the dogs patella is dislocated from its normal anatomic position in the groove of the thigh bone due to malformation of the knee joint, causing lameness and arthritis. This condition can be cured with surgery'>
+
+								<input type='button' class='action-button conformation-image-patellar_luxation' style='cursor: pointer; font-size: 0.8em; padding: 3px; width: 190px;' value='Test Phenotype'>
+
+								<div style='display: none;' class='trait-name-div'>patellar_luxation</div>
+								<div style='display: none;' class='action-type'>reveal_disease</div>
+
+								<!--<div class='trait-icon bottom tipso_style conformation-image-patellar_luxation' data-tipso-title='Patellar Luxation' data-tipso='<p style=margin:4px;><i>Phenotype</i></p>Also known as slipping kneecap, this disease occurs when the dogs patella is dislocated from its normal anatomic position in the groove of the thigh bone due to malformation of the knee joint, causing lameness and arthritis. This condition can be cured with surgery' style='border: 0px; cursor: pointer; height: 23px; width: 205px; padding-top: 9px;'>
+									<img src='media/frame/icon-test-disease.png' align=left style='position: relative; top: -7px; left: 26px; margin-right: -10px;'> Test Phenotype
+								</div>-->
+								<div class='trait-name conformation-name-patellar_luxation' style='width: 205px; height: 41px;'><font color='#000'>Patellar Luxation</font></div>
+							</div><div style='position: relative; float: left; width: 900px; padding: 5px 0; margin: 5px 0; background-color: #695f47; color: #bbe6b1;'>Neurological Disorders</div><div style='clear: both;'></div><div class='trait-cell bottom tipso_style action-cell conformation-trait-chiari_malformation' style='width: 205px; height: 74px; border: 6px solid #ff0000; padding: 2px;' data-tipso-title='Chiari Malformation' data-tipso='Also known as caudal occipital malformation syndrome. This is a condition that retards the growth of the hollow places in the dogs skull, making the posterior fossa too small or deformed. This causes syringomyelia, which is the compression of the brain forcing it down through the opening in the base of the skull and the cerebrospinal fluid is unable to flow through. Depending on severity, there may be no symptoms. This condition may or may not be fatal. This condition can be cured with surgery. It is advised to wait until symptoms appear before investing in medication or surgery as the dog may not develop any symptoms at all and thus not need any treatment.'>
+
+							<div style='display: none;' class='trait-name-div'>chiari_malformation</div>
+							<div style='display: none;' class='action-type'>reveal_disease</div>
+
+							<input type='button' class='action-button conformation-image-chiari_malformation' style='cursor: not-allowed; font-size: 0.8em; padding: 3px; width: 190px; background-color:#998d68; border-color: #8c7c44; color: #b4aa8c;' value='Test Phenotype' disabled>
+
+							<div class='trait-name' style='width: 205px; height: 41px;'><font color='#000'>Chiari Malformation</font><br />Phenotype Affected</div>
+						</div><div class='trait-cell bottom tipso_style action-cell conformation-trait-deafness_congenital' style='width: 205px; height: 74px; border: 6px solid #00c300; padding: 2px;' data-tipso-title='Deafness Congenital' data-tipso='Congenital deafness not caused by pigmentation'>
+
+							<div style='display: none;' class='trait-name-div'>deafness_congenital</div>
+							<div style='display: none;' class='action-type'>reveal_disease</div>
+
+							<input type='button' class='action-button conformation-image-deafness_congenital' style='cursor: not-allowed; font-size: 0.8em; padding: 3px; width: 190px; background-color:#998d68; border-color: #8c7c44; color: #b4aa8c;' value='Test Phenotype' disabled>
+
+							<div class='trait-name' style='width: 205px; height: 41px;'><font color='#000'>Deafness Congenital</font><br />Phenotype Clear</div>
+						</div><div class='trait-cell bottom tipso_style action-cell conformation-trait-degenerative_myelopathy' style='width: 205px; height: 74px; border: 6px solid #00c300; padding: 2px;' data-tipso-title='Degenerative Myelopathy' data-tipso='Recessive. A progressive disease of the spinal cord causing progressive paralysis due to degeneration. The weakness gets progressively worse until the dog is unable to walk. This disease is eventually fatal. Symptoms begin between 8-14 years of age'>
+
+							<div style='display: none;' class='trait-name-div'>degenerative_myelopathy</div>
+							<div style='display: none;' class='action-type'>reveal_disease</div>
+
+							<input type='button' class='action-button conformation-image-degenerative_myelopathy' style='cursor: not-allowed; font-size: 0.8em; padding: 3px; width: 190px; background-color:#998d68; border-color: #8c7c44; color: #b4aa8c;' value='Test Genotype' disabled>
+
+							<div class='trait-name' style='width: 205px; height: 41px;'><font color='#000'>Degenerative Myelopathy</font><br />Genotype Clear</div>
+						</div><div class='trait-cell bottom tipso_style action-cell conformation-trait-epilepsy' style='width: 205px; height: 74px; border: 6px solid #695f47; padding: 2px;' data-tipso-title='Epilepsy' data-tipso='<p style=margin:4px;><i>Phenotype</i></p>A neurological disorder that causes dogs to have sudden, uncontrolled and recurring seizures. If left untreated there is a risk of death, however dogs being medicated live normal lives. Screen between 1-3 years of age'>
+
+								<input type='button' class='action-button conformation-image-epilepsy' style='cursor: pointer; font-size: 0.8em; padding: 3px; width: 190px;' value='Screen Phenotype'>
+
+								<div style='display: none;' class='trait-name-div'>epilepsy</div>
+								<div style='display: none;' class='action-type'>reveal_disease</div>
+
+								<!--<div class='trait-icon bottom tipso_style conformation-image-epilepsy' data-tipso-title='Epilepsy' data-tipso='<p style=margin:4px;><i>Phenotype</i></p>A neurological disorder that causes dogs to have sudden, uncontrolled and recurring seizures. If left untreated there is a risk of death, however dogs being medicated live normal lives. Screen between 1-3 years of age' style='border: 0px; cursor: pointer; height: 23px; width: 205px; padding-top: 9px;'>
+									<img src='media/frame/icon-test-disease.png' align=left style='position: relative; top: -7px; left: 16px; margin-right: -10px;'> Screen Phenotype
+								</div>-->
+								<div class='trait-name conformation-name-epilepsy' style='width: 205px; height: 41px;'><font color='#000'>Epilepsy</font></div>
+							</div><div class='trait-cell bottom tipso_style action-cell conformation-trait-hydrocephalus' style='width: 205px; height: 74px; border: 6px solid #695f47; padding: 2px;' data-tipso-title='Hydrocephalus' data-tipso='<p style=margin:4px;><i>Phenotype</i></p>Also known as water on the brain. This disease is an expansion or abnormal dilation of the ventricular system due to an increased volume of spinal fluid. If left untreated this condition can be fatal. This condition can be cured with surgery'>
+
+								<input type='button' class='action-button conformation-image-hydrocephalus' style='cursor: pointer; font-size: 0.8em; padding: 3px; width: 190px;' value='Test Phenotype'>
+
+								<div style='display: none;' class='trait-name-div'>hydrocephalus</div>
+								<div style='display: none;' class='action-type'>reveal_disease</div>
+
+								<!--<div class='trait-icon bottom tipso_style conformation-image-hydrocephalus' data-tipso-title='Hydrocephalus' data-tipso='<p style=margin:4px;><i>Phenotype</i></p>Also known as water on the brain. This disease is an expansion or abnormal dilation of the ventricular system due to an increased volume of spinal fluid. If left untreated this condition can be fatal. This condition can be cured with surgery' style='border: 0px; cursor: pointer; height: 23px; width: 205px; padding-top: 9px;'>
+									<img src='media/frame/icon-test-disease.png' align=left style='position: relative; top: -7px; left: 26px; margin-right: -10px;'> Test Phenotype
+								</div>-->
+								<div class='trait-name conformation-name-hydrocephalus' style='width: 205px; height: 41px;'><font color='#000'>Hydrocephalus</font></div>
+							</div><div style='position: relative; float: left; width: 900px; padding: 5px 0; margin: 5px 0; background-color: #695f47; color: #bbe6b1;'>Respiratory Disorders</div><div style='clear: both;'></div><div class='trait-cell bottom tipso_style action-cell conformation-trait-cleft_palate' style='width: 205px; height: 74px; border: 6px solid #695f47; padding: 2px;' data-tipso-title='Cleft Palate' data-tipso='<p style=margin:4px;><i>Phenotype</i></p>A congenital split in the roof of the dogs mouth or nose into the nasal cavity. Depending on severity, puppies usually fail to thrive'>
+
+								<input type='button' class='action-button conformation-image-cleft_palate' style='cursor: pointer; font-size: 0.8em; padding: 3px; width: 190px;' value='Test Phenotype'>
+
+								<div style='display: none;' class='trait-name-div'>cleft_palate</div>
+								<div style='display: none;' class='action-type'>reveal_disease</div>
+
+								<!--<div class='trait-icon bottom tipso_style conformation-image-cleft_palate' data-tipso-title='Cleft Palate' data-tipso='<p style=margin:4px;><i>Phenotype</i></p>A congenital split in the roof of the dogs mouth or nose into the nasal cavity. Depending on severity, puppies usually fail to thrive' style='border: 0px; cursor: pointer; height: 23px; width: 205px; padding-top: 9px;'>
+									<img src='media/frame/icon-test-disease.png' align=left style='position: relative; top: -7px; left: 26px; margin-right: -10px;'> Test Phenotype
+								</div>-->
+								<div class='trait-name conformation-name-cleft_palate' style='width: 205px; height: 41px;'><font color='#000'>Cleft Palate</font></div>
+							</div><div style='position: relative; float: left; width: 900px; padding: 5px 0; margin: 5px 0; background-color: #695f47; color: #bbe6b1;'>Skin Disorders</div><div style='clear: both;'></div><div class='trait-cell bottom tipso_style action-cell conformation-trait-atopy' style='width: 205px; height: 74px; border: 6px solid #695f47; padding: 2px;' data-tipso-title='Atopy' data-tipso='<p style=margin:4px;><i>Phenotype</i></p>Also known as allergic inhalant dermatitis, atopic dermatitis, atopic eczema and immune-mediated skin hypersensitivity. This is a disease that makes dogs have an allergic reaction to inhaled allergens which causes a skin reaction. Screen between 6 months to 3 years'>
+
+								<input type='button' class='action-button conformation-image-atopy' style='cursor: pointer; font-size: 0.8em; padding: 3px; width: 190px;' value='Screen Phenotype'>
+
+								<div style='display: none;' class='trait-name-div'>atopy</div>
+								<div style='display: none;' class='action-type'>reveal_disease</div>
+
+								<!--<div class='trait-icon bottom tipso_style conformation-image-atopy' data-tipso-title='Atopy' data-tipso='<p style=margin:4px;><i>Phenotype</i></p>Also known as allergic inhalant dermatitis, atopic dermatitis, atopic eczema and immune-mediated skin hypersensitivity. This is a disease that makes dogs have an allergic reaction to inhaled allergens which causes a skin reaction. Screen between 6 months to 3 years' style='border: 0px; cursor: pointer; height: 23px; width: 205px; padding-top: 9px;'>
+									<img src='media/frame/icon-test-disease.png' align=left style='position: relative; top: -7px; left: 16px; margin-right: -10px;'> Screen Phenotype
+								</div>-->
+								<div class='trait-name conformation-name-atopy' style='width: 205px; height: 41px;'><font color='#000'>Atopy</font></div>
+							</div><div class='trait-cell bottom tipso_style action-cell conformation-trait-demodicosis' style='width: 205px; height: 74px; border: 6px solid #00c300; padding: 2px;' data-tipso-title='Demodicosis' data-tipso='Demodicosis is a skin disease caused by the parasitic mite, Demodex, which is present on all dogs from birth. It causes itching, discomfort and pain. This disease is caused by a genetic immune dysfunction. Screen between 3-12 months'>
+
+							<input type='button' class='action-button conformation-image-demodicosis' style='cursor: pointer; font-size: 0.8em; padding: 3px; width: 190px;' value='Screen Phenotype'>
+
+							<div style='display: none;' class='trait-name-div'>demodicosis</div>
+							<div style='display: none;' class='action-type'>reveal_disease</div>
+							<!--<div class='trait-icon bottom tipso_style conformation-image-demodicosis' data-tipso-title='Demodicosis' data-tipso='<p style=margin:4px;><i>Phenotype</i></p>Demodicosis is a skin disease caused by the parasitic mite, Demodex, which is present on all dogs from birth. It causes itching, discomfort and pain. This disease is caused by a genetic immune dysfunction. Screen between 3-12 months' style='border: 0px; cursor: pointer; height: 23px; width: 205px; padding-top: 9px; top:40px;'>
+								<img src='media/frame/icon-test-disease.png' align=left style='position: relative; top: -7px; left: 16px; margin-right: -10px;'> Screen Phenotype
+							</div>-->
+							<div class='trait-name conformation-name-demodicosis' style='width: 205px; height: 41px; padding: 2px;'><font color='#000'>Demodicosis</font><br>Phenotype Clear<br>Last Screened: 10 months</div>
+						</div><div class='trait-cell bottom tipso_style action-cell conformation-trait-ichthyosis' style='width: 205px; height: 74px; border: 6px solid #00c300; padding: 2px;' data-tipso-title='Ichthyosis' data-tipso='Recessive. Also known as fish scale disease. This disease prevents the outer layer of the epidermis from forming properly, resulting in skin that becomes darkened and thick and flakes excessively. This leads to painful thickened paw pads causing lameness. Onset of symptoms is 1 month to 1 year'>
+
+							<div style='display: none;' class='trait-name-div'>ichthyosis</div>
+							<div style='display: none;' class='action-type'>reveal_disease</div>
+
+							<input type='button' class='action-button conformation-image-ichthyosis' style='cursor: not-allowed; font-size: 0.8em; padding: 3px; width: 190px; background-color:#998d68; border-color: #8c7c44; color: #b4aa8c;' value='Test Genotype' disabled>
+
+							<div class='trait-name' style='width: 205px; height: 41px;'><font color='#000'>Ichthyosis</font><br />Genotype Clear</div>
+						</div><div style='position: relative; float: left; width: 900px; padding: 5px 0; margin: 5px 0; background-color: #695f47; color: #bbe6b1;'>Urinary & Reproductive Disorders</div><div style='clear: both;'></div><div class='trait-cell bottom tipso_style action-cell conformation-trait-cryptorchidism' style='width: 205px; height: 74px; border: 6px solid #695f47; padding: 2px;' data-tipso-title='Cryptorchidism' data-tipso='<p style=margin:4px;><i>Phenotype</i></p>Also known as retained testicle. This is due to failure of one or both testicles to descend into the scrotum. This condition may cause infertility. If left untreated, this condition can also lead to testicular cancer, or testicular torsion, which are fatal.'>
+
+								<input type='button' class='action-button conformation-image-cryptorchidism' style='cursor: pointer; font-size: 0.8em; padding: 3px; width: 190px;' value='Test Phenotype'>
+
+								<div style='display: none;' class='trait-name-div'>cryptorchidism</div>
+								<div style='display: none;' class='action-type'>reveal_disease</div>
+
+								<!--<div class='trait-icon bottom tipso_style conformation-image-cryptorchidism' data-tipso-title='Cryptorchidism' data-tipso='<p style=margin:4px;><i>Phenotype</i></p>Also known as retained testicle. This is due to failure of one or both testicles to descend into the scrotum. This condition may cause infertility. If left untreated, this condition can also lead to testicular cancer, or testicular torsion, which are fatal.' style='border: 0px; cursor: pointer; height: 23px; width: 205px; padding-top: 9px;'>
+									<img src='media/frame/icon-test-disease.png' align=left style='position: relative; top: -7px; left: 26px; margin-right: -10px;'> Test Phenotype
+								</div>-->
+								<div class='trait-name conformation-name-cryptorchidism' style='width: 205px; height: 41px;'><font color='#000'>Cryptorchidism</font></div>
+							</div><div class='trait-cell bottom tipso_style action-cell conformation-trait-primary_glomerulopathy' style='width: 205px; height: 74px; border: 6px solid #00c300; padding: 2px;' data-tipso-title='Primary Glomerulopathy' data-tipso='Recessive. Also known as Protein-Losing Nephropathy. Characterised by damaged kidney glomeruli, which causes them to become “leaky”, thus allowing larger protein molecules to filter into the urine. This leads to kidney failure and death. This condition can be cured with surgery'>
+
+							<div style='display: none;' class='trait-name-div'>primary_glomerulopathy</div>
+							<div style='display: none;' class='action-type'>reveal_disease</div>
+
+							<input type='button' class='action-button conformation-image-primary_glomerulopathy' style='cursor: not-allowed; font-size: 0.8em; padding: 3px; width: 190px; background-color:#998d68; border-color: #8c7c44; color: #b4aa8c;' value='Test Genotype' disabled>
+
+							<div class='trait-name' style='width: 205px; height: 41px;'><font color='#000'>Primary Glomerulopathy</font><br />Genotype Clear</div>
+						</div><div class='trait-cell bottom tipso_style action-cell conformation-trait-renal_dysplasia' style='width: 205px; height: 74px; border: 6px solid #00c300; padding: 2px;' data-tipso-title='Renal Dysplasia' data-tipso='Dominant, incomplete penetrance - not all dogs with the gene will exhibit symptoms. This disease causes abnormal formation of the kidneys. Most dogs are mildly affected and live normal lives. Moderate or severely affected dogs have a shortened lifespan due to eventual kidney failure and death. This condition can be cured with surgery'>
+
+							<div style='display: none;' class='trait-name-div'>renal_dysplasia</div>
+							<div style='display: none;' class='action-type'>reveal_disease</div>
+
+							<input type='button' class='action-button conformation-image-renal_dysplasia' style='cursor: not-allowed; font-size: 0.8em; padding: 3px; width: 190px; background-color:#998d68; border-color: #8c7c44; color: #b4aa8c;' value='Test Genotype' disabled>
+
+							<div class='trait-name' style='width: 205px; height: 41px;'><font color='#000'>Renal Dysplasia</font><br />Genotype Clear</div>
+						</div><div class='trait-cell bottom tipso_style action-cell conformation-trait-umbilical_hernia' style='width: 205px; height: 74px; border: 6px solid #695f47; padding: 2px;' data-tipso-title='Umbilical Hernia' data-tipso='<p style=margin:4px;><i>Phenotype</i></p>Abnormal formation of the tissues around the umbilical cord results in a hernia, which is protrusion of tissue through the hole in the abdominal wall. Reducible hernias might heal on their own by 6 months of age. However most hernias, and especially irreducible hernias require surgery to correct. Left untreated, the hernia can cause symptoms and even can become strangulated, which causes death if surgery is not immediately performed'>
+
+								<input type='button' class='action-button conformation-image-umbilical_hernia' style='cursor: pointer; font-size: 0.8em; padding: 3px; width: 190px;' value='Test Phenotype'>
+
+								<div style='display: none;' class='trait-name-div'>umbilical_hernia</div>
+								<div style='display: none;' class='action-type'>reveal_disease</div>
+
+								<!--<div class='trait-icon bottom tipso_style conformation-image-umbilical_hernia' data-tipso-title='Umbilical Hernia' data-tipso='<p style=margin:4px;><i>Phenotype</i></p>Abnormal formation of the tissues around the umbilical cord results in a hernia, which is protrusion of tissue through the hole in the abdominal wall. Reducible hernias might heal on their own by 6 months of age. However most hernias, and especially irreducible hernias require surgery to correct. Left untreated, the hernia can cause symptoms and even can become strangulated, which causes death if surgery is not immediately performed' style='border: 0px; cursor: pointer; height: 23px; width: 205px; padding-top: 9px;'>
+									<img src='media/frame/icon-test-disease.png' align=left style='position: relative; top: -7px; left: 26px; margin-right: -10px;'> Test Phenotype
+								</div>-->
+								<div class='trait-name conformation-name-umbilical_hernia' style='width: 205px; height: 41px;'><font color='#000'>Umbilical Hernia</font></div>
+							</div><div class='trait-cell bottom tipso_style action-cell conformation-trait-urolithiasis' style='width: 205px; height: 74px; border: 6px solid #00c300; padding: 2px;' data-tipso-title='Urolithiasis' data-tipso='Recessive. This disease causes elevated levels of metabolic byproducts in the urine, which predisposes dogs to form bladder stones which are fatal if left untreated. Medication relieves all symptoms'>
+
+							<div style='display: none;' class='trait-name-div'>urolithiasis</div>
+							<div style='display: none;' class='action-type'>reveal_disease</div>
+
+							<input type='button' class='action-button conformation-image-urolithiasis' style='cursor: not-allowed; font-size: 0.8em; padding: 3px; width: 190px; background-color:#998d68; border-color: #8c7c44; color: #b4aa8c;' value='Test Genotype' disabled>
+
+							<div class='trait-name' style='width: 205px; height: 41px;'><font color='#000'>Urolithiasis</font><br />Genotype Clear</div>
+						</div></div><br />
+
+
+<script>
+document.domain = "dogbreedergame.com";
+function item_drag(ev) {
+        ev.dataTransfer.setData("itemtype", "dbg_dog");
+        ev.dataTransfer.setData("itemid", ev.target.id);
+}
+function copyTextToClipboard(text) {
+  var textArea = document.createElement("textarea");
+  textArea.style.position = 'fixed';
+  textArea.style.top = 0;
+  textArea.style.left = 0;
+  textArea.style.width = '2em';
+  textArea.style.height = '2em';
+  textArea.style.padding = 0;
+  textArea.style.border = 'none';
+  textArea.style.outline = 'none';
+  textArea.style.boxShadow = 'none';
+  textArea.style.background = 'transparent';
+
+  textArea.value = text;
+  document.body.appendChild(textArea);
+  textArea.select();
+
+  try {
+	var successful = document.execCommand('copy');
+	document.getElementById('copytoclipboard').src = "media/frame/icon-copytoclipboard-success.png";
+  } catch (err) {
+	document.getElementById('copytoclipboard').src = "media/frame/icon-copytoclipboard-fail.png";
+  }
+  document.body.removeChild(textArea);
+  setTimeout(function() { document.getElementById('copytoclipboard').src = "media/frame/icon-copytoclipboard.png"; }, 2000);
+}
+
+$('.tipso').tipso();
+
+$(document).ready(function(){
+
+	$('.customimgdivtrigger').click( function() 	{$("#customimgdiv").slideToggle(150);});
+
+    $('.rename_callname').click(function(){
+
+        $('#popup-dialog-content').html("<center><h2 style='margin-bottom:5px;'>Change Callname</h2><form method='post' action='index.php?f=kennels&p=view&dogid=6859258'><p><textarea name='new_dog_name' rows=1 style='font-size: 1.2em; width: 300px; height: 28px; text-align: center;' autocomplete='off' maxlength='50'>Puppy #2</textarea></p><input type='submit' name='rename_final' value='Rename'><input type='hidden' name='dog_id' value='6859258'></form></center>");
+        $('#close-button').html("Cancel");
+
+        $('#popup-bg-shadow').fadeIn(100);
+        $('#popup-dialog-small').fadeIn(100);
+
+    });
+
+	$('.rename_registered_name').click(function(){
+
+		$('#popup-dialog-content').html("<center><h2 style='margin-bottom:5px;'>Set Registered Name</h2><form method='post' action='index.php?f=kennels&p=view&dogid=6859258'><p>This is the registered name, and can only be set once.<br />This name cannot be changed after it has been set.<br /><b>30 characters or less allowed.</b></p>Note: It costs 50 Barks to set a Registered Name<p><p><input type='text' name='new_registered_name' style=' width: 300px; text-align: center;' placeholder='Enter registered name' autocomplete='off' required></p><input type='submit' name='rename_registered_final' value='Set Registered Name'><input type='hidden' name='dog_id' value='6859258'></form></center>");
+		$('#close-button').html("Cancel");
+
+		$('#popup-bg-shadow').fadeIn(100);
+		$('#popup-dialog-small').fadeIn(100);
+
+	});
+
+	$('.rename_suffix').click(function(){
+
+		$('#popup-dialog-content').html("<center><h2 style='margin-bottom:5px;'>Add Suffix</h2><form method='post' action='index.php?f=kennels&p=view&dogid=6859258'><p>This is the suffix, and can only be added once.<br />The suffix cannot be removed after it has been added.<br /></p><p><input type='radio' name='new_suffix' value='at'>at <br><input type='radio' name='new_suffix' value='of'>of <br><input type='radio' name='new_suffix' value='from'>from <br><input type='radio' name='new_suffix' value='with'>with <br><input type='radio' name='new_suffix' value='for'>for <br><input type='radio' name='new_suffix' value='by'>by <br><input type='radio' name='new_suffix' value='to'>to </p>It costs 25 Barks to add a suffix<p><input type='submit' name='rename_suffix_final' value='Add Suffix'><input type='hidden' name='dog_id' value='6859258'></form></center>");
+		$('#close-button').html("Cancel");
+
+		$('#popup-bg-shadow').fadeIn(100);
+		$('#popup-dialog-small').fadeIn(100);
+
+	});
+
+	$(".action-cell").click(function(){
+
+		var actiontype 	= $(this).find('.action-type').html();
+		var traitname	= $(this).find('.trait-name-div').html();
+		var dogid		= "6859258";
+		var genserial 	= "wenc8";
+
+		var data = {
+			"userid": 31996,
+			"traitname": traitname,
+			"dogid": dogid,
+			"actiontype":  actiontype,
+			"genserial": genserial
+		};
+		data = $(this).serialize() + "&" + $.param(data);
+
+		$.ajax({
+			type: "GET",
+			dataType: "json",
+			url: "folders/kennels/view_actions.php", //Relative or absolute path to response.php file
+			data: data,
+			success: function(data) {
+				if (data['validate'] == 1) {
+
+					var imgData 	= data['conformation_image_data'];
+					var nameData 	= data['conformation_label_data'];
+
+					$(this).attr( "data-tipso", '' + data['conformation_value'] + '' );
+					//$(this).html(nameData);
+
+					if (data['msgtype'] == 1) {
+
+						$('.action-button').css('background-color', '#998d68').html('');
+						$('.action-button').css('border-color', '#8c7c44').html('');
+						$('.action-button').css('cursor', 'not-allowed').html('');
+						$('.action-button').css('color', '#b4aa8c').html('');
+
+						if (data['conformation_value'] == 'clear') {
+							$('.conformation-trait-' + data['conformation_name'] +'').css('border-color', '#00c300');
+						} else if (data['conformation_value'] == 'affected') {
+							$('.conformation-trait-' + data['conformation_name'] +'').css('border-color', '#ff0000');
+						} else if (data['conformation_value'] == 'carrier') {
+							$('.conformation-trait-' + data['conformation_name'] +'').css('border-color', '#ffff00');
+						} else if (data['conformation_value'] == 'affected carrying clear') {
+							$('.conformation-trait-' + data['conformation_name'] +'').css('border-color', '#ff7113');
+						}
+
+                        if (actiontype == 'reveal_disease') {
+                            $('.conformation-trait-' + data['conformation_name'] +'').find('.trait-name').html(data['conformation_label_data']);
+                        } else if (actiontype == 'reveal_conformation') {
+                            $('.conformation-name-' + data['conformation_name'] +'').html(data['conformation_label_data']);
+                            $('.conformation-icon-' + data['conformation_name'] +'').empty();
+                            $('.conformation-icon-' + data['conformation_name'] +'').css('background-image', 'url("' + data['conformation_image_data'] + '")');
+                        } else if (actiontype == 'reveal_temperament') {
+                            $('.conformation-name-' + data['conformation_name'] +'').html(data['conformation_label_data']);
+                            $('.conformation-icon-' + data['conformation_name'] +'').empty();
+                            $('.conformation-icon-' + data['conformation_name'] +'').css('background-image', 'url("' + data['conformation_image_data'] + '")');
+                        }
+
+						$('#bottom-log-msg-invalid').hide();
+						$('#bottom-log-msg-valid').html(data['returnmsg']);
+						$('#bottom-log-msg-valid').show();
+
+					} else {
+
+						$('#bottom-log-msg-valid').hide();
+						$('#bottom-log-msg-invalid').html(data['returnmsg']);
+						$('#bottom-log-msg-invalid').show();
+					}
+
+				} else {
+						$('#bottom-log-msg-invalid').hide();
+						$('#bottom-log-msg-valid').html(data['returnmsg']);
+						$('#bottom-log-msg-valid').show();
+				}
+			}
+		});
+		return false;
+	});
+
+});
+
+</script>
+</div>
+
+
+<script>
+
+$(document).ready(function(){
+
+  $('#quickpanel-button').click(function() {
+
+    var $marginLefty = $('#quickpanel');
+
+    $marginLefty.animate({
+
+      marginLeft: parseInt($marginLefty.css('marginLeft'),10) == 0 ?
+
+        $marginLefty.outerWidth() :
+
+        0
+
+    });
+
+  });
+
+});
+
+</script>
+<script>
+
+	$(document).ready(function() {
+
+		$('#close_msg, #msg-normal, #msg-error').click(function(){
+			$(this).fadeOut(200);
+		});
+
+		$('#close-popup').click(function(){
+			$('#window-popup').hide();
+            $('#faded-background-overlay').hide();
+		});
+
+	    $(".defaultText").focus(function(srcc)
+	    {
+	        if ($(this).val() == $(this)[0].title)
+	        {
+	            $(this).removeClass("defaultTextActive").css({'color' : '000'});;
+	            $(this).val("");
+	        }
+	    });
+	    
+	    $(".defaultText").blur(function()
+	    {
+	        if ($(this).val() == "")
+	        {
+	        	$(this).removeClass("defaultTextActive");
+	            $(this).addClass("defaultTextActive").css({'color' : '92b092'});
+	            $(this).val($(this)[0].title);
+	        }
+	    });
+
+	     $(".defaultText").blur();
+
+	// MENU
+		/*
+		$('.menu-button').mouseover(function(){
+			$(this).animate({top: "7px"}, 10);
+		});
+
+		$('.menu-button').mouseout(function(){
+			$(this).animate({top: "9px"}, 10);
+		});
+		*/
+
+	// NEWS
+
+		$('.news-body:first').show();
+	   	$('.news-container').click(function(){
+	   		$('.news-body').hide();
+	   		$(this).find('.news-body').toggle();
+	   	});
+
+	});
+
+</script><div id='giftturns_window' style='position: fixed; display: none; top: 15px; background-color: #468054; padding: 20px; border-radius: 10px; z-index: 99999; position: fixed; left: 50%; transform: translate(-50%, 0);'>
+
+			<h3 style='color: #000; margin-bottom: 0em;'>Gifted Turns</h3><br />
+			<div style='position: absolute; top: 5px; right: 5px;'><input type='button' id='closegiftturns' value='X'></div>
+			<table width=470 class='boxType2' style='position: relative; margin: 0 auto; border-radius: 3px;'>
+			<th colspan=2>Shower the community with the gift of free turns!<br ><font style='font-weight:normal;'>4 turns for every 1 token spent</font></th>
+			<tr>
+				<td align=right>
+					<form method='post'>Spend <input type='text' value='1' size=2 name='tokenamount' style='text-align: center;'>
+					<img src='media/frame/tokens_icon.png' style='position: relative; top: 6px; left:-14px;'>
+				</td>
+				<td>
+					<input type='submit' name='giftturns' value='Gift Turns!' style='position: relative; top: -6px;'></form>
+				</td>
+			</tr></table><table width=470  style='position: relative; margin: 15px auto; border-radius: 3px; background-color: #232018; color: #e3d4af;' cellpadding=4>
+			<th align=left>Gifted By</th>
+			<th>Turns Left</th>
+			<th>Actions</th><tr style='background-color: #5A9E6A; color: #000; text-align: center;'><td colspan=4>There are no turns gifted at this time</td></tr></table>
+
+	</div><form method='post' action='index.php'><input type='submit' value='Show Chat' name='closechat' style='position: fixed;  left: 10px; bottom: 10px;'></form>
+<style>
+.menu-button {
+	position: relative;
+	background-color: #c7b580;
+	border-top: 2px solid #958b70;
+	border-right: 2px solid #958b70;
+	border-left: 2px solid #958b70;
+	border-bottom: 1px solid #e6dab5;
+	padding: 5px 6px 2px 6px;
+	font-size: 1.2em;
+	font-weight: bold;
+	text-align: center;
+	cursor: pointer;
+	margin: 0px 4px 1px 4px;
+	border-top-left-radius: 6px; border-top-right-radius: 6px;
+	color: #444425;
+}
+.menu-button:hover {
+	border-bottom: 1px solid #e6dab5;
+	background-color: #e6dab5;
+	color: #0e0e08;
+}
+.sub-menu-button {
+	text-align: center;
+	background-color: #b5b08d;
+	border-radius: 6px;
+	width: 150px;
+	height: 45px;
+	margin: 4px;
+	padding: 8px;
+	font-weight: normal;
+	display: inline-table;
+	z-index: 999999;
+}
+.sub-menu-button:hover {
+	background-color: #dfd5b3;
+}
+
+.menu-hover {
+	float: right;
+}
+
+#bottomtipbar a {
+	color: white;
+	font-weight: bold;
+	text-decoration: underline;
+}
+.header-element {
+	position: absolute;
+	background: rgba(173,158,119,0.6);
+	border-radius: 6px;
+	padding: 1px;
+	color: #fff;
+ 	text-align: left;
+	font-weight: bold;
+	text-shadow: 1px 1px #000;
+	border: 0px;
+}
+</style>
+
+<div id='bottom-log-msg-invalid' style='position: fixed; display: none; background-color: red; color: #fff; padding: 12px 45px; bottom: 0px; left: 50%; transform: translateX(-50%); text-align: center; z-index: 9999; bottom: 5px; font-size: 1.1em;'></div><div id='bottom-log-msg-valid' style='position: fixed; display: none; background-color: #fff; padding: 12px 30px; bottom: 0px; left: 50%; transform: translateX(-50%); text-align: center; z-index: 9999; bottom: 5px; font-size: 1.1em;'></div><div id='menu-container' style='position: fixed; width: 100%; text-align: center; top: 0px; overflow: hidden; text-align: center; z-index: 9999; margin-bottom: 5px;'><div style='position: relative; width: 100%; text-align: center; margin: 0 auto; background-color: #F5F3E9; background-image:url(media/menu/core_menu_bg2.jpg); background-repeat: repeat-x; background-position: top center; min-height: 102px;'><div style='position: relative; width: 900px; margin: 0 auto auto; height: 67px; clear: both;'><div style='position: absolute; left: 15px; top: 5px;'>
+							<a href='index.php?f=profile&p=view&playerid=31996&edit=1'><div style='position: relative; width: 90px; height: 90px; z-index: 88; background-repeat: no-repeat; background-size: 90px 90px; border-radius: 55px; background-image: url(media/avatar/_avatar.png);'>
+								<div style='position: absolute; left: -7px; bottom: -1px; width: 90px; text-align: center; cursor: help; padding: 3px 8px; border-radius: 4px; background: rgba(173,158,119,0.7); color: #000;'  title='This is your player ID'><big>ID #31996</big></div>
+							</div></a>
+						</div><div style='position: relative; width: 900px; height: 67px;'><div class='header-element bottom tipso_style' style='left: 105px; top: 6px; width: 80px;'  data-tipso-title='Tokens' data-tipso='This is a special currency that is used to purchase special items, subscription time, etc. Purchase Tokens at Rare Breed Games to get more!'>
+							<img src='https://rarebreedgames.com/media/tokens_large_icon.png' width=30 align=left style='position: relative; left: 4px;'>
+							<span style='position: relative; top: 5px; margin-left: 6px;'><big>31</big></span>
+						</div>
+
+						<div class='header-element bottom tipso_style' style='left: 200px; top: 6px; width: 140px;'  data-tipso-title='Barks' data-tipso='This is your main currency in the game. Gain barks by selling dogs, working dog jobs, winning competitions etc. If you are short on barks you can also get a loan or community funding from the finances page under the overview menu.'>
+							<img src='media/frame/reptos_icon.png' width=30 align=left style='position: relative; left: 4px;'>
+							<span style='position: relative; top: 5px; margin-left: 6px;'><big>94,827</big></span>
+						</div>
+
+						<div class='header-element bottom tipso_style' style='left: 355px; top: 6px; width: 150px;'  data-tipso-title='Kennel Space' data-tipso='This is how much kennel space you have used (1 per dog over 2 months old). You can purchase more kennel space via your Kennel page under the tabs.'>
+							<img src='media/frame/kennel_icon.png' width=30 align=left style='position: relative; left: 4px;'>
+							<span style='position: relative; top: 5px; margin-left: 6px;'><big>92/328</big></span>
+						</div>
+
+						<div class='header-element bottom tipso_style' style='left: 520px; top: 6px; width: 240px;'  data-tipso-title='Turns' data-tipso='<p></p>Turns advance your game by 1 month. You gain 1 turn every 30 minutes. Subscribers get 20 maximum turns. <b>Purchase more turns at the item shop</b>.<p>You taken a total of 1028 turns since you joined the game.</p>'>
+							<img src='media/frame/turn_icon.png' width=30 align=left style='position: relative; left: 4px;'>
+							<span style='position: relative; top: 5px; margin-left: 6px;'><big>0 / 20</big></span>
+							<a href='index.php?f=turns&p=turn'><input type='button' value='Take Turn' style='font-size: 1.1em; top: 1px; border-color: #a59252; position: relative; float: right; margin-right: 3px;'></a>
+						</div>
+
+						<a href='index.php?f=online&p=main'>
+						<div class='header-element bottom tipso_style' style='right: 1px; text-align: right; top: 6px; width: 120px; cursor: pointer; font-size: 0.8em;' data-tipso-title='Online Users/Players' data-tipso='This is the amount of other breeder players that have been recently active.'>
+							<img src='media/frame/users_icon.png' width=33 align=left style='position: relative; left: 4px;'>
+							<span style='position: relative; float: right; top: 1px; right: 6px;'><big>45 Online
+							<br />10:49 PM</big></span>
+						</div></a>
+
+					</div></div><div style='position: relative; margin: 0 auto; width: 900px; top: 6px; text-align: right;'><div style='width: 770px; float: right; overflow: hidden; height: 45px; clear: both;'><div class='menu-hover' style='position: relative; float: left; width: 110px;'>
+								<div class='menu-button'>Overview</div>
+							</div><div class='menu-hover' style='position: relative; float: left; width: 100px;'>
+								<div class='menu-button'>Kennels</div>
+							</div><div class='menu-hover' style='position: relative; float: left; width: 100px;'>
+								<div class='menu-button'>Town</div>
+							</div><div class='menu-hover' style='position: relative; float: left; width: 115px;'>
+								<div class='menu-button'>Compete</div>
+							</div><div class='menu-hover' style='position: relative; float: left; width: 130px;'>
+								<div class='menu-button'>Community</div>
+							</div><div class='menu-hover' style='position: relative; float: left; width: 130px;'>
+								<a href='index.php?f=subscribe&p=main' style='text-decoration: none;'><div class='menu-button'>Subscribe!</div></a>
+							</div><div class='menu-hover' style='position: relative; float: left; width: 80px;'>
+								<div class='menu-button'>Info</div>
+							</div></div></div></div><div class='sub-menu-home menu-hover' style='position: relative; width: 100%; margin: 0 auto; top: -11px; text-align: center; background-color: #BFBA99;'><div class='menu-extend-overview sub-menu-section' style='display: none; width: 100%; text-align: center; z-index: 9999; border-bottom: 1px solid #e6dab5; border-top: 1px solid #f3eacd;'>
+
+						<a href='index.php'><div class='sub-menu-button'>
+							<b>Home</b><br />
+							<font color='#857B5F'><small>View the front/news page</small></font>
+						</div></a>
+
+						<a href='index.php?f=settings&p=main'><div class='sub-menu-button'>
+							<b>Settings</b><br />
+							<font color='#857B5F'><small>View and adjust account settings</small></font>
+						</div></a>
+
+						<a href='index.php?f=profile&p=view&playerid=31996&edit=1'><div class='sub-menu-button'>
+							<b>Profile</b><br />
+							<font color='#857B5F'><small>View and adjust your profile</small></font>
+						</div></a>
+
+						<a href='index.php?f=mail&p=main'><div class='sub-menu-button'>
+							<b>Messages</b><br />
+							<font color='#857B5F'><small>View and compose private messages</small></font>
+						</div></a>
+
+						<a href='index.php?f=logs&p=main'><div class='sub-menu-button'>
+							<b>News Log</b><br />
+							<font color='#857B5F'><small>View your personal notifications</small></font>
+						</div></a>
+
+						<br />
+
+						<a href='index.php?f=notes&p=main'><div class='sub-menu-button'>
+							<b>Notepad</b><br />
+							<font color='#857B5F'><small>Write and edit personal notes</small></font>
+						</div></a>
+
+						<a href='index.php?f=finances&p=main'><div class='sub-menu-button'>
+							<b>Finances</b><br />
+							<font color='#857B5F'><small>Review your finances</small></font>
+						</div></a>
+
+						<a href='index.php?f=art&p=main'><div class='sub-menu-button'>
+							<b>Your Art Gallery</b><br />
+							<font color='#857B5F'><small>Manage your dog art uploads</small></font>
+						</div></a>
+
+						<a href='index.php?f=challenges&p=main'><div class='sub-menu-button'>
+							<b>Personal Challenges</b><br />
+							<font color='#857B5F'><small>Complete challenges for rewards</small></font>
+						</div></a>
+
+						<a href='index.php?logout=true'><div class='sub-menu-button'>
+							<b>Logout</b><br />
+							<font color='#857B5F'><small>Log out from the game</small></font>
+						</div></a>
+
+					</div><div class='menu-extend-town sub-menu-section' style='display: none; width: 100%; text-align: center; z-index: 9999; border-bottom: 1px solid #e6dab5; border-top: 1px solid #f3eacd;'>
+
+						<a href='index.php?f=town&p=petshop'><div class='sub-menu-button'>
+							<b>Item Shop</b><br />
+							<font color='#857B5F'><small>Purchase special items</small></font>
+						</div></a>
+
+						<a href='index.php?f=town&p=sales'><div class='sub-menu-button'>
+							<b>Market</b><br />
+							<font color='#857B5F'><small>View & purchase dogs for sale</small></font>
+						</div></a>
+
+						<a href='index.php?f=town&p=studs'><div class='sub-menu-button'>
+							<b>Stud Listings</b><br />
+							<font color='#857B5F'><small>View & purchase stud matings</small></font>
+						</div></a>
+
+						<a href='index.php?f=town&p=shelter'><div class='sub-menu-button'>
+							<b>Rescue Shelter</b><br />
+							<font color='#857B5F'><small>View and adopt abandoned dogs</small></font>
+						</div></a>
+
+						<a href='index.php?f=town&p=tokenshop'><div class='sub-menu-button'>
+							<b>Token Market</b><br />
+							<font color='#857B5F'><small>Buy and sell Tokens</small></font>
+						</div></a>
+
+						 <br />
+
+						<a href='index.php?f=town&p=turnmarket'><div class='sub-menu-button'>
+							<b>Turn Market</b><br />
+							<font color='#857B5F'><small>Buy and sell Turns</small></font>
+						</div></a>
+
+						<a href='index.php?f=town&p=classifieds'><div class='sub-menu-button'>
+							<b>Classifieds</b><br />
+							<font color='#857B5F'><small>Supply dogs to NPC wanted ads</small></font>
+						</div></a>
+
+						<a href='index.php?f=town&p=importer'><div class='sub-menu-button'>
+							<b>Import Shop</b><br />
+							<font color='#857B5F'><small>Import new pedigree dogs or mongrels</small></font>
+						</div></a>
+
+						<a href='index.php?f=town&p=vet'><div class='sub-menu-button'>
+							<b>Veterinarian</b><br />
+							<font color='#857B5F'><small>Treat illnesses and more</small></font>
+						</div></a>
+
+						<a href='index.php?f=minigames&p=main'><div class='sub-menu-button'>
+							<b>Bar</b><br />
+							<font color='#857B5F'><small>Play Mini-games here</small></font>
+						</div></a>
+
+					</div><div class='menu-extend-kennels sub-menu-section' style='display: none; width: 100%; text-align: center; z-index: 9999; border-bottom: 1px solid #e6dab5; border-top: 1px solid #f3eacd;'>
+
+						<a href='index.php?f=kennels&p=main'><div class='sub-menu-button'>
+							<b>Kennel</b><br />
+							<font color='#857B5F'><small>View & manage your dogs</small></font>
+						</div></a>
+
+						<a href='index.php?f=inventory&p=main'><div class='sub-menu-button'>
+							<b>Inventory</b><br />
+							<font color='#857B5F'><small>View & manage your items</small></font>
+						</div></a>
+
+						<a href='index.php?f=kennels&p=litters'><div class='sub-menu-button'>
+							<b>Litters</b><br />
+							<font color='#857B5F'><small>View & manage your litters</small></font>
+						</div></a>
+
+						<a href='index.php?f=kennels&p=projects'><div class='sub-menu-button'>
+							<b>Breeding Projects</b><br />
+							<font color='#857B5F'><small>View & manage your breeding projects</small></font>
+						</div></a>
+
+					</div><div class='menu-extend-community sub-menu-section' style='display: none; width: 100%; text-align: center; z-index: 9999; border-bottom: 1px solid #e6dab5; border-top: 1px solid #f3eacd;'>
+
+						<a href='index.php?f=forum&p=main'><div class='sub-menu-button'>
+							<b>Forums</b><br />
+							<font color='#857B5F'><small>Chat with fellow dog enthusiasts</small></font>
+						</div></a>
+
+						<a href='index.php?f=clubs&p=main&listallclubs=true'><div class='sub-menu-button'>
+							<b>Player Clubs</b><br />
+							<font color='#857B5F'><small>Player run organisations</small></font>
+						</div></a>
+
+						<a href='index.php?f=chat&p=main'><div class='sub-menu-button'>
+							<b>Community Chat</b><br />
+							<font color='#857B5F'><small>Chat with fellow breeders</small></font>
+						</div></a>
+
+						<a href='index.php?f=online&p=main'><div class='sub-menu-button'>
+							<b>Online List</b><br />
+							<font color='#857B5F'><small>View the list of online players</small></font>
+						</div></a>
+
+						<a href='index.php?f=friends&p=main'><div class='sub-menu-button'>
+							<b>Friends</b><br />
+							<font color='#857B5F'><small>Manage your friend list</small></font>
+						</div></a><br />
+
+						<!--<a href='index.php?f=polls&p=main'><div class='sub-menu-button'>
+							<b>Polls</b><br />
+							<font color='#857B5F'><small>Cast your votes!</small></font>
+						</div></a>-->
+
+						<a href='index.php?f=town&p=cemetery'><div class='sub-menu-button'>
+							<b>Cemetery</b><br />
+							<font color='#857B5F'><small>View everybody's or your buried dogs</small></font>
+						</div></a>
+
+						<a href='index.php?f=polls&p=main'><div class='sub-menu-button'>
+							<b>Polls</b><br />
+							<font color='#857B5F'><small>Past poll results</small></font>
+						</div></a>
+
+					</div><div class='menu-extend-compete sub-menu-section' style='display: none; width: 100%; text-align: center; z-index: 9999; border-bottom: 1px solid #e6dab5; border-top: 1px solid #f3eacd;'>
+
+						<a href='index.php?f=shows&p=main'><div class='sub-menu-button'>
+							<b>Shows</b><br />
+							<font color='#857B5F'><small>Participate in conformation shows</small></font>
+						</div></a>
+
+						<a href='index.php?f=sports&p=main'><div class='sub-menu-button'>
+							<b>Sports</b><br />
+							<font color='#857B5F'><small>Participate in performance sports</small></font>
+						</div></a>
+					</div><div class='menu-extend-info sub-menu-section' style='display: none; width: 100%; text-align: center; z-index: 9999; border-bottom: 1px solid #e6dab5; border-top: 1px solid #f3eacd;'>
+
+						<a href='index.php?f=town&p=breedregister'><div class='sub-menu-button'>
+							<b>Breed Register</b><br />
+							<font color='#857B5F'><small>Breed information here</small></font>
+						</div></a>
+
+						<a href='index.php?f=helpandguides&p=highscores'><div class='sub-menu-button'>
+							<b>Leaderboards</b><br />
+							<font color='#857B5F'><small>Check the game's leaderboards</small></font>
+						</div></a>
+
+						<a href='index.php?f=helpandguides&p=main'><div class='sub-menu-button'>
+							<b>Help and Guides</b><br />
+							<font color='#857B5F'><small>Check here for help and general info</small></font>
+						</div></a>
+
+						<a href='index.php?f=database&p=dogs'><div class='sub-menu-button'>
+							<b>Dog Database</b><br />
+							<font color='#857B5F'><small>Check here for help and general info</small></font>
+						</div></a>
+
+					</div></div></div>
+<script>
+
+$(document).ready(function(){
+
+	$("#giftturns").click(function(){
+		$('#giftturns_window').fadeIn(100);
+	});
+
+	$('#closegiftturns').click(function(){
+		$('#giftturns_window').fadeOut(100);
+	});
+
+	$("input, input[type='checkbox'], input[type='radio']").iCheck({
+
+	    checkboxClass: 'icheckbox_flat-orange',
+	    radioClass: 'iradio_flat-orange'
+
+	});
+
+
+	$('.close-button').click(function(){
+		$('.popup-dialog-small').fadeOut(100);
+		$('.popup-bg-shadow').fadeOut(100);
+	});
+
+	$('#close-button').click(function(){
+		$('#popup-dialog-small').fadeOut(100);
+		$('#popup-bg-shadow').fadeOut(100);
+	});
+
+	$('.menu-hover').click(function(){
+		var showmenu = $(this).find('.menu-button').html().toLowerCase();
+		$('.sub-menu').toggle(50);
+		$('.menu-extend-' + showmenu).toggle(250);
+	});
+
+	$('.content').click(function(){
+
+		$('.sub-menu-section').hide();
+
+	});
+
+	$('.add-bookmark-dialog').click(function() {
+
+		$('#popup-dialog-content').html("<center><h2>Add this page to your bookmarks?</h2></center><br /><br /><form method='post'><center>" + item_actions + "<input type='hidden' name='item_id' value='" + item_id + "'><input type='hidden' name='item_description' value='" + item_description + "'></center></form></div>");
+		$('#close-button').html("Cancel");
+
+		$('#popup-bg-shadow').fadeIn(100);
+		$('#popup-dialog-small').fadeIn(100);
+
+	});
+
+	//$('#menu-container').mouseout(function(){
+	//	$('.sub-menu').slideUp(50);
+	//	$('.menu-extend').hide();
+	//});
+
+});
+
+jQuery(document).ready(function(){
+	// Position Tipso
+	jQuery('.right').tipso({
+		position: 'right',
+		background: 'rgba(0,0,0,0.8)',
+		useTitle: false,
+	});
+	jQuery('.left').tipso({
+		position: 'left',
+		background: 'tomato',
+		useTitle: false,
+	});
+	jQuery('.bottom').tipso({
+		position: 'bottom',
+		background: '#f5edd4',
+		useTitle: false,
+	});
+	jQuery('.top, .destroy, .update, .update-tipso-content').tipso({
+		position: 'top',
+		background: '#F62459',
+		useTitle: false,
+	});
+	// Tooltip Hover
+	jQuery('.hover-tipso-tooltip').tipso({
+		position: 'top',
+		background: '#000',
+		useTitle: false,
+		width: false,
+		maxWidth: 300,
+		tooltipHover: true,
+		content: function(){
+			return 'You can <a href="javascript:;">CLICK ME</a> now!';
+		}
+	});
+
+	jQuery('.top-right').tipso({
+		position: 'top-right',
+		background: 'rgba(0,0,0,0.8)',
+		titleBackground: 'tomato',
+		titleContent: 'Some title',
+		useTitle: false,
+		tooltipHover: true
+	});
+
+	jQuery('.top-left').tipso({
+		position: 'top-left',
+		background: 'rgba(0,0,0,0.8)',
+		titleBackground: 'tomato',
+		titleContent: 'Some title',
+		useTitle: false,
+		tooltipHover: true
+	});
+
+	jQuery('.bottom-right').tipso({
+		position: 'bottom-right',
+		background: 'rgba(0,0,0,0.8)',
+		titleBackground: 'tomato',
+		titleContent: 'Some title',
+		useTitle: false,
+		tooltipHover: true
+	});
+
+	jQuery('.bottom-left').tipso({
+		position: 'bottom-left',
+		background: 'rgba(0,0,0,0.8)',
+		titleBackground: 'tomato',
+		titleContent: 'Some title',
+		useTitle: false,
+		tooltipHover: true
+	});
+
+	// Use Title For Tipso Content
+	jQuery('.title-tipso').tipso({
+		useTitle: true
+	});
+	// Tipso for Image
+	jQuery('.img-tipso').tipso({
+		useTitle: false,
+		background: 'rgba(0,0,0,0.8)'
+	});
+	// Show - Hide Tipso on Click
+	jQuery('.show-hide').tipso({
+		background: 'tomato',
+		useTitle: false
+	});
+	jQuery('.show-hide-tipso').on('click', function(e){
+		if(jQuery(this).hasClass('clicked')){
+			jQuery(this).removeClass('clicked');
+			jQuery('.show-hide').tipso('hide');
+		} else {
+			jQuery(this).addClass('clicked');
+			jQuery('.show-hide').tipso('show');
+		}
+		e.preventDefault();
+	});
+	// Before show
+	jQuery('.beforeShow').tipso({
+		background: 'tomato',
+		useTitle: false,
+		onBeforeShow : function(element, tips){
+			element.tipso('update', 'content', 'the title is a random number');
+			element.tipso('update', 'titleContent', Math.random());
+		}
+	});
+	jQuery('.beforeShow-tipso').on('click', function(e){
+		if(jQuery(this).hasClass('clicked')){
+			jQuery(this).removeClass('clicked');
+			jQuery('.beforeShow').tipso('hide');
+		} else {
+			jQuery(this).addClass('clicked');
+			jQuery('.beforeShow').tipso('show');
+		}
+		e.preventDefault();
+	});
+	//Ajax
+	jQuery('.ajax').tipso({
+		background: 'tomato',
+		useTitle: false,
+		ajaxContentUrl : 'ajax.html'
+	});
+	// Destroy Tipso
+	jQuery('.destroy-tipso').on('click', function(e){
+		jQuery('.destroy').tipso('destroy');
+		e.preventDefault();
+	});
+	// Update Tipso Content
+	jQuery('.update-tipso').on('click', function(e){
+		jQuery('.update').tipso('update', 'content', 'this is updated tipso');
+		e.preventDefault();
+	});
+	// Update Tipso Content from input field
+	jQuery('.update-tipso-input').on('click', function(e){
+		var content = jQuery('.tipso-content').val();
+		jQuery('.update-tipso-content').tipso('update', 'content', content);
+		e.preventDefault();
+	});
+	// Calback Tipso
+	jQuery('.callback-tipso').tipso({
+		useTitle: true,
+		onShow : function(){
+	    	alert('Tipso Showed');
+	  	},
+		onHide: function(){
+			alert('Tipso Hidden');
+		}
+	});
+
+	jQuery('.template-content').tipso({
+		position: 'top',
+		background: '#55b555',
+		color: '#eee',
+		useTitle: false,
+		size: 'small',
+		contentElementId: 'template_sample',
+		templateEngineFunc: function(content){
+			var compiled = _.template(content);
+			var names = ['moa', 'sara', 'james', 'hugo', 'mehr'];
+			return compiled({name: _.sample(names)});
+		},
+		content: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores velit, animi necessitatibus? Odio repudiandae vero',
+		onBeforeShow: function(ele, tipso) {
+			ele.tipso('update', 'content', '');
+		}
+	});
+
+	jQuery('.tiny').tipso({ size: 'tiny' });
+	jQuery('.small').tipso({ size: 'small' });
+	jQuery('.default').tipso({ size: 'default' });
+	jQuery('.large').tipso({ size: 'large' });
+
+	jQuery('.page-load').tipso({
+		position: 'left',
+		background: 'rgb(236,236,236)',
+		color: '#663399',
+		useTitle: false,
+		content: 'This one loads on page load',
+	});
+	// Animate Tipso
+	jQuery('.animate').tipso({
+		animationIn: 'bounceIn',
+		animationOut: 'bounceOut',
+		useTitle: false
+	});
+	jQuery('.animationIn').on('change', function(e){
+		var $this = jQuery(this);
+		jQuery('.animate').tipso('update', 'animationIn', $this.val());
+	});
+	jQuery('.animationOut').on('change', function(e){
+		var $this = jQuery(this);
+		jQuery('.animate').tipso('update', 'animationOut', $this.val());
+	});
+
+});
+jQuery(window).load(function(){
+	// Show Tipso on Load
+	jQuery('.page-load').tipso('show');
+});
+
+
+
+/* <![CDATA[ */
+    (function() {
+        var s = document.createElement('script'), t = document.getElementsByTagName('script')[0];
+        s.type = 'text/javascript';
+        s.async = true;
+        s.src = 'https://api.flattr.com/js/0.6/load.js?mode=auto';
+        t.parentNode.insertBefore(s, t);
+    })();
+/* ]]> */
+
+</script>
+
+
+<div class='footer-div' style='margin-top: 95px;'>
+	<div class='footer-content'>
+		&#169;2017 Rare Breed Games<br /><br /><small>
+						<u><a href='index.php?f=online&p=main'>45 Online</u></a>
+		<p>Page loaded in 0.22 seconds</p></small>
+	</div>
+</div>
+
+
+<script>
+
+	$(document).ready(function(){
+
+          $("#tutorial-body").load("tutorial.php", {userid: "31996"});
+
+          $("#prevstage").click(function() {
+
+			$.ajax({
+			  method: "POST",
+			  url: "tutorial.php",
+			  data: { stageState: "prevstage", userid: "31996"}
+			})
+			.done(function( msg ) {
+				$('#tutorial-body').html(msg);
+			});
+
+          });
+
+          $("#nextstage").click(function() {
+
+			$.ajax({
+			  method: "POST",
+			  url: "tutorial.php",
+			  data: { stageState: "nextstage", userid: "31996"}
+			})
+			.done(function( msg ) {
+				$('#tutorial-body').html(msg);
+			});
+
+          });
+
+          $("#showindex").click(function() {
+
+			$.ajax({
+			  method: "POST",
+			  url: "tutorial.php",
+			  data: { stageState: "showindex", userid: "31996"}
+			})
+			.done(function( msg ) {
+				$('#tutorial-body').html(msg);
+			});
+
+          });
+
+          $(".close-toggle").click(function() {
+
+			$.ajax({
+			  method: "POST",
+			  url: "tutorial.php",
+			  data: { stageState: "toggletut", userid: "31996"}
+			})
+			.done(function( msg ) {
+
+				$('#tutorial-body').parent().toggle();
+				$('#prevstage').toggle();
+				$('#nextstage').toggle();
+				$('#showindex').toggle();
+				$('.toggle-show').toggle();
+
+			});
+
+          });
+
+          $("#tutorial-body").on('click', '.change-category', function() {
+
+          	var categoryValue = $(this).html();
+
+				$.ajax({
+				  method: "POST",
+				  url: "tutorial.php",
+				  data: { cat: categoryValue, stageState: "changecat", userid: "31996"}
+				})
+				.done(function( msg ) {
+					$('#tutorial-body').html(msg);
+				});
+
+          });
+
+	});
+
+</script>

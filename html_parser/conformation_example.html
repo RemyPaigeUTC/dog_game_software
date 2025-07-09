@@ -1,0 +1,1502 @@
+
+<html>
+
+<html xmlns="http://www.w3.org/19999/xhtml" xml:lang="en-gb" class="en-gb">
+<head>
+	<title>Dog Breeder Game</title>
+	<link rel="stylesheet" type="text/css" media="all" href="css/core.css">
+	<link rel="stylesheet" type="text/css" media="all" href="css/line/green.css">
+	<link rel="stylesheet" href="css/tipso.css">
+	<link rel="stylesheet" href="css/animate.css">
+	<link rel="icon" href="media/frame/favicon.png">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="kit/tipso.js"></script>
+	<script src="kit/icheck.js"></script>
+
+<style>
+	body,html {
+		/*background-image:url(media/frame/autumnbg.jpg);*/
+		/*background-image:url(media/frame/core_bg_halloween.jpg);*/
+		background-image:url(media/frame/core_bg2.jpg);
+		/*background-image:url(media/frame/easter_bg2.jpg);*/
+		/*background-image:url(media/frame/summer_bg.jpg);*/
+		/*background-image:url(media/frame/core_bg_xmasnew.jpg);*/
+		/*background-color: #560001;*/
+	}
+
+</style>
+
+<div id='tutorial-container' style='display: none; background-color: #c8c2ab; border: 5px solid #e6e3d5; bottom: 0px; padding: 10px 10px 55px 10px; right: 0px; font-size: 1.05em;'>
+			<div class='close-toggle toggle-hide' style='bottom: 8px; right: 8px;'><input type='button' value='Hide'></div>
+			<div id='tutorial-body'></div>
+			<div id='prevstage' style='position: absolute; height: 20px; bottom: 8px; left: 115px; cursor: pointer; display: none;'><b><u>< Previous stage</u></b></div>
+			<div id='showindex' style='position: absolute; height: 20px; bottom: 8px; left: 255px; cursor: pointer; display: none;'>|&nbsp;&nbsp;&nbsp; <b><u>Show Index</u></b> &nbsp;&nbsp;&nbsp;|</div>
+			<div id='nextstage' style='position: absolute; float: right; height: 20px; bottom: 8px; right: 140px; cursor: pointer; display: none;'><b><u>Next stage ></u></b></div>
+			</div><div class='close-toggle toggle-show'><input type='button' value='Show Tutorial'></div><div style='position: fixed; top: 0px; right: 0px; width:70px height:100px; z-index: 99999;'><a href='https://rarebreedgames.com/index.php?f=account&p=tokens' target='_blank'><img src='media/shortontokens.png'></a></div><br /><div style='position: relative; margin: 0 auto 90px auto; top: 120px; background-color: transparent; width: 895px; text-align: center;'>
+	</div><div id='bottomtipbar' style='position: relative; display: table; width: 880px; background-color: #595443; color: #ede1bb; padding: 8px; z-index: 9999; text-align: center; top: 25px; margin: 0 auto; border-radius: 6px; font-size: 1.05em;'>Is your dog's energy too low but you don't want to wait until next turn? Top it up using the Snack Bar from the <a href='index.php?f=town&p=petshop'>Item Shop!</a></div><div id='popup-bg-shadow' style='display: none;'></div><div id='popup-dialog-small' style='display: none;'>
+                        <div id='popup-dialog-content'></div>
+                        <div id='close-button'></div>
+                        </div><div id='popup-dialog-large' style='display: none;'>
+                        <div id='popup-dialog-content'></div>
+                        <div id='close-button'></div>
+                        </div><div id='quickpanel' style='position: fixed; top: 130px; left: -380px; width: 370px; background-color: #988e75; color: #272020; height: 200px; cursor: pointer; z-index: 9999;'>
+                                <div style='position: relative; float: left; padding: 8px 15px 0 20px; width: 360px;'>
+                                        <form method='post'>
+                                                <h3>Search for...</h3>
+                                                <p style='padding: 3px; font-size: 1.1em;'>
+                                                <select name='searchfortype' style='position: relative; margin-bottom: 3px; width: 300px;'>
+                                                    <option value='dog_id'>Dog, ID</option>
+                                                    <option value='dog_registeredname'>Dog, Registered Name</option>
+                                                    <option value='dog_kennelname'>Dog, Kennel Prefix</option>
+                                                    <option value='dog_breeder'>Dog, Breeder ID</option>
+                                                    <option value='player_id'>Player, ID</option>
+                                                    <option value='player_name'>Player, Name</option>
+                                                    <option value='player_kennelname'>Player, Kennel Prefix</option>
+                                                </select>
+                                                <br /><input type='text' name='searchforthis' placeholder='Enter search id/name/etc.' style='width: 240px; text-align: center;'> <input type='submit' name='searchfor' value='Go' style='position: relative; top: -1px;'><br />
+                                                </p>
+                                        </form>
+                                        <form method='post' action='index.php?f=kennels&p=main'>
+                                                <h3>Quick breed...</h3>
+                                                <p style='padding: 3px; font-size: 1.1em;'><input type='text' placeholder='Dog ID' name='origin_id' style='width: 80px; text-align: center;' autocomplete='off'> with <input type='text' name='selected_id' placeholder='Dog ID' style='width: 80px; text-align: center;' autocomplete='off'> <input type='submit' name='breed_prompt' value='Breed Now' style='margin-top: 5px;'></p>
+                                        </form>
+                                </div>
+                                <div id='quickpanel-button' style='position: absolute; right: -60px; height: 200px; background-color: #4d483b; width: 70px; text-align: right; border:1px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; z-index: 99999;'><img src='media/frame/icon-search.png' style='position: absolute; top: 60px; right: 5px;'></div>
+                        </div><div class='content'><style>
+.header-cell {
+	position:relative;
+	float: left;
+	width:300px;
+}
+.trait-cell {
+	position: relative;
+	width: 136px;
+	height: 110px;
+	display: inline-block;
+	background-color: #ada488;
+	margin: 2px;
+	padding: 4px;
+}
+.trait-icon {
+	position: absolute;
+	top: 5px;
+	width: 135px;
+	height: 65px;
+	font-size: 0.9em;
+	background-color: #c5bda2;
+}
+.trait-name {
+	position: absolute;
+	bottom: 2px;
+	width: 130px;
+	height: 32px;
+	font-size: 0.75em;
+	background-color: #b9b094;
+	padding: 8px 0px 0px 0px;
+}
+#energy-bar {
+	position: relative;
+	width: 290px;
+	padding: 2px;
+	top: -33px;
+	display: inline-block;
+}
+#xp-bar {
+	position: relative;
+	width: 290px;
+	float: left;
+	background-color: #bfbaa9;
+	margin: 2px;
+	padding: 2px;
+	border: 1px solid #aba592;
+}
+#prev-dog {
+	position: fixed;
+	top: 320px;
+	left: -2px;
+	border-top-right-radius: 0.7em;
+	border-bottom-right-radius: 1em;
+	background-color: #736d53;
+	border: 2px solid #736d53;
+	padding: 8px 0px;
+	text-align: center;
+	width: 85px;
+	z-index: 9999;
+	color: #d5ceb5;
+	cursor: pointer;
+}
+#next-dog {
+	position: fixed;
+	top: 320px;
+	right: -2px;
+	border-top-left-radius: 0.7em;
+	border-bottom-left-radius: 1em;
+	background-color: #736d53;
+	border: 2px solid #736d53;
+	padding: 8px 0px;
+	text-align: center;
+	width: 85px;
+	z-index: 9999;
+	color: #d5ceb5;
+	cursor: pointer;
+}
+#prev-dog:hover {
+	background-color: #afa993;
+}
+#next-dog:hover {
+	background-color: #afa993;
+}
+</style>
+
+<div style='position: fixed; font-size: 1.25em; overflow: auto; top: 101px; left: 0px; width: 100%; display: block; overflow: hidden; text-align: center; background-color: #e6dab5; color: #413a24; padding: 3px 0 3px 0; border-top: 1px solid #f3eacd; border-bottom: 1px solid #f3eacd; z-index:9999;'>
+			<div style='position: relative; width: 900px; margin: 0 auto; text-align: left; font-weight: bold; display: block; z-index:9999;'>
+			<div class='header-cell' style='width: 620px;'>   <div class='bottom tipso_style' style='position: relative; float: left; margin-right: 10px;'  data-tipso-title='Registered Name' data-tipso='This is the registered name.'>Yip Qttw</div>  <div class='bottom tipso_style' style='position: relative; float: left; margin-right: 10px;'  data-tipso-title='Suffix' data-tipso='This is the suffix.'></div> <div style='position: relative; float: left;'>(Yip Qttw KS)</div><div class='bottom tipso_style rename_callname' style='position: relative; float: left; margin-left: 10px; border: 0px; top: 2px;  cursor: pointer;' data-tipso-title='Adjust Callname' data-tipso='This is the dogs casual callname.'><img src='media/frame/icon-edit.png'></div> </div> <div class='header-cell' style='float: right; text-align: right; width: 120px;'>ID #6801552</div>
+			</div>
+			</div><div style='position: relative; width: 930px; top: 25px; padding: 5px; font-size: 1.1em; display: table;'><div class='bottom tipso_style' style='position: relative; background-color: #b8af90; width: 230px; height: 215px; float: left; margin: 5px; text-align: center; border: 0px; border-radius: 8px;' data-tipso-title='Coat Type' data-tipso='Displays the natural-state coat this dog has. Groomed breeds change in the Conformation tab only when groomed'>
+				<p style='position: relative; top: -10px;'><b>Coat Type Mannequin</b></p><style>
+.layer {position: absolute; width: 183px; height: 149px; top: 40px; left: 20px;}
+</style>
+
+<div class='layer' style='background-image: url(../media/breeds/coattypemannequin/outline.png);'></div><div class='layer' style='background-image: url(../media/breeds/coattypemannequin/legfeathering/straightflatfeathered3.png);'></div><div class='layer' style='background-image: url(../media/breeds/coattypemannequin/bodycoat/straightflat1.png);'></div><div class='layer' style='background-image: url(../media/breeds/coattypemannequin/tailplume/straightflat6.png);'></div><div class='layer' style='background-image: url(../media/breeds/coattypemannequin/earfringe/straightflatfringe8.png);'></div><div class='layer' style='background-image: url(../media/breeds/coattypemannequin/furnishings/none0.5.png);'></div><div class='layer' style='background-image: url(../media/breeds/coattypemannequin/topknot/straightflat1.png);'></div></div><div id=6801552 style='position: relative; float: left; margin: 5px; top: -5px; border-radius: 8px; width: 405px; height: 190px; text-align: center; background-image: url(../media/breeds/cavalierkingcharlesspaniel/frame_1.png);; background-repeat: no-repeat; background-color: #b8af8f; background-position: center top;' draggable=true ondragstart='item_drag(event);'><div style='position: absolute; top: 5px; right: 75px; border: 0px;' class='bottom tipso_style' data-tipso-title='Not Groomed' data-tipso='This dog has not been groomed for showing this turn.<br /><b>To groom this dog, set auto-groom to "on" via the actions drop-down</b>'>
+						<img src='media/frame/icon-action-groomed-0.png' width=65></div><div class='bottom tipso_style' data-tipso-title='Illness' data-tipso='This dog is showing symptoms of disease' style='position: absolute; top: 50px; left: 360px; background-color: #de0b0b; right: 10px; width: 18px; height: 18px; border: 0px; cursor: pointer; padding-top: 0px; padding-left: 1px; border: 3px solid #930000; z-index: 98; color: #fff;'><b>i</b></div><div class='bottom tipso_style' style='position: absolute; right: 6px; bottom: 28px; border: 0px; cursor: pointer;' data-tipso-title='Copy to Clipboard' data-tipso='Clicking this icon copies this dogs direct link to your clipboard, ready for you to paste.'><img id='copytoclipboard' src='media/frame/icon-copytoclipboard.png' onclick="copyTextToClipboard('https://dogbreedergame.com/index.php?f=kennels&p=view&dogid=6801552');"></div><form method='post' value='margin: 0px; padding: 0px;'>
+                        <input type='hidden' name='dog_id' value='6801552'>
+                        <input type='submit' style='position: absolute; right: 6px; bottom: 6px; font-size: 0.6em;' name='advertise_in_chat' value='Advertise in chat'></form><img src='media/frame/icon-gender-1.png' style='position: absolute; top: 10px; right: 10px; border: 0px;' class='bottom tipso_style' data-tipso-title='Sex' data-tipso='Male '></div><div class='bottom tipso_style' style='position: relative; border-radius: 8px; background-color: #b8af90; width: 230px; height: 215px; float: left; margin: 5px; text-align: center; border: 0px;' data-tipso-title='Coat Colour' data-tipso='Displays the coat colour and pattern of this dog.<br /><br />black & tan points'>
+				<p style='position: relative; top: -10px;'><b>Colour Mannequin</b></p><style>
+.layer {position: absolute; width: 183px; height: 149px; top: 40px; left: 20px;}
+</style>
+
+<div class='layer' style='background-image: url(../media/breeds/mannequin/pheomelanin/tan.png);'></div><div class='layer' style='background-image: url(../media/breeds/mannequin/eumelanin/tanpointsblack.png);'></div><div class='layer' style='background-image: url(../media/breeds/mannequin/eyecolour/darkbrown.png);'></div><div class='layer' style='background-image: url(../media/breeds/mannequin/nosecolour/black.png);'></div><div class='layer' style='background-image: url(../media/breeds/mannequin/pigment/black.png);'></div><div class='layer' style='background-image: url(../media/breeds/mannequin/outline.png);'></div></div><a href='index.php?f=kennels&p=view&dogid=5905000'><div id='prev-dog'>Previous<br />Dog</div></a><a href='index.php?f=kennels&p=view&dogid=6801614'><div id='next-dog'>Next<br />Dog</div></a></div><div style='position: relative; width: 900px; margin: 25px auto -15px auto; height: 25px; text-align: center;'><div id='energy-bar' style='position: relative; width: 180px; height: 18px; background-color: #514b38; display: inline-block;'><div id='energy-bar-data' style='background-color: #77c1ff; height: 18px; width: 180px;'></div><div id='energy-text' style='position: relative; display: inline-block; width: 180px; text-align: center; top: -16px; font-size: 0.8em; color: #000;'>Energy (100)</div>
+				</div><div style='position: relative; width: 150px; display: inline-block; top: -33px; right: -20px;'>
+						<a href='index.php?f=kennels&p=view&dogid=6801552&customimage=true&breedselect=18'><input type='button' value='Custom Image' style='position: relative; font-size: 0.75em; top: -16px; z-index: 995;'></a>
+					</div></div><div style='position: relative; float: left; margin-left: 5px; width: 900px; top: -15px;z-index: 100;'>
+				<table>
+				<tr>
+
+					<td width=70 align=center style='background-color: #d5cba9; color: #29230e;'><b>Owner</b></td>
+					<td width=200><a href='index.php?f=profile&p=view&playerid=31996'>bucket</a></td>
+
+					<td width=125 align=center style='background-color: #d5cba9; color: #29230e;'><b>Born</b></td>
+					<td width=180>28 May 2025, 3:47 pm</td>
+
+					<td width=90 align=center style='background-color: #d5cba9; color: #29230e;'><b>Height</b></td><td width=180>15.35 inch / 38.99 cm</td>
+
+				</tr>
+				<tr>
+					<td width=70 align=center style='background-color: #d5cba9; color: #29230e;'><b>Breeder</b></td>
+					<td width=180><a href='index.php?f=profile&p=view&playerid=31996'>bucket</a></td>
+
+					<td width=125 align=center style='background-color: #d5cba9; color: #29230e;'><b>Age</b></td>
+					<td width=180>7 years</td>
+
+					<td width=70 align=center style='background-color: #d5cba9; color: #29230e;'><b>Weight</b></td><td width=180>25.2 lb / 11.43 kg</td>
+
+				</tr><tr>
+                    <td width=70 align=center style='background-color: #d5cba9; color: #29230e;'><b>Breed2</b></td>
+                    <td width=180><a href='index.php?f=town&p=breedregister&viewbreedinfo=true&breed_id=18' target='_blank'><u>Cavalier King Charles Spaniel</u></a></td>
+					<td width=125 align=center style='background-color: #d5cba9; color: #29230e;'><b>Lifestage</b></td>
+					<td width=180>Adult</td>
+
+					<td width=70 align=center style='background-color: #d5cba9; color: #29230e;'><b>COI</b></td>
+					<td width=180>0.00 %</td>
+				</tr><tr>
+					<td width=70 align=center style='background-color: #d5cba9; color: #29230e;'><b>Ages next turn</b></td>
+					<td width=200>No</td>
+
+					<td width=125 align=center style='background-color: #d5cba9; color: #29230e;'><b>Worked?</b></td>
+					<td width=180>No</td>
+
+					<td width=90 align=center style='background-color: #d5cba9; color: #29230e;'><b>Tested?</b></td>
+					<td width=180>No </td>
+				</tr><tr>
+					<td width=70 align=center style='background-color: #d5cba9; color: #29230e;'><b>Neutered</b></td>
+					<td width=200>No</td>
+
+					<td width=125 align=center style='background-color: #d5cba9; color: #29230e;'><b>Generation</b></td>
+					<td width=180>2</td>
+
+					<td width=70 align=center style='background-color: #d5cba9; color: #29230e;'><b>Feed Cost</b></td>
+					<td width=180>7 Barks per turn</td>
+				</tr><tr>
+		                    <td colspan=3 align=center style='background-color: #d5cba9; color: #29230e;'>
+		                        <b>Assigned to tab:</b> <a href='index.php?f=kennels&p=main&tabaction=change&tabid=37607' target='_blank'>Gen 2 M</a>
+		                    </td>
+		                    <td colspan=3 width=70 align=center style='background-color: #d5cba9; color: #29230e;'><form method=post style='margin: 0px;'>
+		                    <b>Change tab:</b> <select name='select_new_tab_id'><option value='33038'>Puppies</option><option value='37483'>wait for season</option><option value='37484'>Gen 1 F</option><option value='37500'>Gen 1 M</option><option value='37501'>Gen 2 F</option><option value='37676'>Gen 3 F</option><option value='37677'>Gen 3 M</option><option value='37703'>bred 1</option></select> <input type='submit' name='assign_to_new_tab' value='Assign'></form>
+		                    </td>
+		                </tr><tr>
+					   <td valign=top colspan=3 style='text-align: center;'><form method='post' style='margin: 0px;' action='index.php?f=kennels&p=view&dogid=6801552'>
+							<select name='action_select' style='position: relative; width: 300px;'><option value='stud'>Put on Stud Listings</option><option value='place_on_sale'>Put on Market</option><option value='sell_to_dealer'>Sell to Dog Dealer (50 Barks)</option><option value='send_to_shelter'>Abandon</option><option value='hide_from_sale'>Hide From Sale</option><option value='hide_from_breeding'>Hide From Breeding</option></select> <input type='submit' name='action' value='Go'><br />
+					<select name='breed_with_id' style='position: relative; width: 240px;'><option value='5809097'>Tip Opou (Cavalier King Charles Spaniel)(#5809097)</option><option value='5812181'>Tiq Wqiq (Cavalier King Charles Spaniel)(#5812181)</option><option value='5859867'>Tit Oiyu (Cavalier King Charles Spaniel)(#5859867)</option><option value='5904987'>Top Roiu (Cavalier King Charles Spaniel)(#5904987)</option><option value='5904996'>Top Rooy Deaf (Cavalier King Charles Spaniel)(#5904996)</option><option value='5902547'>Top Wtru E (Cavalier King Charles Spaniel)(#5902547)</option><option value='6801740'>Yip Qurp (Cavalier King Charles Spaniel)(#6801740)</option><option value='6801741'>Yip Qurq (Cavalier King Charles Spaniel)(#6801741)</option></select> <input type='submit' name='breed_now_check' value='Breed With'  ><br />
+							<input type='submit' name='fertility' value='Fertility Test (30 Barks)' style='margin-top: 8px; background-color: #FF69B4; border: 2px solid #811331;'> 
+							<input type='hidden' name='dogid' value='6801552'></form>
+						</td>
+						<td colspan=3 valign=top><form method='post' style='margin: 0px;' action='index.php?f=kennels&p=view&dogid=6801552'>
+							<textarea style='width: 400px; font-size: 1.1em; height: 60px;' name='note_content' placeholder='Dog notes'></textarea> <input type='submit' name='save_note' value='Update' style='position: relative;'>
+							<input type='hidden' name='dogid' value='6801552'></form>
+						</td>
+					</tr></table>
+			</div><div style='position: relative; z-index: 88;'><center><form method='post'><a href='index.php?f=kennels&p=view&dogid=6801552&viewsection=conformation'><input type='button' class='selectpage' value='Conformation' style='background-color: #af9a51;'></a>
+				<a href='index.php?f=kennels&p=view&dogid=6801552&viewsection=temperament'><input type='button' class='selectpage' value='Personality' style=''></a>
+				<a href='index.php?f=kennels&p=view&dogid=6801552&viewsection=health'><input type='button' class='selectpage' value='Health' style=''></a>
+				<a href='index.php?f=kennels&p=view&dogid=6801552&viewsection=activities'><input type='button' class='selectpage' value='Activities' style=''></a>
+				<a href='index.php?f=kennels&p=view&dogid=6801552&viewsection=pedigree'><input type='button' class='selectpage' value='Pedigree' style=''></a>
+				<a href='index.php?f=kennels&p=view&dogid=6801552&viewsection=offspring'><input type='button' class='selectpage' value='Offspring' style=''></a>
+				<a href='index.php?f=kennels&p=view&dogid=6801552&viewsection=history'><input type='button' class='selectpage' value='History' style=''></a> <br /><input type='submit' name='revealall' class='selectpage' value='Test All Traits' style='background-color: orange; color: #000; margin-top: 5px;' onclick="return confirm('This will use 1 Full Test Kit item. Are you sure you want to do this?')"><input type='hidden' name='dogid' value='6801552'></form></center></div><div style='position: relative; width: 908px; top: 8px; background-color: #695f47; color: #bbe6b1; height: 40px; text-align: center;'>
+
+		<div style='position: absolute; left: 5px; top: 4px; text-align: left; margin: 2px; padding: 5px; color: #fff;'></div>
+
+		<h3 style='position: relative; margin-bottom: 10px; color: #bbe6b1; top: 8px;'>Conformation Traits</h3></div><div style='position: relative; width: 900px; top: 15px; padding: 5px; font-size: 1.1em; text-align: center; display: table;'><div style='position: relative; float: left; width: 900px; padding: 5px 0; margin: 5px 0; background-color: #695f47; color: #bbe6b1;'>Head Conformation</div><div style='clear: both;'></div><div class='trait-cell'>
+								<div class='trait-icon conformation-icon-muzzle_length bottom tipso_style' style='background-image:url(media/traits/conformations/muzzle_length_brachylong-brachylong.png); background-repeat: no-repeat; border: 0px;' data-tipso-title='Muzzle Length' data-tipso='upper jaw length - lower jaw length'>
+								</div>
+								<div style='display: none;' class='trait-name-div'>muzzle_length</div>
+								<div class='trait-name'><font color='#000'>Muzzle Length</font><br />Brachy Long-brachy Long</div>
+							</div><div class='trait-cell'>
+								<div class='trait-icon conformation-icon-muzzle_depth bottom tipso_style' style='background-image:url(media/traits/conformations/muzzle_depth_moderate.png); background-repeat: no-repeat; border: 0px;' data-tipso-title='Muzzle Depth' data-tipso='fine (lips tight, chin and underjaw visible, muzzle tapers to a point), tight (lips tight, chin just visible and tapers slightly), moderate (lips level with bottom of chin, muzzle squared off), deep (lips hang slightly lower than chin, head squared off appearance) or very deep (lips hang down well past chin)'>
+								</div>
+								<div style='display: none;' class='trait-name-div'>muzzle_depth</div>
+								<div class='trait-name'><font color='#000'>Muzzle Depth</font><br />Moderate</div>
+							</div><div class='trait-cell'>
+								<div class='trait-icon conformation-icon-dewlap bottom tipso_style' style='background-image:url(media/traits/conformations/dewlap_slight.png); background-repeat: no-repeat; border: 0px;' data-tipso-title='Dewlap' data-tipso='how loose and floppy the dogs neck dewlap folds (and corner of mouth) is. none, slight or prominent'>
+								</div>
+								<div style='display: none;' class='trait-name-div'>dewlap</div>
+								<div class='trait-name'><font color='#000'>Dewlap</font><br />Slight</div>
+							</div><div class='trait-cell'>
+								<div class='trait-icon conformation-icon-brow_ridge bottom tipso_style' style='background-image:url(media/traits/conformations/brow_ridge_moderate.png); background-repeat: no-repeat; border: 0px;' data-tipso-title='Brow Ridge' data-tipso='how heavy the eyebrows of the dog are'>
+								</div>
+								<div style='display: none;' class='trait-name-div'>brow_ridge</div>
+								<div class='trait-name'><font color='#000'>Brow Ridge</font><br />Moderate</div>
+							</div><div class='trait-cell'>
+								<div class='trait-icon conformation-icon-profile bottom tipso_style' style='background-image:url(media/traits/conformations/profile_slightlyupturned.png); background-repeat: no-repeat; border: 0px;' data-tipso-title='Profile' data-tipso='which way the dogs muzzle curves in profile view. Very down, down, slightly down, level, slightly upturned, upturned or dishfaced'>
+								</div>
+								<div style='display: none;' class='trait-name-div'>profile</div>
+								<div class='trait-name'><font color='#000'>Profile</font><br />Slightly Upturned</div>
+							</div><div class='trait-cell'>
+								<div class='trait-icon conformation-icon-bite bottom tipso_style' style='background-image:url(media/traits/conformations/bite_scissor.png); background-repeat: no-repeat; border: 0px;' data-tipso-title='Bite' data-tipso='how the teeth fit together. underbite, level, scissor or overbite, wry'>
+								</div>
+								<div style='display: none;' class='trait-name-div'>bite</div>
+								<div class='trait-name'><font color='#000'>Bite</font><br />Scissor</div>
+							</div><div class='trait-cell'>
+								<div class='trait-icon conformation-icon-skull bottom tipso_style' style='background-image:url(media/traits/conformations/skull_slightdome.png); background-repeat: no-repeat; border: 0px;' data-tipso-title='Skull' data-tipso='the shape of the topskull. flat, rounded, slight dome, dome'>
+								</div>
+								<div style='display: none;' class='trait-name-div'>skull</div>
+								<div class='trait-name'><font color='#000'>Skull</font><br />Slight Dome</div>
+							</div><div class='trait-cell'>
+								<div class='trait-icon conformation-icon-head_width bottom tipso_style' style='background-image:url(media/traits/conformations/head_width_moderate.png); background-repeat: no-repeat; border: 0px;' data-tipso-title='Head Width' data-tipso='how wide and large the head is. narrow & small head. moderate & medium head. broad & large head. very broad & very large head'>
+								</div>
+								<div style='display: none;' class='trait-name-div'>head_width</div>
+								<div class='trait-name'><font color='#000'>Head Width</font><br />Moderate</div>
+							</div><div class='trait-cell'>
+								<div class='trait-icon conformation-icon-stop bottom tipso_style' style='background-image:url(media/traits/conformations/stop_definite.png); background-repeat: no-repeat; border: 0px;' data-tipso-title='Stop' data-tipso='the dip in the skull between the dogs eyes. none, slight, moderate, definite'>
+								</div>
+								<div style='display: none;' class='trait-name-div'>stop</div>
+								<div class='trait-name'><font color='#000'>Stop</font><br />Definite</div>
+							</div><div class='trait-cell'>
+								<div class='trait-icon conformation-icon-head_carriage bottom tipso_style' style='background-image:url(media/traits/conformations/head_carriage_abovetopline.png); background-repeat: no-repeat; border: 0px;' data-tipso-title='Head Carriage' data-tipso='high, above topline or level'>
+								</div>
+								<div style='display: none;' class='trait-name-div'>head_carriage</div>
+								<div class='trait-name'><font color='#000'>Head Carriage</font><br />Above Topline</div>
+							</div><div class='trait-cell'>
+								<div class='trait-icon conformation-icon-ear_set bottom tipso_style' style='background-image:url(media/traits/conformations/ear_set_high.png); background-repeat: no-repeat; border: 0px;' data-tipso-title='Ear Set' data-tipso='on drop ears - high (above eyes), level (on level with eyes), low (below eyes). on prick ears - high (points to 11 to 12 oclock), level (points to 10 to 11 oclock), low (points to 9 to 10 oclock)'>
+								</div>
+								<div style='display: none;' class='trait-name-div'>ear_set</div>
+								<div class='trait-name'><font color='#000'>Ear Set</font><br />High</div>
+							</div><div class='trait-cell'>
+								<div class='trait-icon conformation-icon-ear_length bottom tipso_style' style='background-image:url(media/traits/conformations/ear_length_medium.png); background-repeat: no-repeat; border: 0px;' data-tipso-title='Ear Length' data-tipso='the size of the dogs ear leathers. very small (reaches up to outside corner of the eye), small (reaches to the inside corner of the eye), medium (reaches past the eye to half way to nose), long (reaches to the end of the nose), very long (reaches past the nose)'>
+								</div>
+								<div style='display: none;' class='trait-name-div'>ear_length</div>
+								<div class='trait-name'><font color='#000'>Ear Length</font><br />Medium</div>
+							</div><div class='trait-cell'>
+								<div class='trait-icon conformation-icon-ear_width bottom tipso_style' style='background-image:url(media/traits/conformations/ear_width_broad.png); background-repeat: no-repeat; border: 0px;' data-tipso-title='Ear Width' data-tipso='wide or narrow ear leathers'>
+								</div>
+								<div style='display: none;' class='trait-name-div'>ear_width</div>
+								<div class='trait-name'><font color='#000'>Ear Width</font><br />Broad</div>
+							</div><div class='trait-cell'>
+								<div class='trait-icon conformation-icon-ear_point bottom tipso_style' style='background-image:url(media/traits/conformations/ear_point_slightlyrounded.png); background-repeat: no-repeat; border: 0px;' data-tipso-title='Ear Point' data-tipso='V shaped, slightly rounded or U shaped ear tips'>
+								</div>
+								<div style='display: none;' class='trait-name-div'>ear_point</div>
+								<div class='trait-name'><font color='#000'>Ear Point</font><br />Slightly Rounded</div>
+							</div><div class='trait-cell'>
+								<div class='trait-icon conformation-icon-ear_carriage bottom tipso_style' style='background-image:url(media/traits/conformations/ear_carriage_drop.png); background-repeat: no-repeat; border: 0px;' data-tipso-title='Ear Carriage' data-tipso='how the dog carries its ears. drop, low button, high button, rose, tipped or prick'>
+								</div>
+								<div style='display: none;' class='trait-name-div'>ear_carriage</div>
+								<div class='trait-name'><font color='#000'>Ear Carriage</font><br />Drop</div>
+							</div><div class='trait-cell'>
+								<div class='trait-icon conformation-icon-eye_size bottom tipso_style' style='background-image:url(media/traits/conformations/eye_size_medium.png); background-repeat: no-repeat; border: 0px;' data-tipso-title='Eye Size' data-tipso='small, medium, large'>
+								</div>
+								<div style='display: none;' class='trait-name-div'>eye_size</div>
+								<div class='trait-name'><font color='#000'>Eye Size</font><br />Medium</div>
+							</div><div class='trait-cell'>
+								<div class='trait-icon conformation-icon-eye_shape bottom tipso_style' style='background-image:url(media/traits/conformations/eye_shape_round.png); background-repeat: no-repeat; border: 0px;' data-tipso-title='Eye Shape' data-tipso='Round, Oval, Almond or Triangular'>
+								</div>
+								<div style='display: none;' class='trait-name-div'>eye_shape</div>
+								<div class='trait-name'><font color='#000'>Eye Shape</font><br />Round</div>
+							</div><div style='position: relative; float: left; width: 900px; padding: 5px 0; margin: 5px 0; background-color: #695f47; color: #bbe6b1;'>Body Conformation</div><div style='clear: both;'></div><div class='trait-cell action-cell'>
+								<div style='' class='trait-name'>bone</div>
+								<div style='display: none;' class='action-type'>reveal_conformation</div>
+								<div class='trait-icon conformation-icon-bone bottom tipso_style conformation-image-bone' data-tipso-title='Bone' data-tipso='how heavy the dogs bones are and the dogs general substance. fine (e.g. sighthounds), medium (e.g. collies, shepherds, spitz), substantial (e.g. spaniels, retrievers, scenthounds) or heavy (e.g. bulldogs, mastiffs)' style='border: 0px; cursor: pointer;'>
+									<br />Click to examine
+								</div>
+								<div style='display: none;' class='trait-name-div'>bone</div>
+								<div class='trait-name conformation-name-bone'><font color='#000'>Bone</font><br />?</div>
+							</div><div class='trait-cell'>
+								<div class='trait-icon conformation-icon-build bottom tipso_style' style='background-image:url(media/traits/conformations/build_bulky.png); background-repeat: no-repeat; border: 0px;' data-tipso-title='Build' data-tipso='whether the dogs general body type is bulky with heavy muscle and bulk, medium muscle and bulk, or lean with slender muscle and very little fat or bulk'>
+								</div>
+								<div style='display: none;' class='trait-name-div'>build</div>
+								<div class='trait-name'><font color='#000'>Build</font><br />Bulky</div>
+							</div><div class='trait-cell'>
+								<div class='trait-icon conformation-icon-back_length bottom tipso_style' style='background-image:url(media/traits/conformations/back_length_medium.png); background-repeat: no-repeat; border: 0px;' data-tipso-title='Back Length' data-tipso='short, medium or long back'>
+								</div>
+								<div style='display: none;' class='trait-name-div'>back_length</div>
+								<div class='trait-name'><font color='#000'>Back Length</font><br />Medium</div>
+							</div><div class='trait-cell'>
+								<div class='trait-icon conformation-icon-back_shape bottom tipso_style' style='background-image:url(media/traits/conformations/back_shape_straight.png); background-repeat: no-repeat; border: 0px;' data-tipso-title='Back Shape' data-tipso='straight back, roach back or sway back'>
+								</div>
+								<div style='display: none;' class='trait-name-div'>back_shape</div>
+								<div class='trait-name'><font color='#000'>Back Shape</font><br />Straight</div>
+							</div><div class='trait-cell'>
+								<div class='trait-icon conformation-icon-topline bottom tipso_style' style='background-image:url(media/traits/conformations/topline_level.png); background-repeat: no-repeat; border: 0px;' data-tipso-title='Topline' data-tipso='level, sloping or high in the rear'>
+								</div>
+								<div style='display: none;' class='trait-name-div'>topline</div>
+								<div class='trait-name'><font color='#000'>Topline</font><br />Level</div>
+							</div><div class='trait-cell'>
+								<div class='trait-icon conformation-icon-neck_length bottom tipso_style' style='background-image:url(media/traits/conformations/neck_length_medium.png); background-repeat: no-repeat; border: 0px;' data-tipso-title='Neck Length' data-tipso='short, medium or long'>
+								</div>
+								<div style='display: none;' class='trait-name-div'>neck_length</div>
+								<div class='trait-name'><font color='#000'>Neck Length</font><br />Medium</div>
+							</div><div class='trait-cell'>
+								<div class='trait-icon conformation-icon-croup bottom tipso_style' style='background-image:url(media/traits/conformations/croup_steep.png); background-repeat: no-repeat; border: 0px;' data-tipso-title='Croup' data-tipso='flat, slightly sloping, moderately sloping, or steep'>
+								</div>
+								<div style='display: none;' class='trait-name-div'>croup</div>
+								<div class='trait-name'><font color='#000'>Croup</font><br />Steep</div>
+							</div><div class='trait-cell action-cell'>
+								<div style='' class='trait-name'>chest_depth</div>
+								<div style='display: none;' class='action-type'>reveal_conformation</div>
+								<div class='trait-icon conformation-icon-chest_depth bottom tipso_style conformation-image-chest_depth' data-tipso-title='Chest Depth' data-tipso='shallow, moderate or deep' style='border: 0px; cursor: pointer;'>
+									<br />Click to examine
+								</div>
+								<div style='display: none;' class='trait-name-div'>chest_depth</div>
+								<div class='trait-name conformation-name-chest_depth'><font color='#000'>Chest Depth</font><br />?</div>
+							</div><div class='trait-cell'>
+								<div class='trait-icon conformation-icon-chest_width bottom tipso_style' style='background-image:url(media/traits/conformations/chest_width_narrow.png); background-repeat: no-repeat; border: 0px;' data-tipso-title='Chest Width' data-tipso='narrow, oval, barrel, wide'>
+								</div>
+								<div style='display: none;' class='trait-name-div'>chest_width</div>
+								<div class='trait-name'><font color='#000'>Chest Width</font><br />Narrow</div>
+							</div><div class='trait-cell'>
+								<div class='trait-icon conformation-icon-tuck bottom tipso_style' style='background-image:url(media/traits/conformations/tuck_slight.png); background-repeat: no-repeat; border: 0px;' data-tipso-title='Tuck' data-tipso='none, slight, moderate, well tucked up, or pronounced'>
+								</div>
+								<div style='display: none;' class='trait-name-div'>tuck</div>
+								<div class='trait-name'><font color='#000'>Tuck</font><br />Slight</div>
+							</div><div class='trait-cell'>
+								<div class='trait-icon conformation-icon-wrinkle bottom tipso_style' style='background-image:url(media/traits/conformations/wrinkle_none.png); background-repeat: no-repeat; border: 0px;' data-tipso-title='Wrinkle' data-tipso='none, slightly wrinkled, wrinkled, very wrinkled or extremely wrinkled'>
+								</div>
+								<div style='display: none;' class='trait-name-div'>wrinkle</div>
+								<div class='trait-name'><font color='#000'>Wrinkle</font><br />None</div>
+							</div><div style='position: relative; float: left; width: 900px; padding: 5px 0; margin: 5px 0; background-color: #695f47; color: #bbe6b1;'>Leg Conformation</div><div style='clear: both;'></div><div class='trait-cell'>
+								<div class='trait-icon conformation-icon-leg_length bottom tipso_style' style='background-image:url(media/traits/conformations/leg_length_medium.png); background-repeat: no-repeat; border: 0px;' data-tipso-title='Leg Length' data-tipso='Long, Medium, Short, Dwarf Long, Dwarf Medium or Dwarf Short'>
+								</div>
+								<div style='display: none;' class='trait-name-div'>leg_length</div>
+								<div class='trait-name'><font color='#000'>Leg Length</font><br />Medium</div>
+							</div><div class='trait-cell'>
+								<div class='trait-icon conformation-icon-front_angulation bottom tipso_style' style='background-image:url(media/traits/conformations/front_angulation_moderatelayback+equal.png); background-repeat: no-repeat; border: 0px;' data-tipso-title='Front Angulation' data-tipso='Shoulder angle (upright, moderate layback or well laid back) + length of upper arm (equal to shoulder, or short)'>
+								</div>
+								<div style='display: none;' class='trait-name-div'>front_angulation</div>
+								<div class='trait-name'><font color='#000'>Front Angulation</font><br />Moderate Layback + Equal</div>
+							</div><div class='trait-cell'>
+								<div class='trait-icon conformation-icon-rear_angulation bottom tipso_style' style='background-image:url(media/traits/conformations/rear_angulation_steep+long.png); background-repeat: no-repeat; border: 0px;' data-tipso-title='Rear Angulation' data-tipso='Croup angle + length of lower thigh (equal to upper thigh, or short or long)'>
+								</div>
+								<div style='display: none;' class='trait-name-div'>rear_angulation</div>
+								<div class='trait-name'><font color='#000'>Rear Angulation</font><br />Steep + Long</div>
+							</div><div class='trait-cell'>
+								<div class='trait-icon conformation-icon-reach bottom tipso_style' style='background-image:url(media/traits/conformations/reach_goodreach.png); background-repeat: no-repeat; border: 0px;' data-tipso-title='Reach' data-tipso='how the dogs front legs move when trotting. hackney - high lift, limited - short reach, moderate - moderate reach, good - good reach, extended - very far reach'>
+								</div>
+								<div style='display: none;' class='trait-name-div'>reach</div>
+								<div class='trait-name'><font color='#000'>Reach</font><br />Good Reach</div>
+							</div><div class='trait-cell action-cell'>
+								<div style='' class='trait-name'>drive</div>
+								<div style='display: none;' class='action-type'>reveal_conformation</div>
+								<div class='trait-icon conformation-icon-drive bottom tipso_style conformation-image-drive' data-tipso-title='Drive' data-tipso='how the dogs rear legs move when trotting. limited - short drive, moderate - moderate drive, good - good drive, exaggerated - very far drive' style='border: 0px; cursor: pointer;'>
+									<br />Click to examine
+								</div>
+								<div style='display: none;' class='trait-name-div'>drive</div>
+								<div class='trait-name conformation-name-drive'><font color='#000'>Drive</font><br />?</div>
+							</div><div class='trait-cell'>
+								<div class='trait-icon conformation-icon-pasterns bottom tipso_style' style='background-image:url(media/traits/conformations/pasterns_moderate.png); background-repeat: no-repeat; border: 0px;' data-tipso-title='Pasterns' data-tipso='Short, Moderate or Long'>
+								</div>
+								<div style='display: none;' class='trait-name-div'>pasterns</div>
+								<div class='trait-name'><font color='#000'>Pasterns</font><br />Moderate</div>
+							</div><div class='trait-cell'>
+								<div class='trait-icon conformation-icon-feet bottom tipso_style' style='background-image:url(media/traits/conformations/feet_hare.png); background-repeat: no-repeat; border: 0px;' data-tipso-title='Feet' data-tipso='Cat, Oval, Hare or Flat'>
+								</div>
+								<div style='display: none;' class='trait-name-div'>feet</div>
+								<div class='trait-name'><font color='#000'>Feet</font><br />Hare</div>
+							</div><div class='trait-cell'>
+								<div class='trait-icon conformation-icon-hind_dew_claws bottom tipso_style' style='background-image:url(media/traits/conformations/hind_dew_claws_none.png); background-repeat: no-repeat; border: 0px;' data-tipso-title='Hind Dew Claws' data-tipso='None, Single, Double'>
+								</div>
+								<div style='display: none;' class='trait-name-div'>hind_dew_claws</div>
+								<div class='trait-name'><font color='#000'>Hind Dew Claws</font><br />None</div>
+							</div><div style='position: relative; float: left; width: 900px; padding: 5px 0; margin: 5px 0; background-color: #695f47; color: #bbe6b1;'>Tail Conformation</div><div style='clear: both;'></div><div class='trait-cell'>
+								<div class='trait-icon conformation-icon-tail_shape bottom tipso_style' style='background-image:url(media/traits/conformations/tail_shape_slightcurve.png); background-repeat: no-repeat; border: 0px;' data-tipso-title='Tail Shape' data-tipso='Shape of the tail consists of: Bobtail or full tail, plus Genetic kinked, screw or straight, plus Shape: tight curl, loose curl, sickle, slight curve or straight, plus Hook: present or absent'>
+								</div>
+								<div style='display: none;' class='trait-name-div'>tail_shape</div>
+								<div class='trait-name'><font color='#000'>Tail Shape</font><br />Slight Curve</div>
+							</div><div class='trait-cell'>
+								<div class='trait-icon conformation-icon-tail_length bottom tipso_style' style='background-image:url(media/traits/conformations/tail_length_long-medium.png); background-repeat: no-repeat; border: 0px;' data-tipso-title='Tail Length' data-tipso='Long is genetically normal length tail, Short is genetic short-tail. the second part is how long the tail is within the main two lengths - Long, Medium or Short. Bobtail is virtually no tail at all'>
+								</div>
+								<div style='display: none;' class='trait-name-div'>tail_length</div>
+								<div class='trait-name'><font color='#000'>Tail Length</font><br />Long-medium</div>
+							</div><div class='trait-cell'>
+								<div class='trait-icon conformation-icon-tail_set bottom tipso_style' style='background-image:url(media/traits/conformations/tail_set_moderate.png); background-repeat: no-repeat; border: 0px;' data-tipso-title='Tail Set' data-tipso='High on the rump, Moderate on the rump, or Low on the rump'>
+								</div>
+								<div style='display: none;' class='trait-name-div'>tail_set</div>
+								<div class='trait-name'><font color='#000'>Tail Set</font><br />Moderate</div>
+							</div><div class='trait-cell'>
+								<div class='trait-icon conformation-icon-tail_carriage bottom tipso_style' style='background-image:url(media/traits/conformations/tail_carriage_level.png); background-repeat: no-repeat; border: 0px;' data-tipso-title='Tail Carriage' data-tipso='Over the back, high, diagonal, level, low or down'>
+								</div>
+								<div style='display: none;' class='trait-name-div'>tail_carriage</div>
+								<div class='trait-name'><font color='#000'>Tail Carriage</font><br />Level</div>
+							</div><div style='position: relative; float: left; width: 900px; padding: 5px 0; margin: 5px 0; background-color: #695f47; color: #bbe6b1;'>Coat Type</div><div style='clear: both;'></div><div class='trait-cell'>
+								<div class='trait-icon conformation-icon-hairless bottom tipso_style' style='background-image:url(media/traits/conformations/hairless_coated.png); background-repeat: no-repeat; border: 0px;' data-tipso-title='Hairless' data-tipso='Dominant Hairless causes dental malformation as well as a hairless body. Recessive hairless does not cause dental malformation and is always completely hairless'>
+								</div>
+								<div style='display: none;' class='trait-name-div'>hairless</div>
+								<div class='trait-name'><font color='#000'>Hairless</font><br />Coated</div>
+							</div><div class='trait-cell'>
+								<div class='trait-icon conformation-icon-coat_length bottom tipso_style' style='background-image:url(media/traits/conformations/coat_length_long2-4inch,5-10cm.png); background-repeat: no-repeat; border: 0px;' data-tipso-title='Coat Length' data-tipso='Actual length of the coat on the dog. For Short haired dogs this number is a uniform length. For long haired dogs this length is the maximum feathering length on the legs, chest and underbelly'>
+								</div>
+								<div style='display: none;' class='trait-name-div'>coat_length</div>
+								<div class='trait-name'><font color='#000'>Coat Length</font><br />Long 2-4 Inch, 5-10 Cm</div>
+							</div><div class='trait-cell'>
+								<div class='trait-icon conformation-icon-furnishings bottom tipso_style' style='background-image:url(media/traits/conformations/furnishings_none.png); background-repeat: no-repeat; border: 0px;' data-tipso-title='Furnishings' data-tipso='Furnishings gives the dog a longer growing coat all over the body including muzzle. It also causes hairy legs, long topknot and fringed ears when long. Broken coat gives the dog a beard and eyebrows, and also makes the rest of the coat grow slightly longer on the furnishings areas (legs, underbelly, etc.)'>
+								</div>
+								<div style='display: none;' class='trait-name-div'>furnishings</div>
+								<div class='trait-name'><font color='#000'>Furnishings</font><br />None</div>
+							</div><div class='trait-cell'>
+								<div class='trait-icon conformation-icon-topknot bottom tipso_style' style='background-image:url(media/traits/conformations/topknot_medium.png); background-repeat: no-repeat; border: 0px;' data-tipso-title='Topknot' data-tipso='smooth hair on the topskull, medium length hair on the topskull (shorter than the feathering length, like a chow chow or newfoundland), long hair on the topskull (same as feathering length, like an irish water spaniel or afghan hound)'>
+								</div>
+								<div style='display: none;' class='trait-name-div'>topknot</div>
+								<div class='trait-name'><font color='#000'>Topknot</font><br />Medium</div>
+							</div><div class='trait-cell'>
+								<div class='trait-icon conformation-icon-ear_fringe_type bottom tipso_style' style='background-image:url(media/traits/conformations/ear_fringe_type_fringe.png); background-repeat: no-repeat; border: 0px;' data-tipso-title='Ear Fringe Type' data-tipso='none (smooth ear), semi fringe (base of ear hairy), reverse semi fringe (tip of ear hairy), fringe (entire ear hairy)'>
+								</div>
+								<div style='display: none;' class='trait-name-div'>ear_fringe_type</div>
+								<div class='trait-name'><font color='#000'>Ear Fringe Type</font><br />Fringe</div>
+							</div><div class='trait-cell'>
+								<div class='trait-icon conformation-icon-ear_fringe_length bottom tipso_style' style='background-image:url(media/traits/conformations/ear_fringe_length_6-8inch,15-20cm.png); background-repeat: no-repeat; border: 0px;' data-tipso-title='Ear Fringe Length' data-tipso='actual length of the hair covering the ears'>
+								</div>
+								<div style='display: none;' class='trait-name-div'>ear_fringe_length</div>
+								<div class='trait-name'><font color='#000'>Ear Fringe Length</font><br />6-8 Inch, 15-20 Cm</div>
+							</div><div class='trait-cell'>
+								<div class='trait-icon conformation-icon-neck_ruff bottom tipso_style' style='background-image:url(media/traits/conformations/neck_ruff_none.png); background-repeat: no-repeat; border: 0px;' data-tipso-title='Neck Ruff' data-tipso='longer hair on the neck and cheeks, forming a ruff. This is negated if the dog has furnishings'>
+								</div>
+								<div style='display: none;' class='trait-name-div'>neck_ruff</div>
+								<div class='trait-name'><font color='#000'>Neck Ruff</font><br />None</div>
+							</div><div class='trait-cell'>
+								<div class='trait-icon conformation-icon-body_coat bottom tipso_style' style='background-image:url(media/traits/conformations/body_coat_shorter.png); background-repeat: no-repeat; border: 0px;' data-tipso-title='Body Coat' data-tipso='body hair on the back and flanks is either shorter, the same, or longer than feathering length on legs, underbelly and chest'>
+								</div>
+								<div style='display: none;' class='trait-name-div'>body_coat</div>
+								<div class='trait-name'><font color='#000'>Body Coat</font><br />Shorter</div>
+							</div><div class='trait-cell'>
+								<div class='trait-icon conformation-icon-leg_feathering bottom tipso_style' style='background-image:url(media/traits/conformations/leg_feathering_feathered.png); background-repeat: no-repeat; border: 0px;' data-tipso-title='Leg Feathering' data-tipso='what type of hair the dog has on the legs and feet. smooth haired (none), feathered (hair on back of legs like a setter), hairy (long hair on the whole leg)'>
+								</div>
+								<div style='display: none;' class='trait-name-div'>leg_feathering</div>
+								<div class='trait-name'><font color='#000'>Leg Feathering</font><br />Feathered</div>
+							</div><div class='trait-cell'>
+								<div class='trait-icon conformation-icon-tail_plume bottom tipso_style' style='background-image:url(media/traits/conformations/tail_plume_long4-6inch,10-15cm.png); background-repeat: no-repeat; border: 0px;' data-tipso-title='Tail Plume' data-tipso='length of coat on the tail'>
+								</div>
+								<div style='display: none;' class='trait-name-div'>tail_plume</div>
+								<div class='trait-name'><font color='#000'>Tail Plume</font><br />Long 4-6 Inch, 10-15 Cm</div>
+							</div><div class='trait-cell'>
+								<div class='trait-icon conformation-icon-coat_curl bottom tipso_style' style='background-image:url(media/traits/conformations/coat_curl_straight.png); background-repeat: no-repeat; border: 0px;' data-tipso-title='Coat Curl' data-tipso='curly, wavy, slight wave or straight. Furnishings may add a slight wave to straight coats depending on texture and length.'>
+								</div>
+								<div style='display: none;' class='trait-name-div'>coat_curl</div>
+								<div class='trait-name'><font color='#000'>Coat Curl</font><br />Straight</div>
+							</div><div class='trait-cell'>
+								<div class='trait-icon conformation-icon-texture bottom tipso_style' style='background-image:url(media/traits/conformations/texture_soft.png); background-repeat: no-repeat; border: 0px;' data-tipso-title='Texture' data-tipso='soft, medium or coarse/hard'>
+								</div>
+								<div style='display: none;' class='trait-name-div'>texture</div>
+								<div class='trait-name'><font color='#000'>Texture</font><br />Soft</div>
+							</div><div class='trait-cell'>
+								<div class='trait-icon conformation-icon-undercoat bottom tipso_style' style='background-image:url(media/traits/conformations/undercoat_none.png); background-repeat: no-repeat; border: 0px;' data-tipso-title='Undercoat' data-tipso='none, sparse, medium, medium-thick, thick'>
+								</div>
+								<div style='display: none;' class='trait-name-div'>undercoat</div>
+								<div class='trait-name'><font color='#000'>Undercoat</font><br />None</div>
+							</div><div class='trait-cell'>
+								<div class='trait-icon conformation-icon-coat_lay bottom tipso_style' style='background-image:url(media/traits/conformations/coat_lay_flat.png); background-repeat: no-repeat; border: 0px;' data-tipso-title='Coat Lay' data-tipso='how the coat lays on the body. flat, moderately offstanding or offstanding'>
+								</div>
+								<div style='display: none;' class='trait-name-div'>coat_lay</div>
+								<div class='trait-name'><font color='#000'>Coat Lay</font><br />Flat</div>
+							</div><div class='trait-cell'>
+								<div class='trait-icon conformation-icon-ridge bottom tipso_style' style='background-image:url(media/traits/conformations/ridge_absent.png); background-repeat: no-repeat; border: 0px;' data-tipso-title='Ridge' data-tipso='a ridge of fur along the spine which grows in the opposite direction. Absent or present'>
+								</div>
+								<div style='display: none;' class='trait-name-div'>ridge</div>
+								<div class='trait-name'><font color='#000'>Ridge</font><br />Absent</div>
+							</div><div class='trait-cell'>
+								<div class='trait-icon conformation-icon-shedding bottom tipso_style' style='background-image:url(media/traits/conformations/shedding_low.png); background-repeat: no-repeat; border: 0px;' data-tipso-title='Shedding' data-tipso='The amount of fur the dog sheds. None, low, medium, high or very high'>
+								</div>
+								<div style='display: none;' class='trait-name-div'>shedding</div>
+								<div class='trait-name'><font color='#000'>Shedding</font><br />Low</div>
+							</div><div class='trait-cell action-cell'>
+								<div style='' class='trait-name'>coat_type_genotype</div>
+								<div style='display: none;' class='action-type'>reveal_conformation</div>
+								<div class='trait-icon conformation-icon-coat_type_genotype bottom tipso_style conformation-image-coat_type_genotype' data-tipso-title='Coat Type Genotype' data-tipso='Genotype of the dogs coat type. Length Locus, Furnishings Locus, Curl Locus, Ridge Locus, Shedding Locus' style='border: 0px; cursor: pointer; padding-top: 8px;'>
+									100 Barks<br />to test
+								</div>
+								<div style='display: none;' class='trait-name-div'>coat_type_genotype</div>
+								<div class='trait-name conformation-name-coat_type_genotype' style='height: 45px;'><font color='#000'>Coat Type Genotype</font><br />?</div>
+							</div><div style='position: relative; float: left; width: 900px; padding: 5px 0; margin: 5px 0; background-color: #695f47; color: #bbe6b1;'>Colour</div><div style='clear: both;'></div><div class='trait-cell'>
+								<div class='trait-icon conformation-icon-eye_colour bottom tipso_style' style='background-image:url(media/traits/conformations/eye_colour_darkbrown.png); background-repeat: no-repeat; border: 0px;' data-tipso-title='Eye Colour' data-tipso='colour of the dogs eyes'>
+								</div>
+								<div style='display: none;' class='trait-name-div'>eye_colour</div>
+								<div class='trait-name'><font color='#000'>Eye Colour</font><br />Dark Brown</div>
+							</div><div class='trait-cell'>
+								<div class='trait-icon conformation-icon-pigment bottom tipso_style' style='background-image:url(media/traits/conformations/pigment_black.png); background-repeat: no-repeat; border: 0px;' data-tipso-title='Pigment' data-tipso='colour of the dogs paw pads, eyelids and lips'>
+								</div>
+								<div style='display: none;' class='trait-name-div'>pigment</div>
+								<div class='trait-name'><font color='#000'>Pigment</font><br />Black</div>
+							</div><div class='trait-cell'>
+								<div class='trait-icon conformation-icon-nose_colour bottom tipso_style' style='background-image:url(media/traits/conformations/nose_colour_black.png); background-repeat: no-repeat; border: 0px;' data-tipso-title='Nose Colour' data-tipso='colour of the dogs nose leather'>
+								</div>
+								<div style='display: none;' class='trait-name-div'>nose_colour</div>
+								<div class='trait-name'><font color='#000'>Nose Colour</font><br />Black</div>
+							</div><div class='trait-cell action-cell'>
+								<div style='' class='trait-name'>coat_colour_genotype</div>
+								<div style='display: none;' class='action-type'>reveal_conformation</div>
+								<div class='trait-icon conformation-icon-coat_colour_genotype bottom tipso_style conformation-image-coat_colour_genotype' data-tipso-title='Coat Colour Genotype' data-tipso='Genotype of the dogs coat colour. Agouti Locus, Brown Locus, Dilute Locus, Extension Locus, Harlequin Locus, Dominant Black Locus, Merle Locus, RALY Locus, White Spotting Locus, Albino Locus' style='border: 0px; cursor: pointer; padding-top: 8px;'>
+									100 Barks<br />to test
+								</div>
+								<div style='display: none;' class='trait-name-div'>coat_colour_genotype</div>
+								<div class='trait-name conformation-name-coat_colour_genotype' style='height: 45px;'><font color='#000'>Coat Colour Genotype</font><br />?</div>
+							</div><div class='trait-cell'>
+					<div class='trait-name' style='height: 100px;'><font color='#736b52'>Coat Colour</font><br />Black & Tan Points</div>
+				</div></div><br />
+
+
+<script>
+document.domain = "dogbreedergame.com";
+function item_drag(ev) {
+        ev.dataTransfer.setData("itemtype", "dbg_dog");
+        ev.dataTransfer.setData("itemid", ev.target.id);
+}
+function copyTextToClipboard(text) {
+  var textArea = document.createElement("textarea");
+  textArea.style.position = 'fixed';
+  textArea.style.top = 0;
+  textArea.style.left = 0;
+  textArea.style.width = '2em';
+  textArea.style.height = '2em';
+  textArea.style.padding = 0;
+  textArea.style.border = 'none';
+  textArea.style.outline = 'none';
+  textArea.style.boxShadow = 'none';
+  textArea.style.background = 'transparent';
+
+  textArea.value = text;
+  document.body.appendChild(textArea);
+  textArea.select();
+
+  try {
+	var successful = document.execCommand('copy');
+	document.getElementById('copytoclipboard').src = "media/frame/icon-copytoclipboard-success.png";
+  } catch (err) {
+	document.getElementById('copytoclipboard').src = "media/frame/icon-copytoclipboard-fail.png";
+  }
+  document.body.removeChild(textArea);
+  setTimeout(function() { document.getElementById('copytoclipboard').src = "media/frame/icon-copytoclipboard.png"; }, 2000);
+}
+
+$('.tipso').tipso();
+
+$(document).ready(function(){
+
+	$('.customimgdivtrigger').click( function() 	{$("#customimgdiv").slideToggle(150);});
+
+    $('.rename_callname').click(function(){
+
+        $('#popup-dialog-content').html("<center><h2 style='margin-bottom:5px;'>Change Callname</h2><form method='post' action='index.php?f=kennels&p=view&dogid=6801552'><p><textarea name='new_dog_name' rows=1 style='font-size: 1.2em; width: 300px; height: 28px; text-align: center;' autocomplete='off' maxlength='50'>Yip Qttw KS</textarea></p><input type='submit' name='rename_final' value='Rename'><input type='hidden' name='dog_id' value='6801552'></form></center>");
+        $('#close-button').html("Cancel");
+
+        $('#popup-bg-shadow').fadeIn(100);
+        $('#popup-dialog-small').fadeIn(100);
+
+    });
+
+	$('.rename_registered_name').click(function(){
+
+		$('#popup-dialog-content').html("<center><h2 style='margin-bottom:5px;'>Set Registered Name</h2><form method='post' action='index.php?f=kennels&p=view&dogid=6801552'><p>This is the registered name, and can only be set once.<br />This name cannot be changed after it has been set.<br /><b>30 characters or less allowed.</b></p>Note: It costs 50 Barks to set a Registered Name<p><p><input type='text' name='new_registered_name' style=' width: 300px; text-align: center;' placeholder='Enter registered name' autocomplete='off' required></p><input type='submit' name='rename_registered_final' value='Set Registered Name'><input type='hidden' name='dog_id' value='6801552'></form></center>");
+		$('#close-button').html("Cancel");
+
+		$('#popup-bg-shadow').fadeIn(100);
+		$('#popup-dialog-small').fadeIn(100);
+
+	});
+
+	$('.rename_suffix').click(function(){
+
+		$('#popup-dialog-content').html("<center><h2 style='margin-bottom:5px;'>Add Suffix</h2><form method='post' action='index.php?f=kennels&p=view&dogid=6801552'><p>This is the suffix, and can only be added once.<br />The suffix cannot be removed after it has been added.<br /></p><p><input type='radio' name='new_suffix' value='at'>at <br><input type='radio' name='new_suffix' value='of'>of <br><input type='radio' name='new_suffix' value='from'>from <br><input type='radio' name='new_suffix' value='with'>with <br><input type='radio' name='new_suffix' value='for'>for <br><input type='radio' name='new_suffix' value='by'>by <br><input type='radio' name='new_suffix' value='to'>to </p>It costs 25 Barks to add a suffix<p><input type='submit' name='rename_suffix_final' value='Add Suffix'><input type='hidden' name='dog_id' value='6801552'></form></center>");
+		$('#close-button').html("Cancel");
+
+		$('#popup-bg-shadow').fadeIn(100);
+		$('#popup-dialog-small').fadeIn(100);
+
+	});
+
+	$(".action-cell").click(function(){
+
+		var actiontype 	= $(this).find('.action-type').html();
+		var traitname	= $(this).find('.trait-name-div').html();
+		var dogid		= "6801552";
+		var genserial 	= "wenc8";
+
+		var data = {
+			"userid": 31996,
+			"traitname": traitname,
+			"dogid": dogid,
+			"actiontype":  actiontype,
+			"genserial": genserial
+		};
+		data = $(this).serialize() + "&" + $.param(data);
+
+		$.ajax({
+			type: "GET",
+			dataType: "json",
+			url: "folders/kennels/view_actions.php", //Relative or absolute path to response.php file
+			data: data,
+			success: function(data) {
+				if (data['validate'] == 1) {
+
+					var imgData 	= data['conformation_image_data'];
+					var nameData 	= data['conformation_label_data'];
+
+					$(this).attr( "data-tipso", '' + data['conformation_value'] + '' );
+					//$(this).html(nameData);
+
+					if (data['msgtype'] == 1) {
+
+						$('.action-button').css('background-color', '#998d68').html('');
+						$('.action-button').css('border-color', '#8c7c44').html('');
+						$('.action-button').css('cursor', 'not-allowed').html('');
+						$('.action-button').css('color', '#b4aa8c').html('');
+
+						if (data['conformation_value'] == 'clear') {
+							$('.conformation-trait-' + data['conformation_name'] +'').css('border-color', '#00c300');
+						} else if (data['conformation_value'] == 'affected') {
+							$('.conformation-trait-' + data['conformation_name'] +'').css('border-color', '#ff0000');
+						} else if (data['conformation_value'] == 'carrier') {
+							$('.conformation-trait-' + data['conformation_name'] +'').css('border-color', '#ffff00');
+						} else if (data['conformation_value'] == 'affected carrying clear') {
+							$('.conformation-trait-' + data['conformation_name'] +'').css('border-color', '#ff7113');
+						}
+
+                        if (actiontype == 'reveal_disease') {
+                            $('.conformation-trait-' + data['conformation_name'] +'').find('.trait-name').html(data['conformation_label_data']);
+                        } else if (actiontype == 'reveal_conformation') {
+                            $('.conformation-name-' + data['conformation_name'] +'').html(data['conformation_label_data']);
+                            $('.conformation-icon-' + data['conformation_name'] +'').empty();
+                            $('.conformation-icon-' + data['conformation_name'] +'').css('background-image', 'url("' + data['conformation_image_data'] + '")');
+                        } else if (actiontype == 'reveal_temperament') {
+                            $('.conformation-name-' + data['conformation_name'] +'').html(data['conformation_label_data']);
+                            $('.conformation-icon-' + data['conformation_name'] +'').empty();
+                            $('.conformation-icon-' + data['conformation_name'] +'').css('background-image', 'url("' + data['conformation_image_data'] + '")');
+                        }
+
+						$('#bottom-log-msg-invalid').hide();
+						$('#bottom-log-msg-valid').html(data['returnmsg']);
+						$('#bottom-log-msg-valid').show();
+
+					} else {
+
+						$('#bottom-log-msg-valid').hide();
+						$('#bottom-log-msg-invalid').html(data['returnmsg']);
+						$('#bottom-log-msg-invalid').show();
+					}
+
+				} else {
+						$('#bottom-log-msg-invalid').hide();
+						$('#bottom-log-msg-valid').html(data['returnmsg']);
+						$('#bottom-log-msg-valid').show();
+				}
+			}
+		});
+		return false;
+	});
+
+});
+
+</script>
+</div>
+
+
+<script>
+
+$(document).ready(function(){
+
+  $('#quickpanel-button').click(function() {
+
+    var $marginLefty = $('#quickpanel');
+
+    $marginLefty.animate({
+
+      marginLeft: parseInt($marginLefty.css('marginLeft'),10) == 0 ?
+
+        $marginLefty.outerWidth() :
+
+        0
+
+    });
+
+  });
+
+});
+
+</script>
+<script>
+
+	$(document).ready(function() {
+
+		$('#close_msg, #msg-normal, #msg-error').click(function(){
+			$(this).fadeOut(200);
+		});
+
+		$('#close-popup').click(function(){
+			$('#window-popup').hide();
+            $('#faded-background-overlay').hide();
+		});
+
+	    $(".defaultText").focus(function(srcc)
+	    {
+	        if ($(this).val() == $(this)[0].title)
+	        {
+	            $(this).removeClass("defaultTextActive").css({'color' : '000'});;
+	            $(this).val("");
+	        }
+	    });
+	    
+	    $(".defaultText").blur(function()
+	    {
+	        if ($(this).val() == "")
+	        {
+	        	$(this).removeClass("defaultTextActive");
+	            $(this).addClass("defaultTextActive").css({'color' : '92b092'});
+	            $(this).val($(this)[0].title);
+	        }
+	    });
+
+	     $(".defaultText").blur();
+
+	// MENU
+		/*
+		$('.menu-button').mouseover(function(){
+			$(this).animate({top: "7px"}, 10);
+		});
+
+		$('.menu-button').mouseout(function(){
+			$(this).animate({top: "9px"}, 10);
+		});
+		*/
+
+	// NEWS
+
+		$('.news-body:first').show();
+	   	$('.news-container').click(function(){
+	   		$('.news-body').hide();
+	   		$(this).find('.news-body').toggle();
+	   	});
+
+	});
+
+</script><div id='giftturns_window' style='position: fixed; display: none; top: 15px; background-color: #468054; padding: 20px; border-radius: 10px; z-index: 99999; position: fixed; left: 50%; transform: translate(-50%, 0);'>
+
+			<h3 style='color: #000; margin-bottom: 0em;'>Gifted Turns</h3><br />
+			<div style='position: absolute; top: 5px; right: 5px;'><input type='button' id='closegiftturns' value='X'></div>
+			<table width=470 class='boxType2' style='position: relative; margin: 0 auto; border-radius: 3px;'>
+			<th colspan=2>Shower the community with the gift of free turns!<br ><font style='font-weight:normal;'>4 turns for every 1 token spent</font></th>
+			<tr>
+				<td align=right>
+					<form method='post'>Spend <input type='text' value='1' size=2 name='tokenamount' style='text-align: center;'>
+					<img src='media/frame/tokens_icon.png' style='position: relative; top: 6px; left:-14px;'>
+				</td>
+				<td>
+					<input type='submit' name='giftturns' value='Gift Turns!' style='position: relative; top: -6px;'></form>
+				</td>
+			</tr></table><table width=470  style='position: relative; margin: 15px auto; border-radius: 3px; background-color: #232018; color: #e3d4af;' cellpadding=4>
+			<th align=left>Gifted By</th>
+			<th>Turns Left</th>
+			<th>Actions</th><tr style='background-color: #5A9E6A; color: #000; text-align: center;'><td colspan=4>There are no turns gifted at this time</td></tr></table>
+
+	</div><form method='post' action='index.php'><input type='submit' value='Show Chat' name='closechat' style='position: fixed;  left: 10px; bottom: 10px;'></form>
+<style>
+.menu-button {
+	position: relative;
+	background-color: #c7b580;
+	border-top: 2px solid #958b70;
+	border-right: 2px solid #958b70;
+	border-left: 2px solid #958b70;
+	border-bottom: 1px solid #e6dab5;
+	padding: 5px 6px 2px 6px;
+	font-size: 1.2em;
+	font-weight: bold;
+	text-align: center;
+	cursor: pointer;
+	margin: 0px 4px 1px 4px;
+	border-top-left-radius: 6px; border-top-right-radius: 6px;
+	color: #444425;
+}
+.menu-button:hover {
+	border-bottom: 1px solid #e6dab5;
+	background-color: #e6dab5;
+	color: #0e0e08;
+}
+.sub-menu-button {
+	text-align: center;
+	background-color: #b5b08d;
+	border-radius: 6px;
+	width: 150px;
+	height: 45px;
+	margin: 4px;
+	padding: 8px;
+	font-weight: normal;
+	display: inline-table;
+	z-index: 999999;
+}
+.sub-menu-button:hover {
+	background-color: #dfd5b3;
+}
+
+.menu-hover {
+	float: right;
+}
+
+#bottomtipbar a {
+	color: white;
+	font-weight: bold;
+	text-decoration: underline;
+}
+.header-element {
+	position: absolute;
+	background: rgba(173,158,119,0.6);
+	border-radius: 6px;
+	padding: 1px;
+	color: #fff;
+ 	text-align: left;
+	font-weight: bold;
+	text-shadow: 1px 1px #000;
+	border: 0px;
+}
+</style>
+
+<div id='bottom-log-msg-invalid' style='position: fixed; display: none; background-color: red; color: #fff; padding: 12px 45px; bottom: 0px; left: 50%; transform: translateX(-50%); text-align: center; z-index: 9999; bottom: 5px; font-size: 1.1em;'></div><div id='bottom-log-msg-valid' style='position: fixed; display: none; background-color: #fff; padding: 12px 30px; bottom: 0px; left: 50%; transform: translateX(-50%); text-align: center; z-index: 9999; bottom: 5px; font-size: 1.1em;'></div><div id='menu-container' style='position: fixed; width: 100%; text-align: center; top: 0px; overflow: hidden; text-align: center; z-index: 9999; margin-bottom: 5px;'><div style='position: relative; width: 100%; text-align: center; margin: 0 auto; background-color: #F5F3E9; background-image:url(media/menu/core_menu_bg4.jpg); background-repeat: repeat-x; background-position: top center; min-height: 102px;'><div style='position: relative; width: 900px; margin: 0 auto auto; height: 67px; clear: both;'><div style='position: absolute; left: 15px; top: 5px;'>
+							<a href='index.php?f=profile&p=view&playerid=31996&edit=1'><div style='position: relative; width: 90px; height: 90px; z-index: 88; background-repeat: no-repeat; background-size: 90px 90px; border-radius: 55px; background-image: url(media/avatar/_avatar.png);'>
+								<div style='position: absolute; left: -7px; bottom: -1px; width: 90px; text-align: center; cursor: help; padding: 3px 8px; border-radius: 4px; background: rgba(173,158,119,0.7); color: #000;'  title='This is your player ID'><big>ID #31996</big></div>
+							</div></a>
+						</div><div style='position: relative; width: 900px; height: 67px;'><div class='header-element bottom tipso_style' style='left: 213px; top: 41px;' data-tipso-title='Salary' data-tipso='You can collect your salary at the beginning of every day at 7am Server Time. Non-subscribers receive 500 Barks, whereas subscribers receive 1,000 Barks.'>
+								<form method='post' style='margin: 0px;' action='index.php'><input type='submit' name='collectsalary' value='+ Collect Salary' style='font-size: 0.9em; top: 0px; border-color: #a59252; position: relative; width: 155px; padding: 4px;' onclick="return confirm('Are you sure you want to collect your salary now?')"></form>
+							</div><div class='header-element bottom tipso_style' style='left: 105px; top: 6px; width: 80px;'  data-tipso-title='Tokens' data-tipso='This is a special currency that is used to purchase special items, subscription time, etc. Purchase Tokens at Rare Breed Games to get more!'>
+							<img src='https://rarebreedgames.com/media/tokens_large_icon.png' width=30 align=left style='position: relative; left: 4px;'>
+							<span style='position: relative; top: 5px; margin-left: 6px;'><big>31</big></span>
+						</div>
+
+						<div class='header-element bottom tipso_style' style='left: 200px; top: 6px; width: 140px;'  data-tipso-title='Barks' data-tipso='This is your main currency in the game. Gain barks by selling dogs, working dog jobs, winning competitions etc. If you are short on barks you can also get a loan or community funding from the finances page under the overview menu.'>
+							<img src='media/frame/reptos_icon.png' width=30 align=left style='position: relative; left: 4px;'>
+							<span style='position: relative; top: 5px; margin-left: 6px;'><big>94,827</big></span>
+						</div>
+
+						<div class='header-element bottom tipso_style' style='left: 355px; top: 6px; width: 150px;'  data-tipso-title='Kennel Space' data-tipso='This is how much kennel space you have used (1 per dog over 2 months old). You can purchase more kennel space via your Kennel page under the tabs.'>
+							<img src='media/frame/kennel_icon.png' width=30 align=left style='position: relative; left: 4px;'>
+							<span style='position: relative; top: 5px; margin-left: 6px;'><big>92/328</big></span>
+						</div>
+
+						<div class='header-element bottom tipso_style' style='left: 520px; top: 6px; width: 240px;'  data-tipso-title='Turns' data-tipso='<p></p>Turns advance your game by 1 month. You gain 1 turn every 30 minutes. Subscribers get 20 maximum turns. <b>Purchase more turns at the item shop</b>.<p>You taken a total of 1028 turns since you joined the game.</p>'>
+							<img src='media/frame/turn_icon.png' width=30 align=left style='position: relative; left: 4px;'>
+							<span style='position: relative; top: 5px; margin-left: 6px;'><big>20 / 20</big></span>
+							<a href='index.php?f=turns&p=turn'><input type='button' value='Take Turn' style='font-size: 1.1em; top: 1px; border-color: #a59252; position: relative; float: right; margin-right: 3px;'></a>
+						</div>
+
+						<a href='index.php?f=online&p=main'>
+						<div class='header-element bottom tipso_style' style='right: 1px; text-align: right; top: 6px; width: 120px; cursor: pointer; font-size: 0.8em;' data-tipso-title='Online Users/Players' data-tipso='This is the amount of other breeder players that have been recently active.'>
+							<img src='media/frame/users_icon.png' width=33 align=left style='position: relative; left: 4px;'>
+							<span style='position: relative; float: right; top: 1px; right: 6px;'><big>27 Online
+							<br />10:10 AM</big></span>
+						</div></a>
+
+					</div></div><div style='position: relative; margin: 0 auto; width: 900px; top: 6px; text-align: right;'><div style='width: 770px; float: right; overflow: hidden; height: 45px; clear: both;'><div class='menu-hover' style='position: relative; float: left; width: 110px;'>
+								<div class='menu-button'>Overview</div>
+							</div><div class='menu-hover' style='position: relative; float: left; width: 100px;'>
+								<div class='menu-button'>Kennels</div>
+							</div><div class='menu-hover' style='position: relative; float: left; width: 100px;'>
+								<div class='menu-button'>Town</div>
+							</div><div class='menu-hover' style='position: relative; float: left; width: 115px;'>
+								<div class='menu-button'>Compete</div>
+							</div><div class='menu-hover' style='position: relative; float: left; width: 130px;'>
+								<div class='menu-button'>Community</div>
+							</div><div class='menu-hover' style='position: relative; float: left; width: 130px;'>
+								<a href='index.php?f=subscribe&p=main' style='text-decoration: none;'><div class='menu-button'>Subscribe!</div></a>
+							</div><div class='menu-hover' style='position: relative; float: left; width: 80px;'>
+								<div class='menu-button'>Info</div>
+							</div></div></div></div><div class='sub-menu-home menu-hover' style='position: relative; width: 100%; margin: 0 auto; top: -11px; text-align: center; background-color: #BFBA99;'><div class='menu-extend-overview sub-menu-section' style='display: none; width: 100%; text-align: center; z-index: 9999; border-bottom: 1px solid #e6dab5; border-top: 1px solid #f3eacd;'>
+
+						<a href='index.php'><div class='sub-menu-button'>
+							<b>Home</b><br />
+							<font color='#857B5F'><small>View the front/news page</small></font>
+						</div></a>
+
+						<a href='index.php?f=settings&p=main'><div class='sub-menu-button'>
+							<b>Settings</b><br />
+							<font color='#857B5F'><small>View and adjust account settings</small></font>
+						</div></a>
+
+						<a href='index.php?f=profile&p=view&playerid=31996&edit=1'><div class='sub-menu-button'>
+							<b>Profile</b><br />
+							<font color='#857B5F'><small>View and adjust your profile</small></font>
+						</div></a>
+
+						<a href='index.php?f=mail&p=main'><div class='sub-menu-button'>
+							<b>Messages</b><br />
+							<font color='#857B5F'><small>View and compose private messages</small></font>
+						</div></a>
+
+						<a href='index.php?f=logs&p=main'><div class='sub-menu-button'>
+							<b>News Log</b><br />
+							<font color='#857B5F'><small>View your personal notifications</small></font>
+						</div></a>
+
+						<br />
+
+						<a href='index.php?f=notes&p=main'><div class='sub-menu-button'>
+							<b>Notepad</b><br />
+							<font color='#857B5F'><small>Write and edit personal notes</small></font>
+						</div></a>
+
+						<a href='index.php?f=finances&p=main'><div class='sub-menu-button'>
+							<b>Finances</b><br />
+							<font color='#857B5F'><small>Review your finances</small></font>
+						</div></a>
+
+						<a href='index.php?f=art&p=main'><div class='sub-menu-button'>
+							<b>Your Art Gallery</b><br />
+							<font color='#857B5F'><small>Manage your dog art uploads</small></font>
+						</div></a>
+
+						<a href='index.php?f=challenges&p=main'><div class='sub-menu-button'>
+							<b>Personal Challenges</b><br />
+							<font color='#857B5F'><small>Complete challenges for rewards</small></font>
+						</div></a>
+
+						<a href='index.php?logout=true'><div class='sub-menu-button'>
+							<b>Logout</b><br />
+							<font color='#857B5F'><small>Log out from the game</small></font>
+						</div></a>
+
+					</div><div class='menu-extend-town sub-menu-section' style='display: none; width: 100%; text-align: center; z-index: 9999; border-bottom: 1px solid #e6dab5; border-top: 1px solid #f3eacd;'>
+
+						<a href='index.php?f=town&p=petshop'><div class='sub-menu-button'>
+							<b>Item Shop</b><br />
+							<font color='#857B5F'><small>Purchase special items</small></font>
+						</div></a>
+
+						<a href='index.php?f=town&p=sales'><div class='sub-menu-button'>
+							<b>Market</b><br />
+							<font color='#857B5F'><small>View & purchase dogs for sale</small></font>
+						</div></a>
+
+						<a href='index.php?f=town&p=studs'><div class='sub-menu-button'>
+							<b>Stud Listings</b><br />
+							<font color='#857B5F'><small>View & purchase stud matings</small></font>
+						</div></a>
+
+						<a href='index.php?f=town&p=shelter'><div class='sub-menu-button'>
+							<b>Rescue Shelter</b><br />
+							<font color='#857B5F'><small>View and adopt abandoned dogs</small></font>
+						</div></a>
+
+						<a href='index.php?f=town&p=tokenshop'><div class='sub-menu-button'>
+							<b>Token Market</b><br />
+							<font color='#857B5F'><small>Buy and sell Tokens</small></font>
+						</div></a>
+
+						 <br />
+
+						<a href='index.php?f=town&p=turnmarket'><div class='sub-menu-button'>
+							<b>Turn Market</b><br />
+							<font color='#857B5F'><small>Buy and sell Turns</small></font>
+						</div></a>
+
+						<a href='index.php?f=town&p=classifieds'><div class='sub-menu-button'>
+							<b>Classifieds</b><br />
+							<font color='#857B5F'><small>Supply dogs to NPC wanted ads</small></font>
+						</div></a>
+
+						<a href='index.php?f=town&p=importer'><div class='sub-menu-button'>
+							<b>Import Shop</b><br />
+							<font color='#857B5F'><small>Import new pedigree dogs or mongrels</small></font>
+						</div></a>
+
+						<a href='index.php?f=town&p=vet'><div class='sub-menu-button'>
+							<b>Veterinarian</b><br />
+							<font color='#857B5F'><small>Treat illnesses and more</small></font>
+						</div></a>
+
+						<a href='index.php?f=minigames&p=main'><div class='sub-menu-button'>
+							<b>Bar</b><br />
+							<font color='#857B5F'><small>Play Mini-games here</small></font>
+						</div></a>
+
+					</div><div class='menu-extend-kennels sub-menu-section' style='display: none; width: 100%; text-align: center; z-index: 9999; border-bottom: 1px solid #e6dab5; border-top: 1px solid #f3eacd;'>
+
+						<a href='index.php?f=kennels&p=main'><div class='sub-menu-button'>
+							<b>Kennel</b><br />
+							<font color='#857B5F'><small>View & manage your dogs</small></font>
+						</div></a>
+
+						<a href='index.php?f=inventory&p=main'><div class='sub-menu-button'>
+							<b>Inventory</b><br />
+							<font color='#857B5F'><small>View & manage your items</small></font>
+						</div></a>
+
+						<a href='index.php?f=kennels&p=litters'><div class='sub-menu-button'>
+							<b>Litters</b><br />
+							<font color='#857B5F'><small>View & manage your litters</small></font>
+						</div></a>
+
+						<a href='index.php?f=kennels&p=projects'><div class='sub-menu-button'>
+							<b>Breeding Projects</b><br />
+							<font color='#857B5F'><small>View & manage your breeding projects</small></font>
+						</div></a>
+
+					</div><div class='menu-extend-community sub-menu-section' style='display: none; width: 100%; text-align: center; z-index: 9999; border-bottom: 1px solid #e6dab5; border-top: 1px solid #f3eacd;'>
+
+						<a href='index.php?f=forum&p=main'><div class='sub-menu-button'>
+							<b>Forums</b><br />
+							<font color='#857B5F'><small>Chat with fellow dog enthusiasts</small></font>
+						</div></a>
+
+						<a href='index.php?f=clubs&p=main&listallclubs=true'><div class='sub-menu-button'>
+							<b>Player Clubs</b><br />
+							<font color='#857B5F'><small>Player run organisations</small></font>
+						</div></a>
+
+						<a href='index.php?f=chat&p=main'><div class='sub-menu-button'>
+							<b>Community Chat</b><br />
+							<font color='#857B5F'><small>Chat with fellow breeders</small></font>
+						</div></a>
+
+						<a href='index.php?f=online&p=main'><div class='sub-menu-button'>
+							<b>Online List</b><br />
+							<font color='#857B5F'><small>View the list of online players</small></font>
+						</div></a>
+
+						<a href='index.php?f=friends&p=main'><div class='sub-menu-button'>
+							<b>Friends</b><br />
+							<font color='#857B5F'><small>Manage your friend list</small></font>
+						</div></a><br />
+
+						<!--<a href='index.php?f=polls&p=main'><div class='sub-menu-button'>
+							<b>Polls</b><br />
+							<font color='#857B5F'><small>Cast your votes!</small></font>
+						</div></a>-->
+
+						<a href='index.php?f=town&p=cemetery'><div class='sub-menu-button'>
+							<b>Cemetery</b><br />
+							<font color='#857B5F'><small>View everybody's or your buried dogs</small></font>
+						</div></a>
+
+						<a href='index.php?f=polls&p=main'><div class='sub-menu-button'>
+							<b>Polls</b><br />
+							<font color='#857B5F'><small>Past poll results</small></font>
+						</div></a>
+
+					</div><div class='menu-extend-compete sub-menu-section' style='display: none; width: 100%; text-align: center; z-index: 9999; border-bottom: 1px solid #e6dab5; border-top: 1px solid #f3eacd;'>
+
+						<a href='index.php?f=shows&p=main'><div class='sub-menu-button'>
+							<b>Shows</b><br />
+							<font color='#857B5F'><small>Participate in conformation shows</small></font>
+						</div></a>
+
+						<a href='index.php?f=sports&p=main'><div class='sub-menu-button'>
+							<b>Sports</b><br />
+							<font color='#857B5F'><small>Participate in performance sports</small></font>
+						</div></a>
+					</div><div class='menu-extend-info sub-menu-section' style='display: none; width: 100%; text-align: center; z-index: 9999; border-bottom: 1px solid #e6dab5; border-top: 1px solid #f3eacd;'>
+
+						<a href='index.php?f=town&p=breedregister'><div class='sub-menu-button'>
+							<b>Breed Register</b><br />
+							<font color='#857B5F'><small>Breed information here</small></font>
+						</div></a>
+
+						<a href='index.php?f=helpandguides&p=highscores'><div class='sub-menu-button'>
+							<b>Leaderboards</b><br />
+							<font color='#857B5F'><small>Check the game's leaderboards</small></font>
+						</div></a>
+
+						<a href='index.php?f=helpandguides&p=main'><div class='sub-menu-button'>
+							<b>Help and Guides</b><br />
+							<font color='#857B5F'><small>Check here for help and general info</small></font>
+						</div></a>
+
+						<a href='index.php?f=database&p=dogs'><div class='sub-menu-button'>
+							<b>Dog Database</b><br />
+							<font color='#857B5F'><small>Check here for help and general info</small></font>
+						</div></a>
+
+					</div></div></div>
+<script>
+
+$(document).ready(function(){
+
+	$("#giftturns").click(function(){
+		$('#giftturns_window').fadeIn(100);
+	});
+
+	$('#closegiftturns').click(function(){
+		$('#giftturns_window').fadeOut(100);
+	});
+
+	$("input, input[type='checkbox'], input[type='radio']").iCheck({
+
+	    checkboxClass: 'icheckbox_flat-orange',
+	    radioClass: 'iradio_flat-orange'
+
+	});
+
+
+	$('.close-button').click(function(){
+		$('.popup-dialog-small').fadeOut(100);
+		$('.popup-bg-shadow').fadeOut(100);
+	});
+
+	$('#close-button').click(function(){
+		$('#popup-dialog-small').fadeOut(100);
+		$('#popup-bg-shadow').fadeOut(100);
+	});
+
+	$('.menu-hover').click(function(){
+		var showmenu = $(this).find('.menu-button').html().toLowerCase();
+		$('.sub-menu').toggle(50);
+		$('.menu-extend-' + showmenu).toggle(250);
+	});
+
+	$('.content').click(function(){
+
+		$('.sub-menu-section').hide();
+
+	});
+
+	$('.add-bookmark-dialog').click(function() {
+
+		$('#popup-dialog-content').html("<center><h2>Add this page to your bookmarks?</h2></center><br /><br /><form method='post'><center>" + item_actions + "<input type='hidden' name='item_id' value='" + item_id + "'><input type='hidden' name='item_description' value='" + item_description + "'></center></form></div>");
+		$('#close-button').html("Cancel");
+
+		$('#popup-bg-shadow').fadeIn(100);
+		$('#popup-dialog-small').fadeIn(100);
+
+	});
+
+	//$('#menu-container').mouseout(function(){
+	//	$('.sub-menu').slideUp(50);
+	//	$('.menu-extend').hide();
+	//});
+
+});
+
+jQuery(document).ready(function(){
+	// Position Tipso
+	jQuery('.right').tipso({
+		position: 'right',
+		background: 'rgba(0,0,0,0.8)',
+		useTitle: false,
+	});
+	jQuery('.left').tipso({
+		position: 'left',
+		background: 'tomato',
+		useTitle: false,
+	});
+	jQuery('.bottom').tipso({
+		position: 'bottom',
+		background: '#f5edd4',
+		useTitle: false,
+	});
+	jQuery('.top, .destroy, .update, .update-tipso-content').tipso({
+		position: 'top',
+		background: '#F62459',
+		useTitle: false,
+	});
+	// Tooltip Hover
+	jQuery('.hover-tipso-tooltip').tipso({
+		position: 'top',
+		background: '#000',
+		useTitle: false,
+		width: false,
+		maxWidth: 300,
+		tooltipHover: true,
+		content: function(){
+			return 'You can <a href="javascript:;">CLICK ME</a> now!';
+		}
+	});
+
+	jQuery('.top-right').tipso({
+		position: 'top-right',
+		background: 'rgba(0,0,0,0.8)',
+		titleBackground: 'tomato',
+		titleContent: 'Some title',
+		useTitle: false,
+		tooltipHover: true
+	});
+
+	jQuery('.top-left').tipso({
+		position: 'top-left',
+		background: 'rgba(0,0,0,0.8)',
+		titleBackground: 'tomato',
+		titleContent: 'Some title',
+		useTitle: false,
+		tooltipHover: true
+	});
+
+	jQuery('.bottom-right').tipso({
+		position: 'bottom-right',
+		background: 'rgba(0,0,0,0.8)',
+		titleBackground: 'tomato',
+		titleContent: 'Some title',
+		useTitle: false,
+		tooltipHover: true
+	});
+
+	jQuery('.bottom-left').tipso({
+		position: 'bottom-left',
+		background: 'rgba(0,0,0,0.8)',
+		titleBackground: 'tomato',
+		titleContent: 'Some title',
+		useTitle: false,
+		tooltipHover: true
+	});
+
+	// Use Title For Tipso Content
+	jQuery('.title-tipso').tipso({
+		useTitle: true
+	});
+	// Tipso for Image
+	jQuery('.img-tipso').tipso({
+		useTitle: false,
+		background: 'rgba(0,0,0,0.8)'
+	});
+	// Show - Hide Tipso on Click
+	jQuery('.show-hide').tipso({
+		background: 'tomato',
+		useTitle: false
+	});
+	jQuery('.show-hide-tipso').on('click', function(e){
+		if(jQuery(this).hasClass('clicked')){
+			jQuery(this).removeClass('clicked');
+			jQuery('.show-hide').tipso('hide');
+		} else {
+			jQuery(this).addClass('clicked');
+			jQuery('.show-hide').tipso('show');
+		}
+		e.preventDefault();
+	});
+	// Before show
+	jQuery('.beforeShow').tipso({
+		background: 'tomato',
+		useTitle: false,
+		onBeforeShow : function(element, tips){
+			element.tipso('update', 'content', 'the title is a random number');
+			element.tipso('update', 'titleContent', Math.random());
+		}
+	});
+	jQuery('.beforeShow-tipso').on('click', function(e){
+		if(jQuery(this).hasClass('clicked')){
+			jQuery(this).removeClass('clicked');
+			jQuery('.beforeShow').tipso('hide');
+		} else {
+			jQuery(this).addClass('clicked');
+			jQuery('.beforeShow').tipso('show');
+		}
+		e.preventDefault();
+	});
+	//Ajax
+	jQuery('.ajax').tipso({
+		background: 'tomato',
+		useTitle: false,
+		ajaxContentUrl : 'ajax.html'
+	});
+	// Destroy Tipso
+	jQuery('.destroy-tipso').on('click', function(e){
+		jQuery('.destroy').tipso('destroy');
+		e.preventDefault();
+	});
+	// Update Tipso Content
+	jQuery('.update-tipso').on('click', function(e){
+		jQuery('.update').tipso('update', 'content', 'this is updated tipso');
+		e.preventDefault();
+	});
+	// Update Tipso Content from input field
+	jQuery('.update-tipso-input').on('click', function(e){
+		var content = jQuery('.tipso-content').val();
+		jQuery('.update-tipso-content').tipso('update', 'content', content);
+		e.preventDefault();
+	});
+	// Calback Tipso
+	jQuery('.callback-tipso').tipso({
+		useTitle: true,
+		onShow : function(){
+	    	alert('Tipso Showed');
+	  	},
+		onHide: function(){
+			alert('Tipso Hidden');
+		}
+	});
+
+	jQuery('.template-content').tipso({
+		position: 'top',
+		background: '#55b555',
+		color: '#eee',
+		useTitle: false,
+		size: 'small',
+		contentElementId: 'template_sample',
+		templateEngineFunc: function(content){
+			var compiled = _.template(content);
+			var names = ['moa', 'sara', 'james', 'hugo', 'mehr'];
+			return compiled({name: _.sample(names)});
+		},
+		content: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores velit, animi necessitatibus? Odio repudiandae vero',
+		onBeforeShow: function(ele, tipso) {
+			ele.tipso('update', 'content', '');
+		}
+	});
+
+	jQuery('.tiny').tipso({ size: 'tiny' });
+	jQuery('.small').tipso({ size: 'small' });
+	jQuery('.default').tipso({ size: 'default' });
+	jQuery('.large').tipso({ size: 'large' });
+
+	jQuery('.page-load').tipso({
+		position: 'left',
+		background: 'rgb(236,236,236)',
+		color: '#663399',
+		useTitle: false,
+		content: 'This one loads on page load',
+	});
+	// Animate Tipso
+	jQuery('.animate').tipso({
+		animationIn: 'bounceIn',
+		animationOut: 'bounceOut',
+		useTitle: false
+	});
+	jQuery('.animationIn').on('change', function(e){
+		var $this = jQuery(this);
+		jQuery('.animate').tipso('update', 'animationIn', $this.val());
+	});
+	jQuery('.animationOut').on('change', function(e){
+		var $this = jQuery(this);
+		jQuery('.animate').tipso('update', 'animationOut', $this.val());
+	});
+
+});
+jQuery(window).load(function(){
+	// Show Tipso on Load
+	jQuery('.page-load').tipso('show');
+});
+
+
+
+/* <![CDATA[ */
+    (function() {
+        var s = document.createElement('script'), t = document.getElementsByTagName('script')[0];
+        s.type = 'text/javascript';
+        s.async = true;
+        s.src = 'https://api.flattr.com/js/0.6/load.js?mode=auto';
+        t.parentNode.insertBefore(s, t);
+    })();
+/* ]]> */
+
+</script>
+
+
+<div class='footer-div' style='margin-top: 95px;'>
+	<div class='footer-content'>
+		&#169;2017 Rare Breed Games<br /><br /><small>
+						<u><a href='index.php?f=online&p=main'>27 Online</u></a>
+		<p>Page loaded in 0.16 seconds</p></small>
+	</div>
+</div>
+
+
+<script>
+
+	$(document).ready(function(){
+
+          $("#tutorial-body").load("tutorial.php", {userid: "31996"});
+
+          $("#prevstage").click(function() {
+
+			$.ajax({
+			  method: "POST",
+			  url: "tutorial.php",
+			  data: { stageState: "prevstage", userid: "31996"}
+			})
+			.done(function( msg ) {
+				$('#tutorial-body').html(msg);
+			});
+
+          });
+
+          $("#nextstage").click(function() {
+
+			$.ajax({
+			  method: "POST",
+			  url: "tutorial.php",
+			  data: { stageState: "nextstage", userid: "31996"}
+			})
+			.done(function( msg ) {
+				$('#tutorial-body').html(msg);
+			});
+
+          });
+
+          $("#showindex").click(function() {
+
+			$.ajax({
+			  method: "POST",
+			  url: "tutorial.php",
+			  data: { stageState: "showindex", userid: "31996"}
+			})
+			.done(function( msg ) {
+				$('#tutorial-body').html(msg);
+			});
+
+          });
+
+          $(".close-toggle").click(function() {
+
+			$.ajax({
+			  method: "POST",
+			  url: "tutorial.php",
+			  data: { stageState: "toggletut", userid: "31996"}
+			})
+			.done(function( msg ) {
+
+				$('#tutorial-body').parent().toggle();
+				$('#prevstage').toggle();
+				$('#nextstage').toggle();
+				$('#showindex').toggle();
+				$('.toggle-show').toggle();
+
+			});
+
+          });
+
+          $("#tutorial-body").on('click', '.change-category', function() {
+
+          	var categoryValue = $(this).html();
+
+				$.ajax({
+				  method: "POST",
+				  url: "tutorial.php",
+				  data: { cat: categoryValue, stageState: "changecat", userid: "31996"}
+				})
+				.done(function( msg ) {
+					$('#tutorial-body').html(msg);
+				});
+
+          });
+
+	});
+
+</script>

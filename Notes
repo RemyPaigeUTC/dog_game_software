@@ -1,0 +1,14 @@
+To add a new webpage with a form
+
+add a class in forms
+add a template in templates
+add a model in models and migrate the database
+    flask db migrate -m "users table"
+    flask db upgrade
+    flask shell
+    >>> u = User(username='john', email='john@example.com')
+    >>> db.session.add(u)
+    >>> db.session.commit()
+add a route in routes
+
+flask db init

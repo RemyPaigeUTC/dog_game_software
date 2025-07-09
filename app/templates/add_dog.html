@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Add Dog</h1>
+    <form action="" method="post" novalidate>
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.id.label }}<br>
+            {{ form.id(size=32) }}
+            {% for error in form.id.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.breed.label }}
+            {{ form.breed() }}
+            {% for error in form.breed.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.gender.label }}
+            {{ form.gender() }}
+            {% for error in form.gender.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.health_data.label }}<br>
+            {{ form.health_data(size=(32)) }}
+        </p>
+        <p>
+            {{ form.conformation_data.label }}<br>
+            {{ form.conformation_data(size=(32)) }}
+        </p>
+        <p>
+            {{ form.parent1_registered_name.label }}<br>
+            {{ form.parent1_registered_name(size=(32)) }}<br>
+            {{ form.parent2_registered_name.label }}<br>
+            {{ form.parent2_registered_name(size=(32)) }}
+        </p>
+        <p>{{ form.submit() }}</p>
+    </form>
+{% endblock %}

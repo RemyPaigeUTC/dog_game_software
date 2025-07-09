@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{#has to be the same block name as in base#}
+{#Data passed from route#}
+{% block content %}
+    <div class="container">
+        <div class="columns">
+            <div class="column col-8">
+                <div> <h1>{{ dog_basic["id"] }}  | {{ dog_basic["registered_name"] }} </h1></div>
+                <div> <h2> {{ dog_basic["gender"] }}  | {{ dog_basic["breed"] }} </h2></div>
+                <h2>Health | {{ dog_health["score"] }}</h2>
+                    <div class="container">
+                        <div class="columns">
+{#                        #ea868f red #feb272 orange #}
+                            {% for attr, value in dog_health.items() %}
+                                <div class="column"><h4>{{ attr }}</h4> {{ value }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                <br>
+                <h2>Conformation | {{ dog_conformation["score"] }}</h2>
+            </div>
+            <div class="column col-4">
+                <div>family tree</div>
+                <div class="panel" >
+                    <div class="panel-header">
+                        <div class="panel-title">Genological health data</div>
+                    </div>
+                    <div class="panel-nav">
+                        <ul class="tab tab-block">
+                          <li class="tab-item active"><a href="#panels">Overview</a></li>
+                          <li class="tab-item"><a href="#panels">filter by partner</a></li>
+                        </ul>
+                    </div>
+                    <div class="panel-body">
+                        <!-- contents -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
