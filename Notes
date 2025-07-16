@@ -11,4 +11,11 @@ add a model in models and migrate the database
     >>> db.session.commit()
 add a route in routes
 
+reset db
+delete migrations
+delete db file
 flask db init
+flask db migrate
+flask db upgrade
+flask shell
+from app import utilities

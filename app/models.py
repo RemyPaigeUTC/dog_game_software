@@ -16,6 +16,7 @@ class DogInfo:
     registered_name: so.Mapped[Optional[str]] = so.mapped_column(sa.String(32), index=True, unique=True)
     call_name: so.Mapped[Optional[str]] = so.mapped_column(sa.String(32), index=True)
     gender: so.Mapped[Optional[str]] = so.mapped_column(sa.String(32), index=True)
+    living_status: so.Mapped[Optional[str]] = so.mapped_column(sa.String(32), index=True)
     breed: so.Mapped[Optional[str]] = so.mapped_column(sa.String(32), index=True)
     muzzle_length: so.Mapped[Optional[str]] = so.mapped_column(sa.String(32), index=True)
     muzzle_depth: so.Mapped[Optional[str]] = so.mapped_column(sa.String(32), index=True)
@@ -79,6 +80,9 @@ class DogInfo:
     coat_colour: so.Mapped[Optional[str]] = so.mapped_column(sa.String(32), index=True)
     immune_mediated_haemolytic_anaemia: so.Mapped[Optional[str]] = so.mapped_column(sa.String(32), index=True)
     dilated_cardiomyopathy: so.Mapped[Optional[str]] = so.mapped_column(sa.String(32), index=True)
+    cardiomyopathy: so.Mapped[Optional[str]] = so.mapped_column(sa.String(32), index=True)
+    endocardiosis: so.Mapped[Optional[str]] = so.mapped_column(sa.String(32), index=True)
+    mitral_valve_dysplasia: so.Mapped[Optional[str]] = so.mapped_column(sa.String(32), index=True)
     patent_ductus_arteriosus: so.Mapped[Optional[str]] = so.mapped_column(sa.String(32), index=True)
     pulmonic_stenosis: so.Mapped[Optional[str]] = so.mapped_column(sa.String(32), index=True)
     ventricular_septal_defect: so.Mapped[Optional[str]] = so.mapped_column(sa.String(32), index=True)
@@ -255,6 +259,9 @@ class Dog(db.Model, DogInfo):
     def become_parent_to(self, dog):
         if not self.is_parent_to(dog):
             self.parent_to.add(dog)
+
+    def set_child_of(self, dog):
+        self.child_of.add(dog)
 
     def undo_become_parent_to(self, dog):
         if self.is_parent_to(dog):

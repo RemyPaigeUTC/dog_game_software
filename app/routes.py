@@ -1,19 +1,72 @@
 from pprint import pprint
 
-from flask import render_template, flash, redirect, url_for
+from flask import render_template, flash, redirect, url_for, request
 from flask_login import current_user, login_user, logout_user
 import sqlalchemy as sa
 from app import app, db
 from app.models import User, Post, Dog
 from app.forms import LoginForm, AddDogForm
 from app import utilities
+from app.utilities import create_dog_dict
+
 
 @app.route('/')
 def index():
+    genotypes_list = ["dilated_cardiomyopathy", "cardiomyopathy", "progressive_retinal_atrophy", "retinal_dysplasia",
+                      "chondrodystrophy", "muscular_dystrophy", "myotonia_congenita", "degenerative_myelopathy",
+                      "ichthyosis", "primary_glomerulopathy",
+                      "urolithiasis"]
+    phenotypes_list = ["endocardiosis", "chiari_malformation", "deafness_congenital", "mitral_valve_dysplasia",
+                       "patent_ductus_arteriosus",
+                       "pulmonic_stenosis", "ventricular_septal_defect", "corneal_dystrophy", "distichiasis",
+                       "keratoconjunctivitis_sicca",
+                       "exocrine_pancreatic_insufficiency", "cervical_spondylomyelopathy", "elbow_dysplasia",
+                       "hip_dysplasia", "patellar_luxation",
+                       "epilepsy", "atopy", "umbilical_hernia", "addisons_disease", "autoimmune_thyroid_disease",
+                       "diabetes_mellitus",
+                       "entropion", "microphthalmia", "persistent_pupillary_membranes", "vitreous_degeneration",
+                       "protein_losing_enteropathy",
+                       "legg_calve_perthes_disease", "hydrocephalus", "cleft_palate", "demodicosis", "cryptorchidism",
+                       "chronic_hepatitis"]
     # Creating webpage using Jinja
     # app/templates
-    return render_template('index.html', title='Home')
+    page = request.args.get('page', 1, type=int)
+    query = sa.select(Dog).where(Dog.living_status == "alive").order_by(Dog.id.asc())
+    # posts = db.session.scalars(current_user.following_posts()).all()
+    dogs = db.session.scalars(query).all()
+    # dogs = db.paginate(query, page=page, per_page=app.config['DOGS_PER_PAGE'], error_out=False)
+    # next_url = url_for('index', page=dogs.next_num) \
+    #     if dogs.has_next else None
+    # prev_url = url_for('index', page=dogs.prev_num) \
+    #     if dogs.has_prev else None
+    # id:   basic:
+    #       health:
+    #       conf:
+    all_dogs_dict = {}
+    for dog in dogs:
+        dog_dict = create_dog_dict(dog)
+        all_dogs_dict[dog.id] = dog_dict
+    for dog in all_dogs_dict.values():
+        for attr, value in dog["health"].copy().items():
+            try:
+                if "Clear" in value:
+                    value = "#479f76"
+                elif "Affected" in value:
+                    value = "#ea868f"
+                elif "Carrier" in value:
+                    value = "#feb272"
+                else:
+                    value = "#000000"
+            except:
+                value = "#000000"
+            first_letters = "".join(x[0] for x in attr.split("_")).upper()
+            second_letters = "".join(x[1] for x in attr.split("_"))
+            first_and_second_letters = ''.join(''.join(x) for x in zip(first_letters, second_letters))
+            dog["health"][first_and_second_letters] = value
+            del dog["health"][attr]
 
+    # return render_template('index.html', title='Home', dogs=all_dogs_dict, next_url=next_url, prev_url=prev_url)
+    return render_template('index.html', title='Home', dogs=all_dogs_dict)
 
 @app.route('/add_dog', methods=['GET', 'POST'])
 def add_dog():
@@ -22,6 +75,7 @@ def add_dog():
         dog = Dog()
         db.session.add(dog)
         dog.id = form.id.data
+        dog.living_status = form.living_status.data
         dog.breed = form.breed.data
         dog.gender = form.gender.data
         db.session.commit()
@@ -61,34 +115,9 @@ def add_dog():
 
 @app.route('/view_dog/<id>', methods=['GET', 'POST'])
 def view_dog(id):
-    trait_list = ['muzzle_length', 'muzzle_depth', 'dewlap', 'brow_ridge', 'profile', 'bite', 'skull', 'head_width', 'stop',
-     'head_carriage', 'ear_ser', 'ear_length', 'ear_width', 'ear_points', 'ear_carriage', 'eye_size', 'eye_shape',
-     'bone', 'build', 'back_length', 'back_shape', 'topline', 'neck_length', 'croup', 'chest_depth', 'chest_width',
-     'tuck', 'wrinkle', 'leg_length', 'front_angulation', 'rear_angulation', 'reach', 'drive', 'pasterns', 'feet',
-     'hind_dew_claws', 'tail_shape', 'tail_length', 'tail_set', 'tail_carriage', 'hairless', 'coat_length',
-     'furnishings', 'topknot', 'ear_fringe_type', 'ear_fringe_length', 'neck_ruff', 'body_coat', 'leg_feather',
-     'tail_plume', 'coat_curl', 'texture', 'undercoat', 'coat_lay', 'ridge', 'shedding', 'coat_type_genotype',
-     'eye_colour', 'pigment', 'nose_colour', 'coat_colour_genotype', 'coat_colour']
-    affected_health_values = ["Phenotype Affected", "Genotype Carrier", "Genotype Affected", "Genotype Affected Carrying Clear"]
     dog = db.first_or_404(sa.select(Dog).where(Dog.id == id))
-    dog_basic = {}
-    dog_health = {}
-    dog_conformation = {}
-
-    for attr, value in dog.__dict__.items():
-        if value is not None or value != "None":
-            if attr == "id" or attr == "breed" or attr == "gender" or attr == "registered_name":
-                dog_basic[attr] = value
-            elif attr == "health_score":
-                dog_health[attr] = value
-            elif attr == "conformation_score":
-                dog_conformation[attr] = value
-            elif attr in trait_list:
-                dog_conformation[attr] = value
-            elif value in affected_health_values:
-                dog_health[attr] = value
-
-    return render_template("view_dog.html", title="View Dog", dog_basic=dog_basic, dog_health=dog_health, dog_conformation=dog_conformation)
+    dog_dict = utilities.create_dog_dict(dog)
+    return render_template("view_dog.html", title="View Dog", dog_basic=dog_dict["basic"], dog_health=dog_dict["health"], dog_conformation=dog_dict["conformation"])
 
 
 

@@ -13,3 +13,20 @@
     margin-right: 10px;
     border-radius: 20px;
 }
+.scrolling {
+  overflow: auto;
+  white-space: nowrap;
+}
+
+.attr_box {
+  display: inline-block;
+}
+.attr_value {
+    display: block;
+}
+.health_attr_box {
+  display: inline-block;
+    width: 75px;
+    padding: 5px;
+    border: #0e0e08 solid 1px;
+}

@@ -3,5 +3,24 @@
 {#has to be the same block name as in base#}
 {#Data passed from route#}
 {% block content %}
+    <div class="scrolling">
+        {% for dog in dogs.values() %}
+            <div class="dog_container">
+                    <div class="attr_box">
+                        <h1>{{ dog["basic"]["id"] }}</h1>
+                    </div>
+                    <div class="attr_box">
+                        <div>{% include "_dog_health.html" %}</div>
+                        <div>{% include '_dog_conformation.html' %}</div>
+                    </div>
+            </div>
 
+        {% endfor %}
+    </div>
+    {% if prev_url %}
+        <a href="{{ prev_url }}">Newer posts</a>
+    {% endif %}
+    {% if next_url %}
+        <a href="{{ next_url }}">Older posts</a>
+    {% endif %}
 {% endblock %}

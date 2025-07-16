@@ -11,6 +11,8 @@ class LoginForm(FlaskForm):
 
 class AddDogForm(FlaskForm):
     id = IntegerField("Dog ID", validators=[DataRequired()])
+    living_status = SelectField("Living Status", choices=[('Alive', "Dead"),("alive", "dead")],
+                                                        validators=[DataRequired()])
     breed = SelectField("Dog Breed", choices=[("Cavalier King Charles Spaniel", "Cavalier King Charles Spaniel"),
                                                         ("Jack Russell Terrier", "Jack Russell Terrier")],
                                                         validators=[DataRequired()])

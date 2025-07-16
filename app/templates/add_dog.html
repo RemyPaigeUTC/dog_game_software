@@ -12,6 +12,13 @@
             {% endfor %}
         </p>
         <p>
+            {{ form.living_status.label }}
+            {{ form.living_status() }}
+            {% for error in form.gender.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
             {{ form.breed.label }}
             {{ form.breed() }}
             {% for error in form.breed.errors %}
