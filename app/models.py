@@ -16,8 +16,11 @@ class DogInfo:
     registered_name: so.Mapped[Optional[str]] = so.mapped_column(sa.String(32), index=True, unique=True)
     call_name: so.Mapped[Optional[str]] = so.mapped_column(sa.String(32), index=True)
     gender: so.Mapped[Optional[str]] = so.mapped_column(sa.String(32), index=True)
+    generation: so.Mapped[Optional[int]] = so.mapped_column(sa.Integer, index=True)
     living_status: so.Mapped[Optional[str]] = so.mapped_column(sa.String(32), index=True)
     breed: so.Mapped[Optional[str]] = so.mapped_column(sa.String(32), index=True)
+    health_score: so.Mapped[Optional[int]] = so.mapped_column(sa.Integer, index=True)
+    conformation_score: so.Mapped[Optional[int]] = so.mapped_column(sa.Integer, index=True)
     muzzle_length: so.Mapped[Optional[str]] = so.mapped_column(sa.String(32), index=True)
     muzzle_depth: so.Mapped[Optional[str]] = so.mapped_column(sa.String(32), index=True)
     dewlap: so.Mapped[Optional[str]] = so.mapped_column(sa.String(32), index=True)
@@ -283,10 +286,10 @@ class Dog(db.Model, DogInfo):
 
     def list_children(self):
         query = self.parent_to.select()
-        return db.session.execute(query).all()
+        return db.session.scalars(query).all()
     def list_parents(self):
         query = self.child_of.select()
-        return db.session.execute(query).all()
+        return db.session.scalars(query).all()
 
 
 

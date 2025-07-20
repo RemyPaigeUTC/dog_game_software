@@ -322,7 +322,7 @@ def parse_csv():
                 dog = set_dog_attr(dog, "chronic_hepatitis", dog_line[i])
         db.session.commit()
         del dog
-#top tppp
+
 def parse_conformation_from_html(html_data, dog):
 
     soup = BeautifulSoup(html_data, 'html.parser')
@@ -371,6 +371,7 @@ def parse_health_from_html(html_data, dog):
             setattr(dog, disease_status_string[0:status_index].replace(" ", "_").lower(), "Phenotype Affected")
     setattr(dog, "health_score", 5)
     return dog
+
 def registered_name_from_id(dog_id):
     dog_id_string = str(dog_id)
     registered_name_string = ""
@@ -401,3 +402,35 @@ def registered_name_from_id(dog_id):
         count = count + 1
     return registered_name_string
 
+def create_descendant_disease_dict(dog, generation_index, descendant_disease_dict):
+    print("start function:" + str(dog.id) + " " + str(generation_index))
+    pprint(descendant_disease_dict)
+    children = dog.list_children()
+    next_generation_index = generation_index + 1
+    for child in children:
+        print("call function:" + str(child.id) + " " + str(next_generation_index))
+        descendant_disease_dict = create_descendant_disease_dict(child, next_generation_index,
+                                                                               descendant_disease_dict)
+    # add existance check
+    if generation_index in descendant_disease_dict:
+        health_dict = descendant_disease_dict[generation_index]
+    else:
+        health_dict = {}
+        descendant_disease_dict[generation_index] =health_dict
+
+    affected_health_values = ["Phenotype Affected", "Genotype Carrier", "Genotype Affected",
+                              "Genotype Affected Carrying Clear"]
+
+    for attr, value in dog.__dict__.items():
+        if value is not None or value != "None" or str(type(value)) != "<class 'NoneType'>":
+            if value in affected_health_values:
+                if attr in health_dict:
+                    health_dict[attr] = health_dict[attr] + 1
+                else:
+                    health_dict[attr] = 1
+        else:
+            print("None")
+    descendant_disease_dict[generation_index] = health_dict
+    print("end function:" + str(dog.id) + " " + str(generation_index))
+    pprint(descendant_disease_dict)
+    return descendant_disease_dict

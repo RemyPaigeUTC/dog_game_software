@@ -92,6 +92,8 @@ def add_dog():
         dog = utilities.parse_conformation_from_html(form.conformation_data.data, dog)
         # TODO: Add score to conf
         db.session.commit()
+        # TODO: Add generation calculation
+
         # except:
         #     print("empty conformation data")
         # Create registered name

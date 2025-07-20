@@ -19,3 +19,12 @@ flask db migrate
 flask db upgrade
 flask shell
 from app import utilities
+
+
+gen 1 dog with 2 gens in csv
+Tou Irpp
+5978400
+
+
+
+scalars gives classes. Execute gives SQL alchmeny thing
