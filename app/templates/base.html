@@ -2,8 +2,8 @@
     <head>
         <link rel="stylesheet" href={{ url_for("static", filename="style.css") }}>
         <link rel="stylesheet" href={{ url_for("static", filename="spectre.css") }}>
-        <link rel="stylesheet" href={{ url_for("static", filename="spectre-exp.min..css") }}>
         <link rel="stylesheet" href={{ url_for("static", filename="spectre-icons.css") }}>
+
         {% if title %}
         <title>{{ title }} - Dog Breeder Game Aid</title>
         {% else %}
@@ -13,18 +13,18 @@
     <body>
         <header class="navbar">
             <section class="navbar-section">
-                <a class="navbar-brand mr-2" href="{{ url_for('index') }}">Home</a>
-                <a class="btn btn-link" href="{{ url_for("add_dog") }}">Add Dog</a>
+                <a class="nav_item" href="{{ url_for('index') }}">Home</a>
+                <a class="nav_item" href="{{ url_for("add_dog") }}">Add Dog</a>
             </section>
         </header>
         {% with messages = get_flashed_messages() %}
-        {% if messages %}
-        <ul>
-            {% for message in messages %}
-            <li>{{ message }}</li>
-            {% endfor %}
-        </ul>
-        {% endif %}
+            {% if messages %}
+                <ul>
+                    {% for message in messages %}
+                    <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
         {% endwith %}
         <div class="container">
             <div class="columns">
@@ -35,5 +35,25 @@
                 <div class="column col-1"></div>
             </div>
         </div>
+        <script>
+            const divs = document.querySelectorAll('.dog_information_row');
+
+            divs.forEach((div) => {
+                div.addEventListener('click', (event) => {
+                    if (div.classList.contains("M_highlight")) {
+                        div.classList.remove("M_highlight")
+                    }
+                    else if (!(div.classList.contains("M_highlight")) && (div.classList.contains("M"))) {
+                        div.classList.add("M_highlight")
+                    }
+                    if (div.classList.contains("F_highlight")) {
+                        div.classList.remove("F_highlight")
+                    }
+                    else if (!(div.classList.contains("F_highlight")) && (div.classList.contains("F"))) {
+                        div.classList.add("F_highlight")
+                    }
+                });
+            });
+        </script>
     </body>
 </html>

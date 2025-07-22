@@ -1,0 +1,21 @@
+<div class="heading2">Health   :   {{ dog_basic["health_score"] }}</div>
+<div class="container">
+    <div class="columns">
+        {% for attr, value in dog_health.items() %}
+            <div class="column col-4" >
+                <div class="large_health_box {{ value }}">
+                    <div class="large_health_box_trucated">{{ truncated_attrs_dict[attr] }}</div>
+                    <div class="large_health_box_full">{{ attr.replace("_", " ") }}</div>
+                </div>
+            </div>
+        {% endfor %}
+        {% for value in unique_descendants_diseases %}
+            <div class="column col-4" >
+                <div class="large_health_box">
+                    <div class="large_health_box_trucated">{{ truncated_attrs_dict[value] }}</div>
+                    <div class="large_health_box_full">{{ value.replace("_", " ") }}</div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>

@@ -5,37 +5,29 @@
 {% block content %}
     <div class="container">
         <div class="columns">
-            <div class="column col-8">
-                <div> <h1>{{ dog_basic["id"] }}  | {{ dog_basic["registered_name"] }} </h1></div>
-                <div> <h2> {{ dog_basic["gender"] }}  | {{ dog_basic["breed"] }} </h2></div>
-                <h2>Health | {{ dog_health["score"] }}</h2>
-                    <div class="container">
-                        <div class="columns">
-{#                        #ea868f red #feb272 orange #}
-                            {% for attr, value in dog_health.items() %}
-                                <div class="column"><h4>{{ attr }}</h4> {{ value }}</div>
-                            {% endfor %}
+            <div class="column col-12 view_dog_basic">
+                <div class="container">
+                    <div class="columns">
+                        <div class="column col-4">
+                            <div> <span class="vd_heading1">{{ dog_basic["registered_name"] }}</span><span class="vd_heading2">{{ dog_basic["id"] }}</span></div>
+                            <div> <span class="vd_heading2">{{ dog_basic["generation"] }} {{ dog_basic["gender"] }}</span><span class="vd_heading3"> {{ dog_basic["breed"] }}</span></div>
+                        </div>
+                        <div class="column col-8">
+                            <div class="edit_dog_button"> <a style="color: #0e0e08" href="{{ url_for('edit_dog', id=dog_basic["id"]) }}">Edit Dog</a></div>
                         </div>
                     </div>
-                <br>
-                <h2>Conformation | {{ dog_conformation["score"] }}</h2>
-            </div>
-            <div class="column col-4">
-                <div>family tree</div>
-                <div class="panel" >
-                    <div class="panel-header">
-                        <div class="panel-title">Genological health data</div>
-                    </div>
-                    <div class="panel-nav">
-                        <ul class="tab tab-block">
-                          <li class="tab-item active"><a href="#panels">Overview</a></li>
-                          <li class="tab-item"><a href="#panels">filter by partner</a></li>
-                        </ul>
-                    </div>
-                    <div class="panel-body">
-                        <!-- contents -->
-                    </div>
                 </div>
+            </div>
+            <br>
+            <div class="column col-6">
+                <div>{% include "_view_dog_dog_health.html" %}</div>
+            </div>
+            <div class="column col-6">
+                <div>{% include "_view_dog_descendant_health.html" %}</div>
+            </div>
+            <div class="column col-12 view_dog_basic">
+                <div class="heading2">Ancestor Information</div>
+                <div>{% include "_view_dog_ancestor_information.html" %}</div>
             </div>
         </div>
     </div>

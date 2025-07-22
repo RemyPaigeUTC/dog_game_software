@@ -1,9 +1,3 @@
-{% extends "base.html" %}
-
-{#has to be the same block name as in base#}
-{#Data passed from route#}
-{% block content %}
-    {% for dog in dogs.values() %}
         <div class="container">
             <div id="{{ dog["basic"]["id"] }}" class="columns dog_information_row {{ dog["basic"]["gender"] }}">
 
@@ -18,13 +12,3 @@
                 </div>
             </div>
         </div>
-
-        {% endfor %}
-    </div>
-    {% if prev_url %}
-        <a href="{{ prev_url }}">Newer posts</a>
-    {% endif %}
-    {% if next_url %}
-        <a href="{{ next_url }}">Older posts</a>
-    {% endif %}
-{% endblock %}

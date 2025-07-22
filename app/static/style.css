@@ -1,3 +1,29 @@
+/*https://getbootstrap.com/docs/5.0/customize/color/*/
+/*300 pastel*/
+.health_affected_bg {
+    background-color: #ea868f;
+}
+.health_carrier_bg {
+    background-color: #feb272;
+}
+.health_clear_bg {
+    background-color: #75b798;
+}
+/*set all divs in columns to the same height using flexbox's inherent properties*/
+.column {
+  box-sizing: border-box;
+}
+.columns {
+  justify-content: space-between;
+}
+.edit_dog_button {
+  background-color: #75b798;
+  border-radius: 5px;
+  padding: 10px;
+  margin: 20px;
+    width: fit-content;
+}
+
 .health_affected {
     padding: 15px;
     background-color: #ea868f;
@@ -29,4 +55,130 @@
     width: 75px;
     padding: 5px;
     border: #0e0e08 solid 1px;
+}
+
+/*view dog styles*/
+.heading1 {
+    font-size: 2em;
+    font-weight: bold;
+    margin-right: 30px;
+}
+.heading2 {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-right: 30px;
+}
+.heading3 {
+    font-size: 0.8em;
+    font-weight: bold;
+    margin-right: 30px;
+}
+.vd_heading1 {
+    font-size: 3em;
+    font-weight: bold;
+    margin-right: 30px;
+}
+.vd_heading2 {
+    font-size: 1.8em;
+    font-weight: bold;
+    margin-right: 30px;
+}
+.vd_heading3 {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-right: 30px;
+}
+
+.view_dog_basic {
+    margin-bottom: 25px;
+}
+
+.large_health_box {
+    width: 80%;
+    border: 1px black solid;
+    margin: 10px;
+    padding: 10px;
+    height: 90%;
+}
+.large_health_box_trucated {
+    padding: 0px;
+    width: 50%;
+    font-weight: bold;
+    display: inline-block;
+}
+.large_health_box_number {
+    padding: 0px;
+    width: 50%;
+    display: inline-block;
+}
+.large_health_box_full {
+    padding-left: 5px
+}
+.small_health_box {
+    width: 90%;
+    border: 1px black solid;
+    margin: 10px;
+    padding: 5px;
+}
+.small_health_box_truncated {
+    padding: 0px;
+    width: 50%;
+    font-weight: bold;
+}
+.small_health_box_number {
+    padding: 0px;
+    width: 50%;
+}
+
+/*index styles*/
+.health_line {
+  display: inline-block;
+  padding: 5px;
+  border: solid 1px black;
+  width: 70px;
+}
+.dog_health_or_confo {
+  margin-bottom: 10px
+}
+.dog_information_row {
+    margin-bottom: 10px;
+    padding-top: 9px;
+    width: 90%;
+}
+.inline_scores {
+    float: right;
+    padding: 9px;
+}
+.dog_basic1 {
+  font-size: 1.5em;
+  line-height: 0.75;
+}
+.dog_basic2 {
+  font-size: 0.8em;
+  padding-left: 5px;
+  padding-top: 3px;
+}
+.Affected {
+    background-color: #ea868f;
+}
+.Carrier {
+    background-color: #feb272;
+}
+.F_highlight {
+    background-color: #d63384 !important;
+}
+.M_highlight {
+    background-color: #0d6efd !important;
+}
+.F {
+    background-color: #efadce;
+}
+.M {
+    background-color: #9ec5fe;
+}
+.nav_item {
+  font-size: 1.2rem;
+  padding: 10px;
+  padding-left: 30px;
+  color: black !important;
 }

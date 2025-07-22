@@ -1,0 +1,54 @@
+<div class="heading2">Descendant Disease Information</div>
+<div style="height: 10px"></div>
+
+{% for partner, generation_dict in descendant_disease_dict.items() %}
+    <div>
+        <div class="heading1">{{ partner }}</div>
+
+        {% for generation, health_info in generation_dict.items() %}
+            {% if generation == 2 %}
+                <div>{{ count_descendants_dict[partner][generation] }} Children</div>
+                <div class="container">
+                    <div class="columns">
+                        {% for attr, value in health_info.items() %}
+                            <div class="column col-2" >
+                                <div class="small_health_box">
+                                    <span class="small_health_box_truncated">{{ truncated_attrs_dict[attr] }}</span>
+                                    <span class="small_health_box_number">{{ value }}</span>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% elif generation == 3 %}
+                <div>{{ count_descendants_dict[partner][generation] }} GrandChildren</div>
+                <div class="container">
+                    <div class="columns">
+                        {% for attr, value in health_info.items() %}
+                            <div class="column col-2" >
+                                <div class="small_health_box">
+                                    <span class="small_health_box_truncated">{{ truncated_attrs_dict[attr] }}</span>
+                                    <span class="small_health_box_number">{{ value }}</span>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% else %}
+                <div>{{ count_descendants_dict[partner][generation] }} Later Generations</div>
+                <div class="container">
+                    <div class="columns">
+                        {% for attr, value in health_info.items() %}
+                            <div class="column col-2" >
+                                <div class="small_health_box">
+                                    <span class="small_health_box_truncated">{{ truncated_attrs_dict[attr] }}</span>
+                                    <span class="small_health_box_number">{{ value }}</span>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endfor %}
