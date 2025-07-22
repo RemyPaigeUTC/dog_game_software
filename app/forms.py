@@ -24,3 +24,9 @@ class AddDogForm(FlaskForm):
     parent2_registered_name = StringField("Parent Registered Name")
     # activity_data = StringField('Activity Data')
     submit = SubmitField('Submit')
+
+class IndexFilterForm(FlaskForm):
+    generation = IntegerField("Generation")
+    breed = SelectField("Dog Breed", choices=[("All", "All"), ("Cavalier King Charles Spaniel", "Cavalier King Charles Spaniel"),
+                                              ("Jack Russell Terrier", "Jack Russell Terrier")])
+    submit = SubmitField('Filter')

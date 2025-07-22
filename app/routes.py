@@ -5,169 +5,196 @@ from flask_login import current_user, login_user, logout_user
 import sqlalchemy as sa
 from app import app, db
 from app.models import User, Post, Dog
-from app.forms import LoginForm, AddDogForm
+from app.forms import LoginForm, AddDogForm, IndexFilterForm
 from app import utilities
 from app.utilities import create_dog_dict, create_descendant_disease_dict, list_descendants_diseases, \
     list_unique_descendants_diseases, create_count_descendants_dict, create_descendant_dict_ggp
+
+genotypes_list = ["dilated_cardiomyopathy", "cardiomyopathy", "progressive_retinal_atrophy", "retinal_dysplasia",
+                  "chondrodystrophy", "muscular_dystrophy", "myotonia_congenita", "degenerative_myelopathy",
+                  "ichthyosis", "primary_glomerulopathy",
+                  "urolithiasis"]
+phenotypes_list = ["endocardiosis", "chiari_malformation", "deafness_congenital", "mitral_valve_dysplasia",
+                   "patent_ductus_arteriosus",
+                   "pulmonic_stenosis", "ventricular_septal_defect", "corneal_dystrophy", "distichiasis",
+                   "keratoconjunctivitis_sicca",
+                   "exocrine_pancreatic_insufficiency", "cervical_spondylomyelopathy", "elbow_dysplasia",
+                   "hip_dysplasia", "patellar_luxation",
+                   "epilepsy", "atopy", "umbilical_hernia", "addisons_disease", "autoimmune_thyroid_disease",
+                   "diabetes_mellitus",
+                   "entropion", "microphthalmia", "persistent_pupillary_membranes", "vitreous_degeneration",
+                   "protein_losing_enteropathy",
+                   "legg_calve_perthes_disease", "hydrocephalus", "cleft_palate", "demodicosis", "cryptorchidism",
+                   "chronic_hepatitis"]
 
 # TODO: code filters
 # TODO: improve look of overflowing small health boxes
 # TODO: add conformation onto index with toggle switch
 # TODO: make the form look nicer
 # TODO: improve conformation score
-@app.route('/')
+@app.route('/',methods=['GET', 'POST'])
 def index():
-    genotypes_list = ["dilated_cardiomyopathy", "cardiomyopathy", "progressive_retinal_atrophy", "retinal_dysplasia",
-                      "chondrodystrophy", "muscular_dystrophy", "myotonia_congenita", "degenerative_myelopathy",
-                      "ichthyosis", "primary_glomerulopathy",
-                      "urolithiasis"]
-    phenotypes_list = ["endocardiosis", "chiari_malformation", "deafness_congenital", "mitral_valve_dysplasia",
-                       "patent_ductus_arteriosus",
-                       "pulmonic_stenosis", "ventricular_septal_defect", "corneal_dystrophy", "distichiasis",
-                       "keratoconjunctivitis_sicca",
-                       "exocrine_pancreatic_insufficiency", "cervical_spondylomyelopathy", "elbow_dysplasia",
-                       "hip_dysplasia", "patellar_luxation",
-                       "epilepsy", "atopy", "umbilical_hernia", "addisons_disease", "autoimmune_thyroid_disease",
-                       "diabetes_mellitus",
-                       "entropion", "microphthalmia", "persistent_pupillary_membranes", "vitreous_degeneration",
-                       "protein_losing_enteropathy",
-                       "legg_calve_perthes_disease", "hydrocephalus", "cleft_palate", "demodicosis", "cryptorchidism",
-                       "chronic_hepatitis"]
+    form = IndexFilterForm()
     truncated_attrs_dict = {
-     'Cavalier King Charles Spaniel': 'CaKiChSp',
-     'Cavalier_King_Charles_Spaniel': 'CaKiChSp',
-     'Jack Russell Terrier': 'JaRuTe',
-     'Jack_Russell_Terrier': 'JaRuTe',
-     'addisons_disease': 'AdDi',
-     'atopy': 'At',
-     'autoimmune_thyroid_disease': 'AuThDi',
-     'back_length': 'BaLe',
-     'back_shape': 'BaSh',
-     'bite': 'Bi',
-     'body_coat': 'BoCo',
-     'bone': 'Bo',
-     'brow_ridge': 'BrRi',
-     'build': 'Bu',
-     'cardiomyopathy': 'Ca',
-     'cervical_spondylomyelopathy': 'CeSp',
-     'chest_depth': 'ChDe',
-     'chest_width': 'ChWi',
-     'chiari_malformation': 'ChMa',
-     'chondrodystrophy': 'Ch',
-     'chronic_hepatitis': 'ChHe',
-     'cleft_palate': 'ClPa',
-     'coat_colour': 'CoCo',
-     'coat_colour_genotype': 'CoCoGe',
-     'coat_curl': 'CoCu',
-     'coat_lay': 'CoLa',
-     'coat_length': 'CoLe',
-     'coat_type_genotype': 'CoTyGe',
-     'corneal_dystrophy': 'CoDy',
-     'croup': 'Cr',
-     'cryptorchidism': 'Cr',
-     'deafness_congenital': 'DeCo',
-     'degenerative_myelopathy': 'DeMy',
-     'demodicosis': 'De',
-     'dewlap': 'De',
-     'diabetes_mellitus': 'DiMe',
-     'dilated_cardiomyopathy': 'DiCa',
-     'distichiasis': 'Di',
-     'drive': 'Dr',
-     'ear_carriage': 'EaCa',
-     'ear_fringe_length': 'EaFrLe',
-     'ear_fringe_type': 'EaFrTy',
-     'ear_length': 'EaLe',
-     'ear_points': 'EaPo',
-     'ear_ser': 'EaSe',
-     'ear_width': 'EaWi',
-     'elbow_dysplasia': 'ElDy',
-     'endocardiosis': 'En',
-     'entropion': 'En',
-     'epilepsy': 'Ep',
-     'exocrine_pancreatic_insufficiency': 'ExPaIn',
-     'eye_colour': 'EyCo',
-     'eye_shape': 'EySh',
-     'eye_size': 'EySi',
-     'feet': 'Fe',
-     'front_angulation': 'FrAn',
-     'furnishings': 'Fu',
-     'hairless': 'Ha',
-     'head_carriage': 'HeCa',
-     'head_width': 'HeWi',
-     'hind_dew_claws': 'HiDeCl',
-     'hip_dysplasia': 'HiDy',
-     'hydrocephalus': 'Hy',
-     'ichthyosis': 'Ic',
-     'keratoconjunctivitis_sicca': 'KeSi',
-     'leg_feather': 'LeFe',
-     'leg_length': 'LeLe',
-     'legg_calve_perthes_disease': 'LeCaPeDi',
-     'microphthalmia': 'Mi',
-     'mitral_valve_dysplasia': 'MiVaDy',
-     'muscular_dystrophy': 'MuDy',
-     'muzzle_depth': 'MuDe',
-     'muzzle_length': 'MuLe',
-     'myotonia_congenita': 'MyCo',
-     'neck_length': 'NeLe',
-     'neck_ruff': 'NeRu',
-     'nose_colour': 'NoCo',
-     'pasterns': 'Pa',
-     'patellar_luxation': 'PaLu',
-     'patent_ductus_arteriosus': 'PaDuAr',
-     'persistent_pupillary_membranes': 'PePuMe',
-     'pigment': 'Pi',
-     'primary_glomerulopathy': 'PrGl',
-     'profile': 'Pr',
-     'progressive_retinal_atrophy': 'PrReAt',
-     'protein_losing_enteropathy': 'PrLoEn',
-     'pulmonic_stenosis': 'PuSt',
-     'reach': 'Re',
-     'rear_angulation': 'ReAn',
-     'retinal_dysplasia': 'ReDy',
-     'ridge': 'Ri',
-     'shedding': 'Sh',
-     'skull': 'Sk',
-     'stop': 'St',
-     'tail_carriage': 'TaCa',
-     'tail_length': 'TaLe',
-     'tail_plume': 'TaPl',
-     'tail_set': 'TaSe',
-     'tail_shape': 'TaSh',
-     'texture': 'Te',
-     'topknot': 'To',
-     'topline': 'To',
-     'tuck': 'Tu',
-     'umbilical_hernia': 'UmHe',
-     'undercoat': 'Un',
-     'urolithiasis': 'Ur',
-     'ventricular_septal_defect': 'VeSeDe',
-     'vitreous_degeneration': 'ViDe',
-     'wrinkle': 'Wr'}
-    # Creating webpage using Jinja
-    # app/templates
-    page = request.args.get('page', 1, type=int)
-    query = sa.select(Dog).where(Dog.living_status == "alive").order_by(Dog.id.asc())
-    # posts = db.session.scalars(current_user.following_posts()).all()
-    dogs = db.session.scalars(query).all()
-    # dogs = db.paginate(query, page=page, per_page=app.config['DOGS_PER_PAGE'], error_out=False)
-    # next_url = url_for('index', page=dogs.next_num) \
-    #     if dogs.has_next else None
-    # prev_url = url_for('index', page=dogs.prev_num) \
-    #     if dogs.has_prev else None
-    # id:   basic:
-    #       health:
-    #       conf:
-    all_dogs_dict = {}
-    for dog in dogs:
-        dog_dict = create_dog_dict(dog)
-        unique_descendants_diseases = list_unique_descendants_diseases(dog)
-        for disease in unique_descendants_diseases:
-            dog_dict["health"][disease] = "Descendant"
-        all_dogs_dict[dog.id] = dog_dict
+        'Cavalier King Charles Spaniel': 'CaKiChSp',
+        'Cavalier_King_Charles_Spaniel': 'CaKiChSp',
+        'Jack Russell Terrier': 'JaRuTe',
+        'Jack_Russell_Terrier': 'JaRuTe',
+        'addisons_disease': 'AdDi',
+        'atopy': 'At',
+        'autoimmune_thyroid_disease': 'AuThDi',
+        'back_length': 'BaLe',
+        'back_shape': 'BaSh',
+        'bite': 'Bi',
+        'body_coat': 'BoCo',
+        'bone': 'Bo',
+        'brow_ridge': 'BrRi',
+        'build': 'Bu',
+        'cardiomyopathy': 'Ca',
+        'cervical_spondylomyelopathy': 'CeSp',
+        'chest_depth': 'ChDe',
+        'chest_width': 'ChWi',
+        'chiari_malformation': 'ChMa',
+        'chondrodystrophy': 'Ch',
+        'chronic_hepatitis': 'ChHe',
+        'cleft_palate': 'ClPa',
+        'coat_colour': 'CoCo',
+        'coat_colour_genotype': 'CoCoGe',
+        'coat_curl': 'CoCu',
+        'coat_lay': 'CoLa',
+        'coat_length': 'CoLe',
+        'coat_type_genotype': 'CoTyGe',
+        'corneal_dystrophy': 'CoDy',
+        'croup': 'Cr',
+        'cryptorchidism': 'Cr',
+        'deafness_congenital': 'DeCo',
+        'degenerative_myelopathy': 'DeMy',
+        'demodicosis': 'De',
+        'dewlap': 'De',
+        'diabetes_mellitus': 'DiMe',
+        'dilated_cardiomyopathy': 'DiCa',
+        'distichiasis': 'Di',
+        'drive': 'Dr',
+        'ear_carriage': 'EaCa',
+        'ear_fringe_length': 'EaFrLe',
+        'ear_fringe_type': 'EaFrTy',
+        'ear_length': 'EaLe',
+        'ear_points': 'EaPo',
+        'ear_ser': 'EaSe',
+        'ear_width': 'EaWi',
+        'elbow_dysplasia': 'ElDy',
+        'endocardiosis': 'En',
+        'entropion': 'En',
+        'epilepsy': 'Ep',
+        'exocrine_pancreatic_insufficiency': 'ExPaIn',
+        'eye_colour': 'EyCo',
+        'eye_shape': 'EySh',
+        'eye_size': 'EySi',
+        'feet': 'Fe',
+        'front_angulation': 'FrAn',
+        'furnishings': 'Fu',
+        'hairless': 'Ha',
+        'head_carriage': 'HeCa',
+        'head_width': 'HeWi',
+        'hind_dew_claws': 'HiDeCl',
+        'hip_dysplasia': 'HiDy',
+        'hydrocephalus': 'Hy',
+        'ichthyosis': 'Ic',
+        'keratoconjunctivitis_sicca': 'KeSi',
+        'leg_feather': 'LeFe',
+        'leg_length': 'LeLe',
+        'legg_calve_perthes_disease': 'LeCaPeDi',
+        'microphthalmia': 'Mi',
+        'mitral_valve_dysplasia': 'MiVaDy',
+        'muscular_dystrophy': 'MuDy',
+        'muzzle_depth': 'MuDe',
+        'muzzle_length': 'MuLe',
+        'myotonia_congenita': 'MyCo',
+        'neck_length': 'NeLe',
+        'neck_ruff': 'NeRu',
+        'nose_colour': 'NoCo',
+        'pasterns': 'Pa',
+        'patellar_luxation': 'PaLu',
+        'patent_ductus_arteriosus': 'PaDuAr',
+        'persistent_pupillary_membranes': 'PePuMe',
+        'pigment': 'Pi',
+        'primary_glomerulopathy': 'PrGl',
+        'profile': 'Pr',
+        'progressive_retinal_atrophy': 'PrReAt',
+        'protein_losing_enteropathy': 'PrLoEn',
+        'pulmonic_stenosis': 'PuSt',
+        'reach': 'Re',
+        'rear_angulation': 'ReAn',
+        'retinal_dysplasia': 'ReDy',
+        'ridge': 'Ri',
+        'shedding': 'Sh',
+        'skull': 'Sk',
+        'stop': 'St',
+        'tail_carriage': 'TaCa',
+        'tail_length': 'TaLe',
+        'tail_plume': 'TaPl',
+        'tail_set': 'TaSe',
+        'tail_shape': 'TaSh',
+        'texture': 'Te',
+        'topknot': 'To',
+        'topline': 'To',
+        'tuck': 'Tu',
+        'umbilical_hernia': 'UmHe',
+        'undercoat': 'Un',
+        'urolithiasis': 'Ur',
+        'ventricular_septal_defect': 'VeSeDe',
+        'vitreous_degeneration': 'ViDe',
+        'wrinkle': 'Wr'}
+    if request.method == 'POST':
+        print("POST")
+        print(form.generation.data)
+        print(form.breed.data)
 
+        if form.generation.data is None and form.breed.data == "All":
+            print("empty")
+            query = sa.select(Dog).where(Dog.living_status == "alive").order_by(Dog.id.asc())
+        elif form.generation.data is not None and form.breed.data != "All":
+            print("both")
+            query = sa.select(Dog).where(Dog.generation == form.generation.data, Dog.breed==form.breed.data, Dog.living_status == "alive").order_by(Dog.id.asc())
+        elif form.generation.data is not None and form.breed.data == "All":
+            print("gen only")
+            query = sa.select(Dog).where(Dog.generation == form.generation.data, Dog.living_status == "alive").order_by(Dog.id.asc())
+        elif form.generation.data is None and form.breed.data != "All":
+            print("breed only")
+            query = sa.select(Dog).where(Dog.breed == form.breed.data, Dog.living_status == "alive").order_by(Dog.id.asc())
 
-    # return render_template('index.html', title='Home', dogs=all_dogs_dict, next_url=next_url, prev_url=prev_url)
-    return render_template('index.html', title='Home', dogs=all_dogs_dict, truncated_attrs_dict=truncated_attrs_dict)
+        dogs = db.session.scalars(query).all()
+        all_dogs_dict = {}
+        for dog in dogs:
+            dog_dict = create_dog_dict(dog)
+            unique_descendants_diseases = list_unique_descendants_diseases(dog)
+            for disease in unique_descendants_diseases:
+                dog_dict["health"][disease] = "Descendant"
+            all_dogs_dict[dog.id] = dog_dict
+        return render_template('index.html', title='Home', dogs=all_dogs_dict,
+                               truncated_attrs_dict=truncated_attrs_dict, form=form)
+    elif request.method == 'GET':
+        print("GET")
+
+        # page = request.args.get('page', 1, type=int)
+        query = sa.select(Dog).where(Dog.living_status == "alive").order_by(Dog.id.asc())
+        dogs = db.session.scalars(query).all()
+        # dogs = db.paginate(query, page=page, per_page=app.config['DOGS_PER_PAGE'], error_out=False)
+        # next_url = url_for('index', page=dogs.next_num) \
+        #     if dogs.has_next else None
+        # prev_url = url_for('index', page=dogs.prev_num) \
+        #     if dogs.has_prev else None
+        all_dogs_dict = {}
+        for dog in dogs:
+            dog_dict = create_dog_dict(dog)
+            unique_descendants_diseases = list_unique_descendants_diseases(dog)
+            for disease in unique_descendants_diseases:
+                dog_dict["health"][disease] = "Descendant"
+            all_dogs_dict[dog.id] = dog_dict
+        # return render_template('index.html', title='Home', dogs=all_dogs_dict, next_url=next_url, prev_url=prev_url)
+        return render_template('index.html', title='Home', dogs=all_dogs_dict, truncated_attrs_dict=truncated_attrs_dict, form=form)
+    return None
+
 
 @app.route('/add_dog', methods=['GET', 'POST'])
 def add_dog():

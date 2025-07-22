@@ -3,7 +3,18 @@
 {#has to be the same block name as in base#}
 {#Data passed from route#}
 {% block content %}
+    <div>
+        <form action="" method="post" novalidate>
+            {{ form.hidden_tag() }}
+            {{ form.generation.label }}
+            {{ form.generation(size=32) }}
+            {{ form.breed.label }}
+            {{ form.breed() }}
+            {{ form.submit() }}
+        </form>
+    </div>
     {% for dog in dogs.values() %}
+
         <div class="container">
             <div id="{{ dog["basic"]["id"] }}" class="columns dog_information_row {{ dog["basic"]["gender"] }}">
 
