@@ -14,13 +14,7 @@ add a route in routes
 reset db
 delete migrations
 delete db file
+
 flask db init
 flask db migrate
 flask db upgrade
-flask shell
-from app import utilities
-
-testing dog: Tuo Iquq gen 1
-             Toe Eqiu gen 3 5933187
-
-             {'basic': {'registered_name': 'yir ieop', 'id': 6848390, 'gender': 'M', 'generation': 2, 'living_status': 'alive', 'breed': 'Cavalier King Charles Spaniel', 'health_score': 8, 'conformation_score': 0}, 'health': {'keratoconjunctivitis_sicca': 'Phenotype Affected', 'retinal_dysplasia': 'Genotype Affected', 'chondrodystrophy': 'Genotype Affected', 'deafness_congenital': 'Phenotype Affected'}, 'conformation': {'ear_width': None, 'ear_fringe_length': None, 'ear_carriage': None, 'neck_ruff': None, 'eye_size': None, 'body_coat': None, 'eye_shape': None, 'leg_feather': None, 'bone': None, 'tail_plume': None, 'tuck': None, 'coat_curl': None, 'build': None, 'texture': None, 'back_length': None, 'undercoat': None, 'back_shape': None, 'coat_lay': None, 'topline': None, 'ridge': None, 'neck_length': None, 'shedding': None, 'croup': None, 'coat_type_genotype': None, 'chest_depth': None, 'eye_colour': None, 'chest_width': None, 'pigment': None, 'wrinkle': None, 'nose_colour': None, 'leg_length': None, 'coat_colour_genotype': None, 'front_angulation': None, 'coat_colour': None, 'rear_angulation': None, 'reach': None, 'drive': None, 'muzzle_length': None, 'pasterns': None, 'muzzle_depth': None, 'feet': None, 'dewlap': None, 'hind_dew_claws': None, 'brow_ridge': None, 'tail_shape': None, 'tail_length': None, 'bite': None, 'tail_set': None, 'skull': None, 'tail_carriage': None, 'head_width': None, 'hairless': None, 'stop': None, 'coat_length': None, 'head_carriage': None, 'furnishings': None, 'ear_length': None, 'topknot': None, 'ear_fringe_type': None}}

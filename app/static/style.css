@@ -141,7 +141,7 @@
   display: inline-block;
   padding: 5px;
   border: solid 1px black;
-  width: 70px;
+  width: 82px;
 }
 .dog_health_or_confo {
   margin-bottom: 10px
@@ -190,4 +190,10 @@
   padding: 10px;
   padding-left: 30px;
   color: black !important;
+}
+
+.visible_toggle_partners {
+    visibility: hidden;
+    display: none;
+    padding-bottom: 10px;
 }

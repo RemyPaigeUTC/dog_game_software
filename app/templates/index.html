@@ -27,6 +27,12 @@
                         {% include "_dog_health_line.html" %}
                     {% endwith %}
                 </div>
+                <div id="1_partners_{{ dog["basic"]["id"] }}" class="column col-2 visible_toggle_partners"></div>
+                <div id="2_partners_{{ dog["basic"]["id"] }}" class="column col-10 visible_toggle_partners">
+                    {% for partner in dog["partners"] %}
+                        <span><a href="{{ url_for('view_dog', id=partner.id) }}" style="color: #0e0e08" > {{ partner.registered_name }} </a></span>
+                    {% endfor %}
+                </div>
             </div>
         </div>
 

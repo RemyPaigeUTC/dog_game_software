@@ -40,18 +40,40 @@
 
             divs.forEach((div) => {
                 div.addEventListener('click', (event) => {
+                    const partner_1_id = "1_partners_" + div.id;
+                    const partner_2_id = "2_partners_" + div.id;
+                    partner_1 = document.getElementById(partner_1_id)
+                    partner_2 = document.getElementById(partner_2_id)
+
                     if (div.classList.contains("M_highlight")) {
                         div.classList.remove("M_highlight")
+                        partner_1.style.visibility = "hidden"
+                        partner_2.style.visibility = "hidden"
+                        partner_1.style.display = "none"
+                        partner_2.style.display = "none"
                     }
                     else if (!(div.classList.contains("M_highlight")) && (div.classList.contains("M"))) {
                         div.classList.add("M_highlight")
+                        partner_1.style.visibility = "visible"
+                        partner_2.style.visibility = "visible"
+                        partner_1.style.display = "inline-block"
+                        partner_2.style.display = "inline-block"
                     }
                     if (div.classList.contains("F_highlight")) {
                         div.classList.remove("F_highlight")
+                        partner_1.style.visibility = "hidden"
+                        partner_2.style.visibility = "hidden"
+                        partner_1.style.display = "none"
+                        partner_2.style.display = "none"
                     }
                     else if (!(div.classList.contains("F_highlight")) && (div.classList.contains("F"))) {
                         div.classList.add("F_highlight")
+                        partner_1.style.visibility = "visible"
+                        partner_2.style.visibility = "visible"
+                        partner_1.style.display = "inline-block"
+                        partner_2.style.display = "inline-block"
                     }
+
                 });
             });
         </script>

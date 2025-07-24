@@ -225,10 +225,21 @@ def create_dog_dict(dog):
             #     dog_health[attr] = value
         else:
             print("None")
+
+    partners = []
+    children = dog.list_children()
+    for child in children:
+        child_parents = child.list_parents()
+        if child_parents[0].id == dog.id:
+            partners.append(child_parents[1])
+        else:
+            partners.append(child_parents[0])
+
     dog_dict = {
         "basic": dog_basic,
         "health": dog_health,
-        "conformation": dog_conformation
+        "conformation": dog_conformation,
+        "partners": partners
     }
     return dog_dict
 
