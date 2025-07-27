@@ -9,158 +9,471 @@ import sqlalchemy as sa
 from pprint import pprint
 import json
 
-def calculate_conf_score_spaniel(dog):
-    perfect_spaniel = {
-        "Muzzle Length": "Brachy Long-brachy Long",
-        "Muzzle Depth": "Moderate",
-        "Dewlap": "Slight",
-        "Brow Ridge":"Moderate",
-        "Profile":["Slightly Upturned", "Upturned"],
+genotypes_list = ["dilated_cardiomyopathy", "cardiomyopathy", "progressive_retinal_atrophy", "retinal_dysplasia",
+                  "chondrodystrophy", "muscular_dystrophy", "myotonia_congenita", "degenerative_myelopathy",
+                  "ichthyosis", "primary_glomerulopathy",
+                  "urolithiasis"]
+phenotypes_list = ["endocardiosis", "chiari_malformation", "deafness_congenital", "mitral_valve_dysplasia",
+                   "patent_ductus_arteriosus",
+                   "pulmonic_stenosis", "ventricular_septal_defect", "corneal_dystrophy", "distichiasis",
+                   "keratoconjunctivitis_sicca",
+                   "exocrine_pancreatic_insufficiency", "cervical_spondylomyelopathy", "elbow_dysplasia",
+                   "hip_dysplasia", "patellar_luxation",
+                   "epilepsy", "atopy", "umbilical_hernia", "addisons_disease", "autoimmune_thyroid_disease",
+                   "diabetes_mellitus",
+                   "entropion", "microphthalmia", "persistent_pupillary_membranes", "vitreous_degeneration",
+                   "protein_losing_enteropathy",
+                   "legg_calve_perthes_disease", "hydrocephalus", "cleft_palate", "demodicosis", "cryptorchidism",
+                   "chronic_hepatitis"]
+trait_list = ['muzzle_length', 'muzzle_depth', 'dewlap', 'brow_ridge', 'profile', 'bite', 'skull', 'head_width',
+              'stop',
+              'head_carriage', 'ear_ser', 'ear_length', 'ear_width', 'ear_points', 'ear_carriage', 'eye_size',
+              'eye_shape',
+              'bone', 'build', 'back_length', 'back_shape', 'topline', 'neck_length', 'croup', 'chest_depth',
+              'chest_width',
+              'tuck', 'wrinkle', 'leg_length', 'front_angulation', 'rear_angulation', 'reach', 'drive', 'pasterns',
+              'feet',
+              'hind_dew_claws', 'tail_shape', 'tail_length', 'tail_set', 'tail_carriage', 'hairless', 'coat_length',
+              'furnishings', 'topknot', 'ear_fringe_type', 'ear_fringe_length', 'neck_ruff', 'body_coat',
+              'leg_feathering',
+              'tail_plume', 'coat_curl', 'texture', 'undercoat', 'coat_lay', 'ridge', 'shedding',
+              'coat_type_genotype',
+              'eye_colour', 'pigment', 'nose_colour', 'coat_colour_genotype', 'coat_colour']
+affected_health_values = ["Phenotype Affected", "Genotype Carrier", "Genotype Affected",
+                              "Genotype Affected Carrying Clear"]
+basic_attrs = [
+        "id", "breed", "gender", "registered_name", "living_status", "generation", "health_score", "conformation_score"
+    ]
+breed_list = ["Cavalier_King_Charles_Spaniel", "Jack_Russell_Terrier"]
+
+perfect_spaniel = {'back_length': 'Short',
+ 'back_shape': 'Straight',
+ 'bite': 'Scissor',
+ 'body_coat': ['Shorter', 'Same'],
+ 'bone': 'Medium',
+ 'brow_ridge': 'Moderate',
+ 'build': 'Lean',
+ 'chest_depth': 'Moderate',
+ 'chest_width': 'Oval',
+ 'coat_colour': '',
+ 'coat_colour_genotype': '',
+ 'coat_curl': 'Straight',
+ 'coat_lay': 'Flat',
+ 'coat_length': 'Long 2-4 Inch, 5-10 Cm',
+ 'coat_type_genotype': '',
+ 'croup': 'Moderate',
+ 'dewlap': 'Slight',
+ 'drive': 'Good Drive',
+ 'ear_carriage': 'Drop',
+ 'ear_fringe_length': ['2 Inch, 5 Cm',
+                       '3-4 Inch, 7.5-10 Cm',
+                       '6-8 Inch, 15-20 Cm'],
+ 'ear_fringe_type': 'Fringe',
+ 'ear_length': 'Long',
+ 'ear_points': 'U Shaped',
+ 'ear_set': 'High',
+ 'ear_width': 'Broad',
+ 'eye_colour': 'Dark Brown',
+ 'eye_shape': 'Round',
+ 'eye_size': 'Large',
+ 'feet': 'Cat',
+ 'front_angulation': 'Well Laid Back + Equal',
+ 'furnishings': 'None',
+ 'hairless': 'Coated',
+ 'head_carriage': ['High', 'Above Topline'],
+ 'head_width': 'Moderate',
+ 'hind_dew_claws': ['None', 'Single', 'Double'],
+ 'leg_feathering': 'Feathered',
+ 'leg_length': 'Dwarf-long',
+ 'muzzle_depth': 'Moderate',
+ 'muzzle_length': 'Brachy Long-brachy Long',
+ 'neck_length': 'Medium',
+ 'neck_ruff': 'None',
+ 'nose_colour': 'Black',
+ 'pasterns': 'Short',
+ 'pigment': ['Black', 'Liver', 'Albino'],
+ 'profile': ['Slightly Upturned', 'Upturned'],
+ 'reach': 'Good Reach',
+ 'rear_angulation': 'Moderate + Equal',
+ 'ridge': 'Absent',
+ 'shedding': ['Low', 'Medium'],
+ 'skull': 'Rounded',
+ 'stop': 'Moderate',
+ 'tail_carriage': 'Level',
+ 'tail_length': 'Long-medium',
+ 'tail_plume': ['Long 2-3 Inch, 5-7.5 Cm', 'Long 4-6 Inch, 10-15 Cm'],
+ 'tail_set': 'Moderate',
+ 'tail_shape': ['Straight', 'Slight Curve'],
+ 'texture': 'Soft',
+ 'topknot': ['Smooth', 'Medium', 'Long'],
+ 'topline': 'Level',
+ 'tuck': 'None',
+ 'undercoat': 'None',
+ 'wrinkle': 'None'}
+possible_spaniel = {'back_length': ['Short', 'Medium', 'Long'],
+ 'back_shape': ['Straight', 'Roach', 'Sway'],
+ 'bite': ['Underbite',
+          'Wry Underbite',
+          'Level',
+          'Wry Level',
+          'Scissor',
+          'Wry Scissor',
+          'Overbite',
+          'Wry Overbite'],
+ 'body_coat': ['Shorter', 'Same'],
+ 'bone': ['Fine', 'Medium', 'Substantial'],
+ 'brow_ridge': 'Moderate',
+ 'build': ['Lean', 'Bulky'],
+ 'chest_depth': ['Shallow', 'Moderate', 'Deep'],
+ 'chest_width': ['Narrow', 'Oval', 'Barrel'],
+ 'coat_colour': '',
+ 'coat_colour_genotype': '',
+ 'coat_curl': 'Straight',
+ 'coat_lay': 'Flat',
+ 'coat_length': ['Long 1-2 Inch, 2.5-5 Cm', 'Long 2-4 Inch, 5-10 Cm'],
+ 'coat_type_genotype': '',
+ 'croup': ['Flat', 'Slight', 'Moderate', 'Steep'],
+ 'dewlap': ['Slight', 'Prominent'],
+ 'drive': ['Limited Drive',
+           'Limited Drive Kicking Up',
+           'Moderate Drive',
+           'Moderate Drive Kicking Up',
+           'Good Drive',
+           'Good Drive Kicking Up',
+           'Exaggerated Drive',
+           'Exaggerated Drive Kicking Up'],
+ 'ear_carriage': 'Drop',
+ 'ear_fringe_length': ['2 Inch, 5 Cm',
+                       '3-4 Inch, 7.5-10 Cm',
+                       '6-8 Inch, 15-20 Cm'],
+ 'ear_fringe_type': ['Semi Fringe', 'Fringe'],
+ 'ear_length': ['Medium', 'Long'],
+ 'ear_points': ['Slightly Rounded', 'U Shaped'],
+ 'ear_set': ['High', 'Level'],
+ 'ear_width': 'Broad',
+ 'eye_colour': ['Dark Brown', 'Light Brown', 'Amber', 'Yellow', 'Albino'],
+ 'eye_shape': ['Round', 'Oval', 'Almond'],
+ 'eye_size': ['Small', 'Medium', 'Large'],
+ 'feet': ['Cat', 'Oval', 'Hare', 'Flat'],
+ 'front_angulation': ['Upright + Short',
+                      'Upright + Equal',
+                      'Moderate + Short',
+                      'Moderate + Equal',
+                      'Well Laid Back + Short',
+                      'Well Laid Back + Equal'],
+ 'furnishings': 'None',
+ 'hairless': 'Coated',
+ 'head_carriage': ['High', 'Above Topline'],
+ 'head_width': 'Moderate',
+ 'hind_dew_claws': ['None', 'Single', 'Double'],
+ 'leg_feathering': 'Feathered',
+ 'leg_length': ['Dwarf-medium', 'Dwarf-long'],
+ 'muzzle_depth': ['Moderate', 'Deep'],
+ 'muzzle_length': ['Brachy Long-brachy Long',
+                   'Brachy Long-brachy Medium',
+                   'Brachy Medium-brachy Long',
+                   'Brachy Medium-brachy Medium'],
+ 'neck_length': ['Short', 'Medium', 'Long'],
+ 'neck_ruff': 'None',
+ 'nose_colour': ['Black',
+                 'Black Dudley',
+                 'Liver',
+                 'Liver Dudley',
+                 'Red Dudley',
+                 'Albino'],
+ 'pasterns': ['Short', 'Moderate', 'Long'],
+ 'pigment': ['Black', 'Liver', 'Albino'],
+ 'profile': ['Slightly Upturned', 'Upturned'],
+ 'reach': ['Limited Reach',
+           'Limited Reach Hackney',
+           'Limited Reach High Step',
+           'Moderate Reach',
+           'Moderate Reach Hackney',
+           'Moderate Reach High Step',
+           'Good Reach',
+           'Good Reach Hackney',
+           'Good Reach High Step',
+           'Extended Reach',
+           'Extended Reach Hackney',
+           'Extended Reach High Step'],
+ 'rear_angulation': ['Flat + Short',
+                     'Flat + Equal',
+                     'Flat + Long',
+                     'Slight + Short',
+                     'Slight + Equal',
+                     'Slight + Long',
+                     'Moderate + Short',
+                     'Moderate + Equal',
+                     'Moderate + Long',
+                     'Steep + Short',
+                     'Steep + Equal',
+                     'Steep + Long'],
+ 'ridge': 'Absent',
+ 'shedding': ['Low', 'Medium'],
+ 'skull': ['Rounded', 'Slight Dome'],
+ 'stop': ['Moderate', 'Definite'],
+ 'tail_carriage': ['Diagonal', 'Level', 'Low'],
+ 'tail_length': ['Long-medium', 'Long-short'],
+ 'tail_plume': ['Long 2-3 Inch, 5-7.5 Cm', 'Long 4-6 Inch, 10-15 Cm'],
+ 'tail_set': ['High', 'Moderate', 'Low'],
+ 'tail_shape': ['Straight', 'Slight Curve', 'Sickle'],
+ 'texture': 'Soft',
+ 'topknot': ['Smooth', 'Medium', 'Long'],
+ 'topline': ['Level', 'Sloping', 'High Rear'],
+ 'tuck': ['None', 'Slight', 'Moderate', 'Well Tucked Up'],
+ 'undercoat': ['None', 'Sparse', 'Medium'],
+ 'wrinkle': 'None'}
+
+
+
+def commit_dog_to_db(dog, form):
+    print("commit_dog_to_db")
+    print(type(dog))
+    dog.living_status = form.living_status.data
+    db.session.commit()
+    dog.breed = form.breed.data
+    db.session.commit()
+    dog.gender = form.gender.data
+    db.session.commit()
+    # Parse Health Data
+    try:
+        dog = parse_health_from_html(form.health_data.data, dog)
+        db.session.commit()
+    except:
+        print("empty health data")
+
+    # Parse Conformation Data
+    try:
+        dog = parse_conformation_from_html(form.conformation_data.data, dog)
+        db.session.commit()
+    except:
+        print("empty conformation data")
+
+    # Additional Info
+    dog.registered_name = registered_name_from_id(dog.id)
+    db.session.commit()
+    # find parent IDs from registered names
+    # parents don't exist for gen 0s
+    if bool(form.parent1_registered_name.data):
+        parent1_id = id_from_registered_name(form.parent1_registered_name.data)
+        parent2_id = id_from_registered_name(form.parent2_registered_name.data)
+        parent1 = db.session.scalar(sa.select(Dog).where(Dog.id == parent1_id))
+        parent2 = db.session.scalar(sa.select(Dog).where(Dog.id == parent2_id))
+        parent1.become_parent_to(dog)
+        parent2.become_parent_to(dog)
+    dog.generation = calculate_generation(dog, 1)
+    db.session.commit()
+    print("calculate_commit_health_score")
+    calculate_commit_health_score(dog.id)
+
+def create_all_dogs_dict_with_query(query):
+    # pagination code commented out
+    # page = request.args.get('page', 1, type=int)
+
+    dogs = db.session.scalars(query).all()
+    # dogs = db.paginate(query, page=page, per_page=app.config['DOGS_PER_PAGE'], error_out=False)
+    # next_url = url_for('index', page=dogs.next_num) \
+    #     if dogs.has_next else None
+    # prev_url = url_for('index', page=dogs.prev_num) \
+    #     if dogs.has_prev else None
+    all_dogs_dict = {}
+    for dog in dogs:
+        dog_dict = create_dog_dict(dog)
+        unique_descendants_diseases = list_unique_descendants_diseases(dog)
+        for disease in unique_descendants_diseases:
+            dog_dict["health"][disease] = "Descendant"
+        all_dogs_dict[dog.id] = dog_dict
+    # return render_template('index.html', title='Home', dogs=all_dogs_dict, next_url=next_url, prev_url=prev_url)
+    return all_dogs_dict
+
+def calculate_conf_spaniel(id):
+    global perfect_spaniel
+    global possible_spaniel
+    conf = create_commit_conf_dict(perfect_spaniel, possible_spaniel, id)
+    return conf
+
+def calculate_conf_terrier(id):
+    perfect_terrier = {
+        "Muzzle Length": "Long-long",
+        "Muzzle Depth": "Tight",
+        #"Dewlap": "Slight",
+        #"Brow Ridge":"Moderate",
+        #"Profile":["Slightly Upturned", "Upturned"],
         "Bite": "Scissor",
-        "Skull": "Rounded",
+        "Skull": "Flat",
         "Head Width":"Moderate",
         "Stop": "Moderate",
-        "Head Carriage":["High", "Above Topline"],
+        #"Head Carriage":["High", "Above Topline"],
         "Ear Set": "High",
-        "Ear Length": "Long",
+        #"Ear Length": "Long",
         "Ear Width":"Broad",
-        "Ear Points": "U Shaped",
-        "Ear Carriage":"Drop",
-        "Eye Size": "Large",
-        "Eye Shape": "Round",
+        "Ear Points": "V Shaped",
+        "Ear Carriage":["Drop", "Low Button", "High Button"],
+        "Eye Size": "Small",
+        "Eye Shape": "Almond",
         "Bone": "Medium",
-        "Build":"Lean",
-        "Back Length": "Short",
+        #"Build":"Lean",
+        "Back Length": "Medium",
         "Back Shape": "Straight",
         "Topline": "Level",
-        "Neck Length": "Medium",
+        "Neck Length": "Long",
         "Croup": "Moderate",
         "Chest Depth": "Moderate",
         "Chest Width": "Oval",
-        "Tuck": "None",
-        "Wrinkle":"None",
-        "Leg Length":"Dwarf Long",
+        "Tuck": "Moderate",
+        #"Wrinkle":"None",
+        "Leg Length":["Short", "Dwarf Long"],
         "Front Angulation":"Well Laid Back + Equal",
         "Rear Angulation":"Moderate + Equal",
         "Reach":"Good Reach",
         "Drive":"Good Drive",
         "Pasterns":"Short",
         "Feet":"Cat",
-        "Hind Dew Claws":["None", "Single", "Double"],
+        #"Hind Dew Claws":["None", "Single", "Double"],
         "Tail Shape":["Straight", "Slight Curve"],
-        "Tail Length":"Long-medium",
-        "Tail Set":"Moderate",
-        "Tail Carriage":"Level",
-        "Hairless":"Coated",
-        "Coat Length":"Long 2-4 Inch, 5-10 Cm",
-        "Furnishings":"None",
-        "Topknot":["Smooth", "Medium", "Long"],
-        "Ear Fringe Type":"Fringe",
-        "Ear Fringe Length":["2 Inch, 5 Cm", "3-4 Inch, 7.5-10 Cm", "6-8 Inch, 15-20 Cm"],
-        "Neck Ruff":"None",
-        "Body Coat":["Shorter", "Same"],
-        "Leg Feather":"Feathered",
-        "Tail Plume":["Long 2-3 Inch, 5-7.5 Cm", "Long 4-6 Inch, 10-15 Cm"],
+        "Tail Length":"Long-short",
+        "Tail Set":"High",
+        "Tail Carriage":["Over The Back", "Level"],
+        #"Hairless":"Coated",
+        "Coat Length":["Short 0.5 Inch, 1.25 Cm", "Short 1 Inch, 2.5 Cm", "Furnished Short 1 Inch, 2.5 Cm", "Broken Short 1 Inch, 2.5 Cm"],
+        #"Furnishings":"None",
+        "Topknot":"Smooth",
+        "Ear Fringe Type":"None",
+        "Ear Fringe Length":"0.5 Inch, 1.25 Cm",
+        #"Neck Ruff":"None",
+        "Body Coat":"Same",
+        "Leg Feathering":["None", "Hairy"],
+        "Tail Plume":["0.5 Inch, 1.25 Cm", "1 Inch, 2.5 Cm", "Short 2 Inch, 5 Cm"],
         "Coat Curl":"Straight",
-        "Texture":"Soft",
-        "Undercoat":"None",
-        "Coat Lay":"Flat",
-        "Ridge":"Absent",
-        "Shedding":["Low", "Medium"],
-        "Coat Type Genotype":"",
+        "Texture":"Coarse",
+        "Undercoat":"Medium",
+        #"Coat Lay":"Flat",
+        #"Ridge":"Absent",
+        #"Shedding":["Low", "Medium"],
+        #"Coat Type Genotype":"",
         "Eye Colour":"Dark Brown",
-        "Pigment":["Black", "Liver", "Albino"],
+        #"Pigment":["Black", "Liver", "Albino"],
         "Nose Colour":"Black",
         "Coat Colour Genotype":"",
         "Coat Colour":""
     }
+    possible_terrier = {
+        "Muzzle Length": ["Long-long", "Long-medium", "Medium-long", "Medium-medium"],
+        "Muzzle Depth": ["Fine", "Tight", "Moderate"],
+        "Dewlap": "None",
+        "Brow Ridge":["Slight", "Moderate", "Pronounced"],
+        "Profile": ["Slightly Down", "Level"],
+        "Bite": ["Underbite", "Wry Underbite" ,"Level", "Wry Level" ,"Scissor", "Wry Scissor", "Overbite", "Wry Overbite"],
+        "Skull": ["Flat", "Rounded"],
+        "Head Width": ["Narrow", "Moderate", "Broad"],
+        "Stop": ["None", "Slight", "Moderate", "Definite"],
+        "Head Carriage":"Above Topline",
+        "Ear Set": ["High", "Level"],
+        "Ear Length": ["Very Small", "Small"],
+        "Ear Width":["Broad", "Narrow"],
+        "Ear Points": ["V Shaped", "Slightly Rounded", "U Shaped"],
+        "Ear Carriage":["Drop", "Low Button", "High Button", "Rose", "Tipped", "Prick"],
+        "Eye Size": ["Small", "Medium", "Large"],
+        "Eye Shape": ["Round", "Oval", "Almond", "Triangular"],
+        "Bone": ["Fine", "Medium", "Substantial"],
+        "Build":"Bulky",
+        "Back Length": ["Short", "Medium", "Long"],
+        "Back Shape": ["Straight", "Roach", "Sway"],
+        "Topline": ["Level", "Sloping", "High Rear"],
+        "Neck Length": ["Short", "Medium", "Long"],
+        "Croup": ["Flat", "Slight", "Moderate", "Steep"],
+        "Chest Depth": ["Shallow", "Moderate", "Deep"],
+        "Chest Width": ["Narrow", "Oval", "Barrel"],
+        "Tuck": ["None", "Slight", "Moderate", "Well Tucked Up"],
+        "Wrinkle":"None",
+        "Leg Length": ["Long", "Medium", "Short", "Dwarf Long", "Dwarf Medium"],
+        "Front Angulation":["Upright + Short", "Upright + Equal", "Moderate + Short", "Moderate + Equal", "Well Laid Back + Short", "Well Laid Back + Equal"],
+        "Rear Angulation":["Flat + Short", "Flat + Equal", "Flat + Long", "Slight + Short", "Slight + Equal", "Slight + Long", "Moderate + Short", "Moderate + Equal", "Moderate + Long", "Steep + Short", "Steep + Equal", "Steep + Long"],
+        "Reach":["Limited Reach", "Limited Reach Hackney", "Limited Reach High Step", "Moderate Reach", "Moderate Reach Hackney", "Moderate Reach High Step", "Good Reach", "Good Reach Hackney", "Good Reach High Step", "Extended Reach", "Extended Reach Hackney", "Extended Reach High Step"],
+        "Drive":["Limited Drive", "Limited Drive Kicking Up", "Moderate Drive", "Moderate Drive Kicking Up", "Good Drive", "Good Drive Kicking Up", "Exaggerated Drive", "Exaggerated Drive Kicking Up"],
+        "Pasterns":["Short", "Moderate", "Long"],
+        "Feet":["Cat", "Oval", "Hare", "Flat"],
+        "Hind Dew Claws":["None", "Single", "Double"],
+        "Tail Shape":["Bobtail", "Straight", "Slight Curve", "Sickle", "Loose Curl", "Tight Curl", "Straight With Kink", "Slight Curve With Kink", "Sickle With Kink", "Loose Curl With Kink", "Tight Curl With Kink"],
+        "Tail Length":["Bobtail", "Long-medium", "Long-short"],
+        "Tail Set":["High", "Moderate", "Low"],
+        "Tail Carriage":["Bobtail", "Over The Back", "High", "Diagonal", "Level"],
+        "Hairless":"Coated",
+        "Coat Length":["Long 1-2 Inch, 2.5-5 Cm", "Long 2-4 Inch, 5-10 Cm"],
+
+        "Furnishings":"None",
+        "Topknot":["Smooth", "Medium", "Long"],
+        "Ear Fringe Type":["Semi Fringe", "Fringe"],
+        "Ear Fringe Length":["2 Inch, 5 Cm", "3-4 Inch, 7.5-10 Cm", "6-8 Inch, 15-20 Cm"],
+        "Neck Ruff":"None",
+        "Body Coat":["Shorter", "Same"],
+        "Leg Feathering":"Feathered",
+        "Tail Plume":["Long 2-3 Inch, 5-7.5 Cm", "Long 4-6 Inch, 10-15 Cm"],
+        "Coat Curl":"Straight",
+        "Texture":"Soft",
+        "Undercoat":["None", "Sparse", "Medium"],
+        "Coat Lay":"Flat",
+        "Ridge":"Absent",
+        "Shedding":["Low", "Medium"],
+        "Coat Type Genotype":"",
+        "Eye Colour":["Dark Brown", "Light Brown", "Amber", "Yellow", "Albino"],
+        "Pigment":["Black", "Liver", "Albino"],
+        "Nose Colour":["Black", "Black Dudley", "Liver", "Liver Dudley", "Red Dudley", "Albino"],
+        "Coat Colour Genotype":"",
+        "Coat Colour":""
+    }
+    conf = create_commit_conf_dict(perfect_terrier, possible_terrier, id)
+    return conf
+
+def create_commit_conf_dict(perfect, possible, id):
+    global trait_list
+    conf = {}
+    dog = db.first_or_404(sa.select(Dog).where(Dog.id == id))
     conf_score = 0
     for attr, value in dog.__dict__.items():
         if value is not None or value != "None" or str(type(value)) != "<class 'NoneType'>":
-            if attr in perfect_spaniel.keys():
-                if value in perfect_spaniel[attr]:
-                    conf_score = conf_score
-                else:
-                    conf_score = conf_score + 1
+            if attr in trait_list:
+                try:
+                    # only one option for perfect attr - stored as string in dictionary
+                    if str(type(perfect[attr])) == "<class 'str'>":
+                        # perfect
+                        if perfect[attr] == value:
+                            attr_score = 0
+                        # not perfect. find indexs of perfect and reality to comapre
+                        else:
+                            perfect_index = possible[attr].index(perfect[attr])
+                            real_index = possible[attr].index(value)
+                            attr_score = perfect_index - real_index
+                    # multiple options for perfect attr - stored as list in dictionary
+                    else:
+                        # perfect
+                        if value in perfect[attr]:
+                            attr_score = 0
+                        # use the first item in the perfect list
+                        else:
+                            perfect_index = possible[attr].index(perfect[attr][0])
+                            real_index = possible[attr].index(value)
+                            attr_score = perfect_index - real_index
+                except:
+                    attr_score = 0
+                    print("skip")
+                    print(attr)
+                    print(value)
+                print(attr_score)
+                conf_score = conf_score + abs(attr_score)
+                conf[attr] = [value, attr_score]
         else:
             print("None")
-    return conf_score
 
-def calculate_conf_of_attr(dog, attr):
-    perfect_spaniel = {
-        "Muzzle Length": "Brachy Long-brachy Long",
-        "Muzzle Depth": "Moderate",
-        "Dewlap": "Slight",
-        "Brow Ridge": "Moderate",
-        "Profile": ["Slightly Upturned", "Upturned"],
-        "Bite": "Scissor",
-        "Skull": "Rounded",
-        "Head Width": "Moderate",
-        "Stop": "Moderate",
-        "Head Carriage": ["High", "Above Topline"],
-        "Ear Set": "High",
-        "Ear Length": "Long",
-        "Ear Width": "Broad",
-        "Ear Points": "U Shaped",
-        "Ear Carriage": "Drop",
-        "Eye Size": "Large",
-        "Eye Shape": "Round",
-        "Bone": "Medium",
-        "Build": "Lean",
-        "Back Length": "Short",
-        "Back Shape": "Straight",
-        "Topline": "Level",
-        "Neck Length": "Medium",
-        "Croup": "Moderate",
-        "Chest Depth": "Moderate",
-        "Chest Width": "Oval",
-        "Tuck": "None",
-        "Wrinkle": "None",
-        "Leg Length": "Dwarf Long",
-        "Front Angulation": "Well Laid Back + Equal",
-        "Rear Angulation": "Moderate + Equal",
-        "Reach": "Good Reach",
-        "Drive": "Good Drive",
-        "Pasterns": "Short",
-        "Feet": "Cat",
-        "Hind Dew Claws": ["None", "Single", "Double"],
-        "Tail Shape": ["Straight", "Slight Curve"],
-        "Tail Length": "Long-medium",
-        "Tail Set": "Moderate",
-        "Tail Carriage": "Level",
-        "Hairless": "Coated",
-        "Coat Length": "Long 2-4 Inch, 5-10 Cm",
-        "Furnishings": "None",
-        "Topknot": ["Smooth", "Medium", "Long"],
-        "Ear Fringe Type": "Fringe",
-        "Ear Fringe Length": ["2 Inch, 5 Cm", "3-4 Inch, 7.5-10 Cm", "6-8 Inch, 15-20 Cm"],
-        "Neck Ruff": "None",
-        "Body Coat": ["Shorter", "Same"],
-        "Leg Feather": "Feathered",
-        "Tail Plume": ["Long 2-3 Inch, 5-7.5 Cm", "Long 4-6 Inch, 10-15 Cm"],
-        "Coat Curl": "Straight",
-        "Texture": "Soft",
-        "Undercoat": "None",
-        "Coat Lay": "Flat",
-        "Ridge": "Absent",
-        "Shedding": ["Low", "Medium"],
-        "Coat Type Genotype": "",
-        "Eye Colour": "Dark Brown",
-        "Pigment": ["Black", "Liver", "Albino"],
-        "Nose Colour": "Black",
-        "Coat Colour Genotype": "",
-        "Coat Colour": ""
-    }
-    # TODO: improve
-    if getattr(dog, attr) in perfect_spaniel[attr]:
-        return 0
-    else:
-        return 1
+    conf["conf_score"] = conf_score
+    dog.conformation_score = conf_score
+    db.session.commit()
+    return conf
 
-def calculate_health_score(dog):
-    affected_health_values = ["Phenotype Affected", "Genotype Carrier", "Genotype Affected",
-                              "Genotype Affected Carrying Clear"]
+def calculate_commit_health_score(id):
+    global affected_health_values
     health_score = 0
+    dog = db.first_or_404(sa.select(Dog).where(Dog.id == id))
     for attr, value in dog.__dict__.items():
         if value is not None or value != "None" or str(type(value)) != "<class 'NoneType'>":
             if value == "Genotype Affected Carrying Clear":
@@ -171,44 +484,14 @@ def calculate_health_score(dog):
                 health_score += 1
         else:
             print("None")
-    return health_score
+    dog.health_score = health_score
+    db.session.commit()
 
 def create_dog_dict(dog):
-    trait_list = ['muzzle_length', 'muzzle_depth', 'dewlap', 'brow_ridge', 'profile', 'bite', 'skull', 'head_width',
-                  'stop',
-                  'head_carriage', 'ear_ser', 'ear_length', 'ear_width', 'ear_points', 'ear_carriage', 'eye_size',
-                  'eye_shape',
-                  'bone', 'build', 'back_length', 'back_shape', 'topline', 'neck_length', 'croup', 'chest_depth',
-                  'chest_width',
-                  'tuck', 'wrinkle', 'leg_length', 'front_angulation', 'rear_angulation', 'reach', 'drive', 'pasterns',
-                  'feet',
-                  'hind_dew_claws', 'tail_shape', 'tail_length', 'tail_set', 'tail_carriage', 'hairless', 'coat_length',
-                  'furnishings', 'topknot', 'ear_fringe_type', 'ear_fringe_length', 'neck_ruff', 'body_coat',
-                  'leg_feather',
-                  'tail_plume', 'coat_curl', 'texture', 'undercoat', 'coat_lay', 'ridge', 'shedding',
-                  'coat_type_genotype',
-                  'eye_colour', 'pigment', 'nose_colour', 'coat_colour_genotype', 'coat_colour']
-    affected_health_values = ["Phenotype Affected", "Genotype Carrier", "Genotype Affected",
-                              "Genotype Affected Carrying Clear"]
-    basic_attrs = [
-        "id", "breed", "gender", "registered_name", "living_status", "generation", "health_score", "conformation_score"
-    ]
-    genotypes_list = ["dilated_cardiomyopathy", "cardiomyopathy", "progressive_retinal_atrophy", "retinal_dysplasia",
-                      "chondrodystrophy", "muscular_dystrophy", "myotonia_congenita", "degenerative_myelopathy",
-                      "ichthyosis", "primary_glomerulopathy",
-                      "urolithiasis"]
-    phenotypes_list = ["endocardiosis", "chiari_malformation", "deafness_congenital", "mitral_valve_dysplasia",
-                       "patent_ductus_arteriosus",
-                       "pulmonic_stenosis", "ventricular_septal_defect", "corneal_dystrophy", "distichiasis",
-                       "keratoconjunctivitis_sicca",
-                       "exocrine_pancreatic_insufficiency", "cervical_spondylomyelopathy", "elbow_dysplasia",
-                       "hip_dysplasia", "patellar_luxation",
-                       "epilepsy", "atopy", "umbilical_hernia", "addisons_disease", "autoimmune_thyroid_disease",
-                       "diabetes_mellitus",
-                       "entropion", "microphthalmia", "persistent_pupillary_membranes", "vitreous_degeneration",
-                       "protein_losing_enteropathy",
-                       "legg_calve_perthes_disease", "hydrocephalus", "cleft_palate", "demodicosis", "cryptorchidism",
-                       "chronic_hepatitis"]
+
+    global affected_health_values
+    global basic_attrs
+
     dog_basic = {}
     dog_health = {}
     dog_conformation = {}
@@ -217,12 +500,8 @@ def create_dog_dict(dog):
         if value is not None or value != "None" or str(type(value)) != "<class 'NoneType'>":
             if attr in basic_attrs:
                 dog_basic[attr] = value
-            elif attr in trait_list:
-                dog_conformation[attr] = value
             elif value in affected_health_values:
                 dog_health[attr] = value
-            # elif attr in genotypes_list or attr in phenotypes_list:
-            #     dog_health[attr] = value
         else:
             print("None")
 
@@ -231,9 +510,16 @@ def create_dog_dict(dog):
     for child in children:
         child_parents = child.list_parents()
         if child_parents[0].id == dog.id:
-            partners.append(child_parents[1])
+            if child_parents[1] not in partners:
+                partners.append(child_parents[1])
         else:
-            partners.append(child_parents[0])
+            if child_parents[0] not in partners:
+                partners.append(child_parents[0])
+
+    # if dog.breed == 'Cavalier King Charles Spaniel':
+    #     dog_conformation = calculate_conf_spaniel(dog)
+    # elif dog.breed == 'Jack Russell Terrier':
+    #     dog_conformation = calculate_conf_terrier(dog)
 
     dog_dict = {
         "basic": dog_basic,
@@ -271,29 +557,9 @@ def id_from_registered_name(registered_name):
     return dog_id
 
 def set_dog_attr(dog, attr, dog_line_value):
-    trait_list = ['muzzle_length', 'muzzle_depth', 'dewlap', 'brow_ridge', 'profile', 'bite', 'skull', 'head_width',
-                  'stop',
-                  'head_carriage', 'ear_ser', 'ear_length', 'ear_width', 'ear_points', 'ear_carriage', 'eye_size',
-                  'eye_shape',
-                  'bone', 'build', 'back_length', 'back_shape', 'topline', 'neck_length', 'croup', 'chest_depth',
-                  'chest_width',
-                  'tuck', 'wrinkle', 'leg_length', 'front_angulation', 'rear_angulation', 'reach', 'drive', 'pasterns',
-                  'feet',
-                  'hind_dew_claws', 'tail_shape', 'tail_length', 'tail_set', 'tail_carriage', 'hairless', 'coat_length',
-                  'furnishings', 'topknot', 'ear_fringe_type', 'ear_fringe_length', 'neck_ruff', 'body_coat',
-                  'leg_feather',
-                  'tail_plume', 'coat_curl', 'texture', 'undercoat', 'coat_lay', 'ridge', 'shedding',
-                  'coat_type_genotype',
-                  'eye_colour', 'pigment', 'nose_colour', 'coat_colour_genotype', 'coat_colour']
-    genotypes_list = ["dilated_cardiomyopathy", "cardiomyopathy", "progressive_retinal_atrophy", "retinal_dysplasia",
-                       "chondrodystrophy", "muscular_dystrophy", "myotonia_congenita", "degenerative_myelopathy", "ichthyosis", "primary_glomerulopathy",
-                       "urolithiasis"]
-    phenotypes_list = ["endocardiosis", "chiari_malformation", "deafness_congenital", "mitral_valve_dysplasia", "patent_ductus_arteriosus",
-                       "pulmonic_stenosis", "ventricular_septal_defect", "corneal_dystrophy", "distichiasis", "keratoconjunctivitis_sicca",
-                       "exocrine_pancreatic_insufficiency", "cervical_spondylomyelopathy", "elbow_dysplasia", "hip_dysplasia", "patellar_luxation",
-                       "epilepsy", "atopy", "umbilical_hernia", "addisons_disease", "autoimmune_thyroid_disease", "diabetes_mellitus",
-                       "entropion", "microphthalmia", "persistent_pupillary_membranes", "vitreous_degeneration", "protein_losing_enteropathy",
-                       "legg_calve_perthes_disease", "hydrocephalus", "cleft_palate","demodicosis","cryptorchidism","chronic_hepatitis"]
+    global trait_list
+    global genotypes_list
+    global phenotypes_list
     if dog_line_value == "":
         setattr(dog, attr, "None")
     elif attr in genotypes_list:
@@ -328,16 +594,19 @@ def calculate_generation(dog, generation):
 def parse_conformation_from_html(html_data, dog):
 
     soup = BeautifulSoup(html_data, 'html.parser')
-
+    capitalised_trait_list = ["Muzzle Length", "Muzzle Depth","Dewlap","Brow Ridge", "Profile", "Bite", "Skull", "Head Width", "Stop", "Head Carriage", "Ear Ser", "Ear Length", "Ear Width", "Ear Points", "Ear Carriage", "Eye Size", "Eye Shape", "Bone", "Build", "Back Length", "Back Shape", "Topline", "Neck Length", "Croup", "Chest Depth", "Chest Width", "Tuck", "Wrinkle", "Leg Length", "Front Angulation", "Rear Angulation", "Reach", "Drive", "Pasterns", "Feet", "Hind Dew Claws", "Tail Shape", "Tail Length", "Tail Set", "Tail Carriage", "Hairless", "Coat Length", "Furnishings", "Topknot", "Ear Fringe Type", "Ear Fringe Length", "Neck Ruff", "Body Coat", "Leg Feathering", "Tail Plume", "Coat Curl", "Texture", "Undercoat", "Coat Lay", "Ridge", "Shedding", "Coat Type Genotype", "Eye Colour", "Pigment", "Nose Colour", "Coat Colour Genotype", "Coat Colour"]
     conformation_info = soup.find("h3", string="Conformation Traits").parent.next_sibling
-    trait_list = ["Muzzle Length", "Muzzle Depth","Dewlap","Brow Ridge", "Profile", "Bite", "Skull", "Head Width", "Stop", "Head Carriage", "Ear Ser", "Ear Length", "Ear Width", "Ear Points", "Ear Carriage", "Eye Size", "Eye Shape", "Bone", "Build", "Back Length", "Back Shape", "Topline", "Neck Length", "Croup", "Chest Depth", "Chest Width", "Tuck", "Wrinkle", "Leg Length", "Front Angulation", "Rear Angulation", "Reach", "Drive", "Pasterns", "Feet", "Hind Dew Claws", "Tail Shape", "Tail Length", "Tail Set", "Tail Carriage", "Hairless", "Coat Length", "Furnishings", "Topknot", "Ear Fringe Type", "Ear Fringe Length", "Neck Ruff", "Body Coat", "Leg Feather", "Tail Plume", "Coat Curl", "Texture", "Undercoat", "Coat Lay", "Ridge", "Shedding", "Coat Type Genotype", "Eye Colour", "Pigment", "Nose Colour", "Coat Colour Genotype", "Coat Colour"]
     for element in conformation_info:
         if len(element.find_all("div")) > 0:
             trait_status_string = element.find_all("div")[-1].text
-            for trait in trait_list:
+            for trait in capitalised_trait_list:
+                if trait == "Leg Feathering" and trait_status_string == "Leg FeatheringFeathered":
+                    print("Leg Feathering")
+                    print(trait.replace(" ", "_").lower())
+                    print(trait_status_string[len(trait):])
                 if trait in trait_status_string:
                     setattr(dog, trait.replace(" ", "_").lower(), trait_status_string[len(trait):])
-    setattr(dog, "conformation_score", 5)
+
     return dog
 
 def parse_health_from_html(html_data, dog):
@@ -586,6 +855,7 @@ def create_descendant_dict_ggp(dog):
                 descendant_dict[key]["health"][disease] = "Descendant"
     return descendant_dict
 
+#single use
 def parse_csv():
     with open("html_parser/dog_base.csv") as fp:
         reader = csv.reader(fp, delimiter=",", quotechar='"')
@@ -714,41 +984,16 @@ def parse_csv_additional_information():
         dog.registered_name = registered_name_from_id(dog.id)
         dog.generation = calculate_generation(dog, 1)
         dog.breed = "Cavalier King Charles Spaniel"
-        dog.health_score = calculate_health_score(dog)
-        dog.conformation_score = calculate_conf_score_spaniel(dog)
+        #dog.health_score = calculate_health_score(dog)
+        dog.conformation_score = calculate_conf_spaniel(dog)["conf_score"]
         db.session.commit()
 
 def produce_truncated_attrs():
-    genotypes_list = ["dilated_cardiomyopathy", "cardiomyopathy", "progressive_retinal_atrophy", "retinal_dysplasia",
-                      "chondrodystrophy", "muscular_dystrophy", "myotonia_congenita", "degenerative_myelopathy",
-                      "ichthyosis", "primary_glomerulopathy",
-                      "urolithiasis"]
-    phenotypes_list = ["endocardiosis", "chiari_malformation", "deafness_congenital", "mitral_valve_dysplasia",
-                       "patent_ductus_arteriosus",
-                       "pulmonic_stenosis", "ventricular_septal_defect", "corneal_dystrophy", "distichiasis",
-                       "keratoconjunctivitis_sicca",
-                       "exocrine_pancreatic_insufficiency", "cervical_spondylomyelopathy", "elbow_dysplasia",
-                       "hip_dysplasia", "patellar_luxation",
-                       "epilepsy", "atopy", "umbilical_hernia", "addisons_disease", "autoimmune_thyroid_disease",
-                       "diabetes_mellitus",
-                       "entropion", "microphthalmia", "persistent_pupillary_membranes", "vitreous_degeneration",
-                       "protein_losing_enteropathy",
-                       "legg_calve_perthes_disease", "hydrocephalus", "cleft_palate", "demodicosis", "cryptorchidism",
-                       "chronic_hepatitis"]
-    trait_list = ['muzzle_length', 'muzzle_depth', 'dewlap', 'brow_ridge', 'profile', 'bite', 'skull', 'head_width',
-                  'stop',
-                  'head_carriage', 'ear_ser', 'ear_length', 'ear_width', 'ear_points', 'ear_carriage', 'eye_size',
-                  'eye_shape',
-                  'bone', 'build', 'back_length', 'back_shape', 'topline', 'neck_length', 'croup', 'chest_depth',
-                  'chest_width',
-                  'tuck', 'wrinkle', 'leg_length', 'front_angulation', 'rear_angulation', 'reach', 'drive', 'pasterns',
-                  'feet',
-                  'hind_dew_claws', 'tail_shape', 'tail_length', 'tail_set', 'tail_carriage', 'hairless', 'coat_length',
-                  'furnishings', 'topknot', 'ear_fringe_type', 'ear_fringe_length', 'neck_ruff', 'body_coat',
-                  'leg_feather',
-                  'tail_plume', 'coat_curl', 'texture', 'undercoat', 'coat_lay', 'ridge', 'shedding',
-                  'coat_type_genotype',
-                  'eye_colour', 'pigment', 'nose_colour', 'coat_colour_genotype', 'coat_colour']
+    global genotypes_list
+    global phenotypes_list
+    global trait_list
+    global breed_list
+
     truncated_attrs_dict = {}
     for attr in genotypes_list:
         first_letters = "".join(x[0] for x in attr.split("_")).upper()
@@ -765,7 +1010,7 @@ def produce_truncated_attrs():
         second_letters = "".join(x[1] for x in attr.split("_"))
         first_and_second_letters = ''.join(''.join(x) for x in zip(first_letters, second_letters))
         truncated_attrs_dict[attr] = first_and_second_letters
-    breed_list = ["Cavalier_King_Charles_Spaniel", "Jack_Russell_Terrier"]
+
     for attr in breed_list:
         first_letters = "".join(x[0] for x in attr.split("_")).upper()
         second_letters = "".join(x[1] for x in attr.split("_"))
@@ -789,3 +1034,156 @@ def export_database_as_dict():
     for filename, options in files:
         with open(filename, "w") as f:
             json.dump(all_dogs_dict, f, **options)
+
+def recalculate_health_scores():
+    query = sa.select(Dog)
+    dogs = db.session.scalars(query).all()
+    for dog in dogs:
+        print(dog.id)
+        print(type(dog))
+        #health_score = calculate_health_score(dog)
+        #print(health_score)
+        #dog.health_score = health_score
+        db.session.commit()
+
+
+def reform_conf_dicts():
+    perfect_spaniel = {
+        "Muzzle Length": "Brachy Long-brachy Long",
+        "Muzzle Depth": "Moderate",
+        "Dewlap": "Slight",
+        "Brow Ridge":"Moderate",
+        "Profile":["Slightly Upturned", "Upturned"],
+        "Bite": "Scissor",
+        "Skull": "Rounded",
+        "Head Width":"Moderate",
+        "Stop": "Moderate",
+        "Head Carriage":["High", "Above Topline"],
+        "Ear Set": "High",
+        "Ear Length": "Long",
+        "Ear Width":"Broad",
+        "Ear Points": "U Shaped",
+        "Ear Carriage":"Drop",
+        "Eye Size": "Large",
+        "Eye Shape": "Round",
+        "Bone": "Medium",
+        "Build":"Lean",
+        "Back Length": "Short",
+        "Back Shape": "Straight",
+        "Topline": "Level",
+        "Neck Length": "Medium",
+        "Croup": "Moderate",
+        "Chest Depth": "Moderate",
+        "Chest Width": "Oval",
+        "Tuck": "None",
+        "Wrinkle":"None",
+        "Leg Length":"Dwarf Long",
+        "Front Angulation":"Well Laid Back + Equal",
+        "Rear Angulation":"Moderate + Equal",
+        "Reach":"Good Reach",
+        "Drive":"Good Drive",
+        "Pasterns":"Short",
+        "Feet":"Cat",
+        "Hind Dew Claws":["None", "Single", "Double"],
+        "Tail Shape":["Straight", "Slight Curve"],
+        "Tail Length":"Long-medium",
+        "Tail Set":"Moderate",
+        "Tail Carriage":"Level",
+        "Hairless":"Coated",
+        "Coat Length":"Long 2-4 Inch, 5-10 Cm",
+        "Furnishings":"None",
+        "Topknot":["Smooth", "Medium", "Long"],
+        "Ear Fringe Type":"Fringe",
+        "Ear Fringe Length":["2 Inch, 5 Cm", "3-4 Inch, 7.5-10 Cm", "6-8 Inch, 15-20 Cm"],
+        "Neck Ruff":"None",
+        "Body Coat":["Shorter", "Same"],
+        "Leg Feather":"Feathered",
+        "Tail Plume":["Long 2-3 Inch, 5-7.5 Cm", "Long 4-6 Inch, 10-15 Cm"],
+        "Coat Curl":"Straight",
+        "Texture":"Soft",
+        "Undercoat":"None",
+        "Coat Lay":"Flat",
+        "Ridge":"Absent",
+        "Shedding":["Low", "Medium"],
+        "Coat Type Genotype":"",
+        "Eye Colour":"Dark Brown",
+        "Pigment":["Black", "Liver", "Albino"],
+        "Nose Colour":"Black",
+        "Coat Colour Genotype":"",
+        "Coat Colour":""
+    }
+    possible_spaniel = {
+        "Muzzle Length": ["Brachy Long-brachy Long", "Brachy Long-brachy Medium", "Brachy Medium-brachy Long", "Brachy Medium-brachy Medium"],
+        "Muzzle Depth": ["Moderate", "Deep"],
+        "Dewlap": ["Slight", "Prominent"],
+        "Brow Ridge":"Moderate",
+        "Profile":["Slightly Upturned", "Upturned"],
+        "Bite": ["Underbite", "Wry Underbite" ,"Level", "Wry Level" ,"Scissor", "Wry Scissor", "Overbite", "Wry Overbite"],
+        "Skull": ["Rounded", "Slight Dome"],
+        "Head Width":"Moderate",
+        "Stop": ["Moderate", "Definite"],
+        "Head Carriage":["High", "Above Topline"],
+        "Ear Set": ["High", "Level"],
+        "Ear Length": ["Medium", "Long"],
+        "Ear Width":"Broad",
+        "Ear Points": ["Slightly Rounded", "U Shaped"],
+        "Ear Carriage":"Drop",
+        "Eye Size": ["Small", "Medium", "Large"],
+        "Eye Shape": ["Round", "Oval", "Almond"],
+        "Bone": ["Fine", "Medium", "Substantial"],
+        "Build":"Lean",
+        "Back Length": ["Short", "Medium", "Long"],
+        "Back Shape": ["Straight", "Roach", "Sway"],
+        "Topline": ["Level", "Sloping", "High Rear"],
+        "Neck Length": ["Short", "Medium", "Long"],
+        "Croup": ["Flat", "Slight", "Moderate", "Steep"],
+        "Chest Depth": ["Shallow", "Moderate", "Deep"],
+        "Chest Width": ["Narrow", "Oval", "Barrel"],
+        "Tuck": ["None", "Slight", "Moderate", "Well Tucked Up"],
+        "Wrinkle":"None",
+        "Leg Length": ["Dwarf Medium","Dwarf Long"],
+        "Front Angulation":["Upright + Short", "Upright + Equal", "Moderate + Short", "Moderate + Equal", "Well Laid Back + Short", "Well Laid Back + Equal"],
+        "Rear Angulation":["Flat + Short", "Flat + Equal", "Flat + Long", "Slight + Short", "Slight + Equal", "Slight + Long", "Moderate + Short", "Moderate + Equal", "Moderate + Long", "Steep + Short", "Steep + Equal", "Steep + Long"],
+        "Reach":["Limited Reach", "Limited Reach Hackney", "Limited Reach High Step", "Moderate Reach", "Moderate Reach Hackney", "Moderate Reach High Step", "Good Reach", "Good Reach Hackney", "Good Reach High Step", "Extended Reach", "Extended Reach Hackney", "Extended Reach High Step"],
+        "Drive":["Limited Drive", "Limited Drive Kicking Up", "Moderate Drive", "Moderate Drive Kicking Up", "Good Drive", "Good Drive Kicking Up", "Exaggerated Drive", "Exaggerated Drive Kicking Up"],
+        "Pasterns":["Short", "Moderate", "Long"],
+        "Feet":["Cat", "Oval", "Hare", "Flat"],
+        "Hind Dew Claws":["None", "Single", "Double"],
+        "Tail Shape":["Straight", "Slight Curve", "Sickle"],
+        "Tail Length":["Long-medium", "Long-short"],
+        "Tail Set":["High", "Moderate", "Low"],
+        "Tail Carriage":["Diagonal", "Level", "Low"],
+        "Hairless":"Coated",
+        "Coat Length":["Long 1-2 Inch, 2.5-5 Cm", "Long 2-4 Inch, 5-10 Cm"],
+        "Furnishings":"None",
+        "Topknot":["Smooth", "Medium", "Long"],
+        "Ear Fringe Type":["Semi Fringe", "Fringe"],
+        "Ear Fringe Length":["2 Inch, 5 Cm", "3-4 Inch, 7.5-10 Cm", "6-8 Inch, 15-20 Cm"],
+        "Neck Ruff":"None",
+        "Body Coat":["Shorter", "Same"],
+        "Leg Feather":"Feathered",
+        "Tail Plume":["Long 2-3 Inch, 5-7.5 Cm", "Long 4-6 Inch, 10-15 Cm"],
+        "Coat Curl":"Straight",
+        "Texture":"Soft",
+        "Undercoat":["None", "Sparse", "Medium"],
+        "Coat Lay":"Flat",
+        "Ridge":"Absent",
+        "Shedding":["Low", "Medium"],
+        "Coat Type Genotype":"",
+        "Eye Colour":["Dark Brown", "Light Brown", "Amber", "Yellow", "Albino"],
+        "Pigment":["Black", "Liver", "Albino"],
+        "Nose Colour":["Black", "Black Dudley", "Liver", "Liver Dudley", "Red Dudley", "Albino"],
+        "Coat Colour Genotype":"",
+        "Coat Colour":""
+    }
+
+    for key, value in perfect_spaniel.copy().items():
+        perfect_spaniel[key.lower().replace(" ", "_")] = value
+        del perfect_spaniel[key]
+    pprint(perfect_spaniel)
+
+
+    for key, value in possible_spaniel.copy().items():
+        possible_spaniel[key.lower().replace(" ", "_")] = value
+        del possible_spaniel[key]
+    pprint(possible_spaniel)

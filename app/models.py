@@ -67,7 +67,7 @@ class DogInfo:
     ear_fringe_length: so.Mapped[Optional[str]] = so.mapped_column(sa.String(32), index=True)
     neck_ruff: so.Mapped[Optional[str]] = so.mapped_column(sa.String(32), index=True)
     body_coat: so.Mapped[Optional[str]] = so.mapped_column(sa.String(32), index=True)
-    leg_feather: so.Mapped[Optional[str]] = so.mapped_column(sa.String(32), index=True)
+    leg_feathering: so.Mapped[Optional[str]] = so.mapped_column(sa.String(32), index=True)
     tail_plume: so.Mapped[Optional[str]] = so.mapped_column(sa.String(32), index=True)
     coat_curl: so.Mapped[Optional[str]] = so.mapped_column(sa.String(32), index=True)
     texture: so.Mapped[Optional[str]] = so.mapped_column(sa.String(32), index=True)

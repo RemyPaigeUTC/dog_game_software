@@ -8,7 +8,8 @@ from app.models import User, Post, Dog
 from app.forms import LoginForm, AddDogForm, IndexFilterForm
 from app import utilities
 from app.utilities import create_dog_dict, create_descendant_disease_dict, list_descendants_diseases, \
-    list_unique_descendants_diseases, create_count_descendants_dict, create_descendant_dict_ggp
+    list_unique_descendants_diseases, create_count_descendants_dict, create_descendant_dict_ggp, \
+    create_all_dogs_dict_with_query, commit_dog_to_db
 
 genotypes_list = ["dilated_cardiomyopathy", "cardiomyopathy", "progressive_retinal_atrophy", "retinal_dysplasia",
                   "chondrodystrophy", "muscular_dystrophy", "myotonia_congenita", "degenerative_myelopathy",
@@ -154,9 +155,6 @@ def index():
     form = IndexFilterForm()
     global truncated_attrs_dict
     if request.method == 'POST':
-        print("POST")
-        print(form.generation.data)
-        print(form.breed.data)
 
         if form.generation.data is None and form.breed.data == "All":
             print("empty")
@@ -171,35 +169,13 @@ def index():
             print("breed only")
             query = sa.select(Dog).where(Dog.breed == form.breed.data, Dog.living_status == "alive").order_by(Dog.id.asc())
 
-        dogs = db.session.scalars(query).all()
-        all_dogs_dict = {}
-        for dog in dogs:
-            dog_dict = create_dog_dict(dog)
-            unique_descendants_diseases = list_unique_descendants_diseases(dog)
-            for disease in unique_descendants_diseases:
-                dog_dict["health"][disease] = "Descendant"
-            all_dogs_dict[dog.id] = dog_dict
+        all_dogs_dict = create_all_dogs_dict_with_query(query)
+
         return render_template('index.html', title='Home', dogs=all_dogs_dict,
                                truncated_attrs_dict=truncated_attrs_dict, form=form)
     elif request.method == 'GET':
-        print("GET")
-
-        # page = request.args.get('page', 1, type=int)
         query = sa.select(Dog).where(Dog.living_status == "alive").order_by(Dog.id.asc())
-        dogs = db.session.scalars(query).all()
-        # dogs = db.paginate(query, page=page, per_page=app.config['DOGS_PER_PAGE'], error_out=False)
-        # next_url = url_for('index', page=dogs.next_num) \
-        #     if dogs.has_next else None
-        # prev_url = url_for('index', page=dogs.prev_num) \
-        #     if dogs.has_prev else None
-        all_dogs_dict = {}
-        for dog in dogs:
-            dog_dict = create_dog_dict(dog)
-            unique_descendants_diseases = list_unique_descendants_diseases(dog)
-            for disease in unique_descendants_diseases:
-                dog_dict["health"][disease] = "Descendant"
-            all_dogs_dict[dog.id] = dog_dict
-        # return render_template('index.html', title='Home', dogs=all_dogs_dict, next_url=next_url, prev_url=prev_url)
+        all_dogs_dict = create_all_dogs_dict_with_query(query)
         return render_template('index.html', title='Home', dogs=all_dogs_dict, truncated_attrs_dict=truncated_attrs_dict, form=form)
     return None
 
@@ -211,219 +187,20 @@ def add_dog():
         dog = Dog()
         db.session.add(dog)
         dog.id = form.id.data
-        dog.living_status = form.living_status.data
-        dog.breed = form.breed.data
-        dog.gender = form.gender.data
-        db.session.commit()
-        # Parse Health Data
-        try:
-            dog = utilities.parse_health_from_html(form.health_data.data, dog)
-            db.session.commit()
-        except:
-            print("empty health data")
-
-        # Parse Conformation Data
-        try:
-            dog = utilities.parse_conformation_from_html(form.conformation_data.data, dog)
-            db.session.commit()
-        except:
-            print("empty conformation data")
-
-        # Additional Info
-
-
-
-        dog.health_score = utilities.calculate_health_score(dog)
-        dog.registered_name = utilities.registered_name_from_id(dog.id)
-        db.session.commit()
-        # find parent IDs from regsitered names
-        #parents don't exist for gen 0s
-        if bool(form.parent1_registered_name.data):
-            parent1_id = utilities.id_from_registered_name(form.parent1_registered_name.data)
-            parent2_id = utilities.id_from_registered_name(form.parent2_registered_name.data)
-            parent1 = db.session.scalar(sa.select(Dog).where(Dog.id == parent1_id))
-            parent2 = db.session.scalar(sa.select(Dog).where(Dog.id == parent2_id))
-            print(parent1, parent2)
-            print(parent1_id, parent2_id)
-            parent1.become_parent_to(dog)
-            parent2.become_parent_to(dog)
-        dog.generation = utilities.calculate_generation(dog, 1)
-        db.session.commit()
+        commit_dog_to_db(dog, form)
         return redirect(url_for('view_dog', id=dog.id))
     else:
         # dont forget to pass the form in
         return render_template("add_dog.html", title='Add Dog', form=form)
 
-@app.route('/kill_dog/<id>', methods=['GET', 'POST'])
-def kill_dog(id):
-    form = IndexFilterForm()
-    truncated_attrs_dict = {
-        'Cavalier King Charles Spaniel': 'CaKiChSp',
-        'Cavalier_King_Charles_Spaniel': 'CaKiChSp',
-        'Jack Russell Terrier': 'JaRuTe',
-        'Jack_Russell_Terrier': 'JaRuTe',
-        'addisons_disease': 'AdDi',
-        'atopy': 'At',
-        'autoimmune_thyroid_disease': 'AuThDi',
-        'back_length': 'BaLe',
-        'back_shape': 'BaSh',
-        'bite': 'Bi',
-        'body_coat': 'BoCo',
-        'bone': 'Bo',
-        'brow_ridge': 'BrRi',
-        'build': 'Bu',
-        'cardiomyopathy': 'Ca',
-        'cataracts_hereditary': 'CaHe',
-        'cervical_spondylomyelopathy': 'CeSp',
-        'chest_depth': 'ChDe',
-        'chest_width': 'ChWi',
-        'chiari_malformation': 'ChMa',
-        'chondrodystrophy': 'Ch',
-        'chronic_hepatitis': 'ChHe',
-        'cleft_palate': 'ClPa',
-        'coat_colour': 'CoCo',
-        'coat_colour_genotype': 'CoCoGe',
-        'coat_curl': 'CoCu',
-        'coat_lay': 'CoLa',
-        'coat_length': 'CoLe',
-        'coat_type_genotype': 'CoTyGe',
-        'corneal_dystrophy': 'CoDy',
-        'croup': 'Cr',
-        'cryptorchidism': 'Cr',
-        'deafness_congenital': 'DeCo',
-        'degenerative_myelopathy': 'DeMy',
-        'demodicosis': 'De',
-        'dewlap': 'De',
-        'diabetes_mellitus': 'DiMe',
-        'dilated_cardiomyopathy': 'DiCa',
-        'distichiasis': 'Di',
-        'drive': 'Dr',
-        'ear_carriage': 'EaCa',
-        'ear_fringe_length': 'EaFrLe',
-        'ear_fringe_type': 'EaFrTy',
-        'ear_length': 'EaLe',
-        'ear_points': 'EaPo',
-        'ear_ser': 'EaSe',
-        'ear_width': 'EaWi',
-        'elbow_dysplasia': 'ElDy',
-        'endocardiosis': 'En',
-        'entropion': 'En',
-        'epilepsy': 'Ep',
-        'exocrine_pancreatic_insufficiency': 'ExPaIn',
-        'eye_colour': 'EyCo',
-        'eye_shape': 'EySh',
-        'eye_size': 'EySi',
-        'feet': 'Fe',
-        'front_angulation': 'FrAn',
-        'furnishings': 'Fu',
-        'hairless': 'Ha',
-        'head_carriage': 'HeCa',
-        'head_width': 'HeWi',
-        'hind_dew_claws': 'HiDeCl',
-        'hip_dysplasia': 'HiDy',
-        'hydrocephalus': 'Hy',
-        'ichthyosis': 'Ic',
-        'keratoconjunctivitis_sicca': 'KeSi',
-        'leg_feather': 'LeFe',
-        'leg_length': 'LeLe',
-        'legg_calve_perthes_disease': 'LeCaPeDi',
-        'microphthalmia': 'Mi',
-        'mitral_valve_dysplasia': 'MiVaDy',
-        'muscular_dystrophy': 'MuDy',
-        'muzzle_depth': 'MuDe',
-        'muzzle_length': 'MuLe',
-        'myotonia_congenita': 'MyCo',
-        'neck_length': 'NeLe',
-        'neck_ruff': 'NeRu',
-        'nose_colour': 'NoCo',
-        'pasterns': 'Pa',
-        'patellar_luxation': 'PaLu',
-        'patent_ductus_arteriosus': 'PaDuAr',
-        'persistent_pupillary_membranes': 'PePuMe',
-        'pigment': 'Pi',
-        'primary_glomerulopathy': 'PrGl',
-        'profile': 'Pr',
-        'progressive_retinal_atrophy': 'PrReAt',
-        'protein_losing_enteropathy': 'PrLoEn',
-        'pulmonic_stenosis': 'PuSt',
-        'reach': 'Re',
-        'rear_angulation': 'ReAn',
-        'renal_dysplasia': 'RenDy',
-        'retinal_dysplasia': 'RetDy',
-        'ridge': 'Ri',
-        'shedding': 'Sh',
-        'skull': 'Sk',
-        'stop': 'St',
-        'tail_carriage': 'TaCa',
-        'tail_length': 'TaLe',
-        'tail_plume': 'TaPl',
-        'tail_set': 'TaSe',
-        'tail_shape': 'TaSh',
-        'texture': 'Te',
-        'topknot': 'To',
-        'topline': 'To',
-        'tuck': 'Tu',
-        'umbilical_hernia': 'UmHe',
-        'undercoat': 'Un',
-        'urolithiasis': 'Ur',
-        'ventricular_septal_defect': 'VeSeDe',
-        'vitreous_degeneration': 'ViDe',
-        'wrinkle': 'Wr'}
-    dog = db.first_or_404(sa.select(Dog).where(Dog.id == id))
-    dog.living_status = "dead"
-    db.session.commit()
-    query = sa.select(Dog).where(Dog.living_status == "alive").order_by(Dog.id.asc())
-    dogs = db.session.scalars(query).all()
-    all_dogs_dict = {}
-    for dog in dogs:
-        dog_dict = create_dog_dict(dog)
-        unique_descendants_diseases = list_unique_descendants_diseases(dog)
-        for disease in unique_descendants_diseases:
-            dog_dict["health"][disease] = "Descendant"
-        all_dogs_dict[dog.id] = dog_dict
-    return render_template('index.html', title='Home', dogs=all_dogs_dict, truncated_attrs_dict=truncated_attrs_dict,
-                           form=form)
 @app.route('/edit_dog/<id>', methods=['GET', 'POST'])
 def edit_dog(id):
     form = AddDogForm()
     if form.validate_on_submit():
         dog = db.first_or_404(sa.select(Dog).where(Dog.id == id))
-        dog.living_status = form.living_status.data
-        dog.breed = form.breed.data
-        dog.gender = form.gender.data
-        db.session.commit()
-        # Parse Health Data
-        try:
-            dog = utilities.parse_health_from_html(form.health_data.data, dog)
-            db.session.commit()
-        except:
-            print("empty health data")
-
-        # Parse Conformation Data
-        try:
-            dog = utilities.parse_conformation_from_html(form.conformation_data.data, dog)
-            db.session.commit()
-        except:
-            print("empty conformation data")
-
-        # Additional Info
-
-        dog.health_score = utilities.calculate_health_score(dog)
-        dog.registered_name = utilities.registered_name_from_id(dog.id)
-        db.session.commit()
-        # find parent IDs from regsitered names
-        #parents don't exist for gen 0s
-        if bool(form.parent1_registered_name.data):
-            parent1_id = utilities.id_from_registered_name(form.parent1_registered_name.data)
-            parent2_id = utilities.id_from_registered_name(form.parent2_registered_name.data)
-            parent1 = db.session.scalar(sa.select(Dog).where(Dog.id == parent1_id))
-            parent2 = db.session.scalar(sa.select(Dog).where(Dog.id == parent2_id))
-            print(parent1, parent2)
-            print(parent1_id, parent2_id)
-            parent1.become_parent_to(dog)
-            parent2.become_parent_to(dog)
-        dog.generation = utilities.calculate_generation(dog, 1)
-        db.session.commit()
+        print("edit dog")
+        print(type(dog))
+        commit_dog_to_db(dog, form)
         return redirect(url_for('view_dog', id=dog.id))
     elif request.method == 'GET':
         dog = db.first_or_404(sa.select(Dog).where(Dog.id == id))
@@ -440,6 +217,12 @@ def edit_dog(id):
         # dont forget to pass the form in
         return render_template("add_dog.html", title='Add Dog', form=form)
 
+@app.route('/kill_dog/<id>', methods=['GET', 'POST'])
+def kill_dog(id):
+    dog = db.first_or_404(sa.select(Dog).where(Dog.id == id))
+    dog.living_status = "dead"
+    db.session.commit()
+    return redirect(url_for('index.html'))
 @app.route('/view_dog/<id>', methods=['GET', 'POST'])
 def view_dog(id):
     global truncated_attrs_dict
