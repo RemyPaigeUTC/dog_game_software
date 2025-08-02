@@ -114,8 +114,8 @@
 }
 .large_health_box_number {
     padding: 0px;
-    width: 50%;
     display: inline-block;
+    float: right;
 }
 .large_health_box_full {
     padding-left: 5px
@@ -142,6 +142,14 @@
   padding: 5px;
   border: solid 1px black;
   width: 82px;
+    margin-bottom: 4px;
+}
+.conformation_line {
+    display: inline-block;
+  padding: 5px;
+  border: solid 1px black;
+  width: 22px;
+    margin-bottom: 4px;
 }
 .dog_health_or_confo {
   margin-bottom: 10px
@@ -164,15 +172,17 @@
   padding-left: 5px;
   padding-top: 3px;
 }
-.Carrying {
+.Carrying, .background_0 {
   background-color: #75b798 !important;
 }
-.Affected {
+
+.Affected, .background_2, .background_-2, .background_3, .background_-3, .background_4, .background_-4 {
     background-color: #ea868f;
 }
-.Carrier {
+.Carrier, .background_1, .background_-1 {
     background-color: #feb272;
 }
+
 .F_highlight {
     background-color: #d63384 !important;
 }
@@ -196,4 +206,85 @@
     visibility: hidden;
     display: none;
     padding-bottom: 10px;
+}
+
+#conformation_information {
+    visibility: hidden;
+    display: none;
+}
+
+.phenotype {
+    border: dotted !important;
+    padding: 3px !important;
+}
+
+.partner_basic {
+  font-size: 1.5em;
+  line-height: 0.75;
+    margin-bottom: 10px;
+}
+
+.partner_health {
+    margin-left: 18px;
+}
+
+.index_button{
+    display: inline-block;
+    padding: 10px;
+    margin: 5px;
+    border: solid 1px black;
+    border-radius: 7px;
+}
+
+.active_index_button {
+   color: black;
+    background-color: #2da23c;
+}
+
+.inactive_index_button {
+    background-color: grey;
+    color: darkgrey;
+}
+
+.index_form {
+    display: inline-block;
+    margin-left: 20px;
+}
+
+.hidden {
+    visibility: hidden;
+    display: none;
+}
+.visible {
+    visibility: visible;
+    display: inline-block;
+}
+
+.stick_to_bottom {
+  position: fixed;
+  bottom: 0;
+  width: 82% !important;
+}
+
+.floater_parent {
+    position: absolute;
+}
+
+.stick_button {
+    position: absolute;
+    right: 20px;
+    top: -14px;
+    padding: 6px;
+      margin: 5px;
+      border: solid 1px black;
+      border-radius: 7px;
+}
+.unstick_button {
+    position: absolute;
+    right: 20px;
+    top: -14px;
+    padding: 6px;
+      margin: 5px;
+      border: solid 1px black;
+      border-radius: 7px;
 }

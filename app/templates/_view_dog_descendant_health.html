@@ -3,11 +3,16 @@
 
 {% for partner, generation_dict in descendant_disease_dict.items() %}
     <div>
-        <div class="heading1">{{ partner }}</div>
+        <div class="partner_basic" ><a href="{{ url_for('view_dog', id=partners_health_dict[partner]["basic"]["id"]) }}" style="color: #0e0e08" > {{ partners_health_dict[partner]["basic"]["registered_name"] }} </a></div>
+        <div class="partner_health">
+        {% with dog_health=partners_health_dict[partner]["health"] %}
+            {% include "_dog_health_line.html" %}
+        {% endwith %}
+        </div>
 
         {% for generation, health_info in generation_dict.items() %}
             {% if generation == 2 %}
-                <div>{{ count_descendants_dict[partner][generation] }} Children</div>
+                <div class="partner_health">{{ count_descendants_dict[partner][generation] }} Children</div>
                 <div class="container">
                     <div class="columns">
                         {% for attr, value in health_info.items() %}

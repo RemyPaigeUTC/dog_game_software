@@ -9,13 +9,30 @@ from app.forms import LoginForm, AddDogForm, IndexFilterForm
 from app import utilities
 from app.utilities import create_dog_dict, create_descendant_disease_dict, list_descendants_diseases, \
     list_unique_descendants_diseases, create_count_descendants_dict, create_descendant_dict_ggp, \
-    create_all_dogs_dict_with_query, commit_dog_to_db
+    create_all_dogs_dict_with_query, commit_dog_to_db, create_partners_heatlh_dict
 
-genotypes_list = ["dilated_cardiomyopathy", "cardiomyopathy", "progressive_retinal_atrophy", "retinal_dysplasia",
+genotypes_list = ["haemophilia",
+                            "von_willebrands_disease",
+                            "cataracts_hereditary",
+                            "choroidal_hypoplasia",
+                            "primary_glaucoma",
+                            "primary_lens_luxation",
+                            "craniomandibular_osteopathy",
+                            "cerebellar_abiotrophy",
+                            "exercise_induced_collapse",
+                            "neuroaxonal_dystrophy",
+                            "sensory_neuropathy","dilated_cardiomyopathy", "cardiomyopathy", "progressive_retinal_atrophy", "retinal_dysplasia",
                   "chondrodystrophy", "muscular_dystrophy", "myotonia_congenita", "degenerative_myelopathy",
                   "ichthyosis", "primary_glomerulopathy",
                   "urolithiasis"]
-phenotypes_list = ["endocardiosis", "chiari_malformation", "deafness_congenital", "mitral_valve_dysplasia",
+phenotypes_list = ["immune_mediated_haemolytic_anaemia",
+                            "portosystemic_shunt",
+                            "optic_nerve_hypoplasia",
+                            "selective_iga_deficiency",
+                            "osteochondritis_dissecans",
+                            "myasthenia_gravis",
+                            "tracheal_collapse",
+                            "follicular_dysplasia","endocardiosis", "chiari_malformation", "deafness_congenital", "mitral_valve_dysplasia",
                    "patent_ductus_arteriosus",
                    "pulmonic_stenosis", "ventricular_septal_defect", "corneal_dystrophy", "distichiasis",
                    "keratoconjunctivitis_sicca",
@@ -104,6 +121,7 @@ truncated_attrs_dict = {
     'muscular_dystrophy': 'MuDy',
     'muzzle_depth': 'MuDe',
     'muzzle_length': 'MuLe',
+    'neuroaxonal_dystrophy': 'NeDy',
     'myotonia_congenita': 'MyCo',
     'neck_length': 'NeLe',
     'neck_ruff': 'NeRu',
@@ -119,6 +137,7 @@ truncated_attrs_dict = {
     'profile': 'Pr',
     'progressive_retinal_atrophy': 'PrReAt',
     'protein_losing_enteropathy': 'PrLoEn',
+    'portosystemic shunt': 'PoSh',
     'pulmonic_stenosis': 'PuSt',
     'reach': 'Re',
     'rear_angulation': 'ReAn',
@@ -143,17 +162,94 @@ truncated_attrs_dict = {
     'urolithiasis': 'Ur',
     'ventricular_septal_defect': 'VeSeDe',
     'vitreous_degeneration': 'ViDe',
-    'wrinkle': 'Wr'}
+    'wrinkle': 'Wr',
+               "immune_mediated_haemolytic_anaemia": "ImMeHaAn",
+"portosystemic_shunt": "PoSh",
+"optic_nerve_hypoplasia": "OpNeHy",
+"selective_iga_deficiency": "SeIgDe",
+"osteochondritis_dissecans": "OsDi",
+"myasthenia_gravis": "MyGr",
+"tracheal_collapse": "TrCo",
+"follicular_dysplasia": "FoDy",
+    "haemophilia": "He",
+    "von_willebrands_disease": "VoWiDi",
+    "craniomandibular_osteopathy": "CrOs",
+    "exercise_induced_collapse": "ExInCo",
+}
+genotype_phenotype_lookup = {
+                            "haemophilia": "genotype",
+                            "von_willebrands_disease": "genotype",
+                            "cataracts_hereditary": "genotype",
+                            "choroidal_hypoplasia": "genotype",
+                            "primary_glaucoma": "genotype",
+                            "primary_lens_luxation": "genotype",
+                            "craniomandibular_osteopathy": "genotype",
+                            "cerebellar_abiotrophy": "genotype",
+                            "exercise_induced_collapse": "genotype",
+                            "neuroaxonal_dystrophy": "genotype",
+                            "sensory_neuropathy": "genotype",
+                            "dilated_cardiomyopathy": "genotype",
+                             "cardiomyopathy": "genotype",
+                             "progressive_retinal_atrophy": "genotype",
+                             "retinal_dysplasia": "genotype",
+                             "chondrodystrophy": "genotype",
+                             "muscular_dystrophy": "genotype",
+                             "myotonia_congenita": "genotype",
+                             "degenerative_myelopathy": "genotype",
+                             "ichthyosis": "genotype",
+                             "primary_glomerulopathy": "genotype",
+                             "urolithiasis": "genotype",
+                            "immune_mediated_haemolytic_anaemia": "phenotype",
+                            "portosystemic_shunt": "phenotype",
+                            "optic_nerve_hypoplasia": "phenotype",
+                            "selective_iga_deficiency": "phenotype",
+                            "osteochondritis_dissecans": "phenotype",
+                            "myasthenia_gravis": "phenotype",
+                            "tracheal_collapse": "phenotype",
+                            "follicular_dysplasia": "phenotype",
+                             "endocardiosis": "phenotype",
+                             "chiari_malformation": "phenotype",
+                             "deafness_congenital": "phenotype",
+                             "mitral_valve_dysplasia": "phenotype",
+                             "patent_ductus_arteriosus": "phenotype",
+                             "pulmonic_stenosis": "phenotype",
+                             "ventricular_septal_defect": "phenotype",
+                             "corneal_dystrophy": "phenotype",
+                             "distichiasis": "phenotype",
+                             "keratoconjunctivitis_sicca": "phenotype",
+                             "exocrine_pancreatic_insufficiency": "phenotype",
+                             "cervical_spondylomyelopathy": "phenotype",
+                             "elbow_dysplasia": "phenotype",
+                             "hip_dysplasia": "phenotype",
+                             "patellar_luxation": "phenotype",
+                             "epilepsy": "phenotype",
+                             "atopy": "phenotype",
+                             "umbilical_hernia": "phenotype",
+                             "addisons_disease": "phenotype",
+                             "autoimmune_thyroid_disease": "phenotype",
+                             "diabetes_mellitus": "phenotype",
+                             "entropion": "phenotype",
+                             "microphthalmia": "phenotype",
+                             "persistent_pupillary_membranes": "phenotype",
+                             "vitreous_degeneration": "phenotype",
+                             "protein_losing_enteropathy": "phenotype",
+                             "legg_calve_perthes_disease": "phenotype",
+                             "hydrocephalus": "phenotype",
+                             "cleft_palate": "phenotype",
+                             "demodicosis": "phenotype",
+                             "cryptorchidism": "phenotype",
+                             "chronic_hepatitis": "phenotype"}
 # TODO: code filters
-# TODO: improve look of overflowing small health boxes
-# TODO: add conformation onto index with toggle switch
-# TODO: make the form look nicer
-# TODO: improve conformation score
-# TODO: the index function has the most up to date tuncated arrs dict. Cateracts and Renal Dysplasia were mising. Retinal dysplasia modified.
+# TODO: improve look of overflowing boxes
+# TODO: remove known phentypes of partners from possible diseases
+# TODO: a way to mark possible diseases as probably safe - coming from the other parnter
+# TODO: add siblings
+# TODO: add personality and job tracking
 @app.route('/',methods=['GET', 'POST'])
 def index():
     form = IndexFilterForm()
     global truncated_attrs_dict
+    global genotype_phenotype_lookup
     if request.method == 'POST':
 
         if form.generation.data is None and form.breed.data == "All":
@@ -172,11 +268,11 @@ def index():
         all_dogs_dict = create_all_dogs_dict_with_query(query)
 
         return render_template('index.html', title='Home', dogs=all_dogs_dict,
-                               truncated_attrs_dict=truncated_attrs_dict, form=form)
+                               truncated_attrs_dict=truncated_attrs_dict, genotype_phenotype_lookup=genotype_phenotype_lookup, form=form)
     elif request.method == 'GET':
         query = sa.select(Dog).where(Dog.living_status == "alive").order_by(Dog.id.asc())
         all_dogs_dict = create_all_dogs_dict_with_query(query)
-        return render_template('index.html', title='Home', dogs=all_dogs_dict, truncated_attrs_dict=truncated_attrs_dict, form=form)
+        return render_template('index.html', title='Home', dogs=all_dogs_dict, truncated_attrs_dict=truncated_attrs_dict, genotype_phenotype_lookup=genotype_phenotype_lookup,form=form)
     return None
 
 
@@ -222,13 +318,14 @@ def kill_dog(id):
     dog = db.first_or_404(sa.select(Dog).where(Dog.id == id))
     dog.living_status = "dead"
     db.session.commit()
-    return redirect(url_for('index.html'))
+    return redirect(url_for('index'))
 @app.route('/view_dog/<id>', methods=['GET', 'POST'])
 def view_dog(id):
     global truncated_attrs_dict
     dog = db.first_or_404(sa.select(Dog).where(Dog.id == id))
     dog_dict = utilities.create_dog_dict(dog)
     descendant_disease_dict = create_descendant_disease_dict(dog, 1, {})
+    partners_health_dict = create_partners_heatlh_dict(descendant_disease_dict)
     unique_descendants_diseases = list_unique_descendants_diseases(dog)
     count_descendants_dict = create_count_descendants_dict(dog, 1, {})
     descendant_dict_ggp = create_descendant_dict_ggp(dog)
@@ -241,6 +338,8 @@ def view_dog(id):
                            descendant_disease_dict=descendant_disease_dict,
                            unique_descendants_diseases=unique_descendants_diseases,
                            count_descendants_dict=count_descendants_dict,
+                           partners_health_dict=partners_health_dict,
+                           genotype_phenotype_lookup=genotype_phenotype_lookup,
                            descendant_dict_ggp=descendant_dict_ggp)
 
 # Accept GET and POST requests in same function

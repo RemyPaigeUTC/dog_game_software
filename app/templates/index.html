@@ -4,10 +4,12 @@
 {#Data passed from route#}
 {% block content %}
     <div>
-        <form action="" method="post" novalidate>
+        <div id="health_button" class="index_button active_index_button"> Health </div>
+        <div id="conformation_button" class="index_button inactive_index_button"> Conformation </div>
+        <form class="index_form" action="" method="post" novalidate>
             {{ form.hidden_tag() }}
             {{ form.generation.label }}
-            {{ form.generation(size=32) }}
+            {{ form.generation(size=1) }}
             {{ form.breed.label }}
             {{ form.breed() }}
             {{ form.submit() }}
@@ -15,16 +17,24 @@
     </div>
     {% for dog in dogs.values() %}
 
-        <div class="container">
+        <div id="container_{{ dog["basic"]["id"] }}" class="container">
+
             <div id="{{ dog["basic"]["id"] }}" class="columns dog_information_row {{ dog["basic"]["gender"] }}">
 
                 <div class="column col-2 ">
-                    <div class="dog_basic1"><a href="{{ url_for('view_dog', id=dog["basic"]["id"]) }}" style="color: #0e0e08" > {{ dog["basic"]["registered_name"] }} </a> <span class="inline_scores">{{ dog["basic"]["health_score"] }}</span></div>
+                    <div class="floater_parent">
+                        <div id="stick_button_{{ dog["basic"]["id"] }}" class="stick_button visible" >stick</div>
+                        <div id="unstick_button_{{ dog["basic"]["id"] }}" class="unstick_button hidden" >unstick</div>
+                    </div>
+                    <div class="dog_basic1"><a href="{{ url_for('view_dog', id=dog["basic"]["id"]) }}" style="color: #0e0e08" > {{ dog["basic"]["registered_name"] }} </a> <span id="health_score" class="inline_scores visible">{{ dog["basic"]["health_score"] }}</span> <span id="conformation_score" class="inline_scores hidden">{{ dog["basic"]["conformation_score"] }}</span></div>
                     <div class="dog_basic2">{{ dog["basic"]["generation"] }} {{ dog["basic"]["gender"] }}    {{ truncated_attrs_dict[dog["basic"]["breed"]] }}</div>
                 </div>
                 <div class="column col-10 dog_health_or_confo">
                     {% with dog_health=dog["health"] %}
                         {% include "_dog_health_line.html" %}
+                    {% endwith %}
+                    {% with dog_conf=dog["conformation"] %}
+                        {% include "_dog_conformation_line.html" %}
                     {% endwith %}
                 </div>
                 <div id="1_partners_{{ dog["basic"]["id"] }}" class="column col-2 visible_toggle_partners"></div>

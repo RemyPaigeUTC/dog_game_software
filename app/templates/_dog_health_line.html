@@ -1,5 +1,7 @@
-{% for attr, value in dog_health.items() %}
-    <div class="health_line {{ value }}">
-        <div>{{ truncated_attrs_dict[attr] }}</div>
-    </div>
-{% endfor %}
+<div id="health_line" class="visible">
+    {% for attr, value in dog_health.items() %}
+        <div class="health_line {{ value }} {{ genotype_phenotype_lookup[attr] }}">
+            <div>{{ truncated_attrs_dict[attr] }}</div>
+        </div>
+    {% endfor %}
+</div>

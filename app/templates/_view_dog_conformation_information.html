@@ -1,0 +1,14 @@
+<div class="heading2">Conformation   :   {{ dog_basic["conformation_score"] }}</div>
+<div class="container">
+    <div class="columns">
+        {% for attr, value in dog_conformation.items() %}
+            <div class="column col-3" >
+                <div class="large_health_box background_{{ value[1] }}">
+                    <div class="large_health_box_trucated">{{ attr }}</div>
+                    <div class="large_health_box_number">{{ value[1] }}</div>
+                    <div class="large_health_box_full">{{ value[0] }}</div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>

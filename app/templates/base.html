@@ -36,46 +36,195 @@
             </div>
         </div>
         <script>
-            const divs = document.querySelectorAll('.dog_information_row');
+            try {
+                {# index - view partners toggle #}
+                const divs = document.querySelectorAll('.dog_information_row');
+                divs.forEach((div) => {
+                    div.addEventListener('click', (event) => {
+                        const partner_1_id = "1_partners_" + div.id;
+                        const partner_2_id = "2_partners_" + div.id;
+                        partner_1 = document.getElementById(partner_1_id)
+                        partner_2 = document.getElementById(partner_2_id)
 
-            divs.forEach((div) => {
-                div.addEventListener('click', (event) => {
-                    const partner_1_id = "1_partners_" + div.id;
-                    const partner_2_id = "2_partners_" + div.id;
-                    partner_1 = document.getElementById(partner_1_id)
-                    partner_2 = document.getElementById(partner_2_id)
+                        if (div.classList.contains("M_highlight")) {
+                            div.classList.remove("M_highlight")
+                            partner_1.style.visibility = "hidden"
+                            partner_2.style.visibility = "hidden"
+                            partner_1.style.display = "none"
+                            partner_2.style.display = "none"
+                        }
+                        else if (!(div.classList.contains("M_highlight")) && (div.classList.contains("M"))) {
+                            div.classList.add("M_highlight")
+                            partner_1.style.visibility = "visible"
+                            partner_2.style.visibility = "visible"
+                            partner_1.style.display = "inline-block"
+                            partner_2.style.display = "inline-block"
+                        }
+                        if (div.classList.contains("F_highlight")) {
+                            div.classList.remove("F_highlight")
+                            partner_1.style.visibility = "hidden"
+                            partner_2.style.visibility = "hidden"
+                            partner_1.style.display = "none"
+                            partner_2.style.display = "none"
+                        }
+                        else if (!(div.classList.contains("F_highlight")) && (div.classList.contains("F"))) {
+                            div.classList.add("F_highlight")
+                            partner_1.style.visibility = "visible"
+                            partner_2.style.visibility = "visible"
+                            partner_1.style.display = "inline-block"
+                            partner_2.style.display = "inline-block"
+                        }
 
-                    if (div.classList.contains("M_highlight")) {
-                        div.classList.remove("M_highlight")
-                        partner_1.style.visibility = "hidden"
-                        partner_2.style.visibility = "hidden"
-                        partner_1.style.display = "none"
-                        partner_2.style.display = "none"
-                    }
-                    else if (!(div.classList.contains("M_highlight")) && (div.classList.contains("M"))) {
-                        div.classList.add("M_highlight")
-                        partner_1.style.visibility = "visible"
-                        partner_2.style.visibility = "visible"
-                        partner_1.style.display = "inline-block"
-                        partner_2.style.display = "inline-block"
-                    }
-                    if (div.classList.contains("F_highlight")) {
-                        div.classList.remove("F_highlight")
-                        partner_1.style.visibility = "hidden"
-                        partner_2.style.visibility = "hidden"
-                        partner_1.style.display = "none"
-                        partner_2.style.display = "none"
-                    }
-                    else if (!(div.classList.contains("F_highlight")) && (div.classList.contains("F"))) {
-                        div.classList.add("F_highlight")
-                        partner_1.style.visibility = "visible"
-                        partner_2.style.visibility = "visible"
-                        partner_1.style.display = "inline-block"
-                        partner_2.style.display = "inline-block"
-                    }
-
+                    });
                 });
-            });
+            }
+            catch(err) {
+                console.log(err)
+            }
+
+            try {
+
+                const divs = document.querySelectorAll('.stick_button');
+                divs.forEach((div) => {
+                    div.addEventListener('click', (event) => {
+                        const container_id = "container_" + div.id.slice(13);
+                        const unstick_button_id = "unstick_button_" + div.id.slice(13);
+
+                        const container = document.getElementById(container_id)
+                        const unstick_button = document.getElementById(unstick_button_id)
+
+                        console.log(unstick_button_id)
+                        console.log(unstick_button)
+
+                        if (container.classList.contains("stick_to_bottom")) {
+                            container.classList.remove("stick_to_bottom")
+                        } else {
+                            container.classList.add("stick_to_bottom")
+                            unstick_button.classList.remove("hidden")
+                            unstick_button.classList.add("visible")
+                            divs.forEach((div2) => {
+                                div2.classList.remove("visible")
+                                div2.classList.add("hidden")
+                            })
+
+
+                        }
+
+                    });
+                });
+            }
+            catch(err) {
+                console.log(err)
+            }
+            try {
+
+                const divs = document.querySelectorAll('.unstick_button');
+                divs.forEach((div) => {
+                    div.addEventListener('click', (event) => {
+                        const container_id = "container_" + div.id.slice(15);
+                        const unstick_button_id = "unstick_button_" + div.id.slice(15);
+
+                        const container = document.getElementById(container_id)
+                        const unstick_button = document.getElementById(unstick_button_id)
+
+                        if (container.classList.contains("stick_to_bottom")) {
+                            container.classList.remove("stick_to_bottom")
+                            unstick_button.classList.remove("visible")
+                            unstick_button.classList.add("hidden")
+                            const divs2 = document.querySelectorAll('.stick_button');
+                            divs2.forEach((div2) => {
+                                div2.classList.remove("hidden")
+                                div2.classList.add("visible")
+                            })
+                        } else {
+                            container.classList.add("stick_to_bottom")
+                        }
+
+                    });
+                });
+            }
+            catch(err) {
+                console.log(err)
+            }
+
+            try {
+                {# view dog - view conformation panel toggle#}
+                const view_dog_conf = document.getElementById("conformation_information");
+                const view_dog_conf_header = document.getElementById("conformation_information_header")
+                view_dog_conf_header.onclick = function (event) {
+                    if (view_dog_conf.style.visibility === "" || view_dog_conf.style.visibility === "hidden") {
+                        view_dog_conf.style.visibility = "visible"
+                        view_dog_conf.style.display = "block"
+                    } else if (view_dog_conf.style.visibility === "visible") {
+                        view_dog_conf.style.visibility = "hidden"
+                        view_dog_conf.style.display = "none"
+                    }
+                }
+            }
+            catch(err) {
+                console.log(err)
+            }
+
+            try {
+                {# index - switch health conf toggle    #}
+                const health_button = document.getElementById("health_button");
+                const conformation_button = document.getElementById("conformation_button")
+
+                const conformation_scores = document.querySelectorAll("#conformation_score")
+                const health_scores = document.querySelectorAll("#health_score")
+                const conformation_lines = document.querySelectorAll("#conformation_line")
+                const health_lines = document.querySelectorAll("#health_line")
+
+                health_button.onclick = function (event) {
+                    if (health_button.classList.contains("active_index_button")) {
+                        console.log("click the other one")
+                    } else if (health_button.classList.contains("inactive_index_button")) {
+                        health_button.classList.add("active_index_button")
+                        health_button.classList.remove("inactive_index_button")
+                        conformation_button.classList.add("inactive_index_button")
+                        conformation_button.classList.remove("active_index_button")
+
+                        for (let i = 0; i < health_scores.length; i++) {
+                            health_scores[i].classList.add("visible")
+                            health_scores[i].classList.remove("hidden")
+                            health_lines[i].classList.add("visible")
+                            health_lines[i].classList.remove("hidden")
+                            conformation_scores[i].classList.add("hidden")
+                            conformation_scores[i].classList.remove("visible")
+                            conformation_lines[i].classList.add("hidden")
+                            conformation_lines[i].classList.remove("visible")
+                        }
+                    }
+                }
+
+                conformation_button.onclick = function (event) {
+                    if (conformation_button.classList.contains("inactive_index_button")) {
+                        health_button.classList.add("inactive_index_button")
+                        health_button.classList.remove("active_index_button")
+                        conformation_button.classList.add("active_index_button")
+                        conformation_button.classList.remove("inactive_index_button")
+
+                        for (let i = 0; i < health_scores.length; i++) {
+                            health_scores[i].classList.add("hidden")
+                            health_scores[i].classList.remove("visible")
+                            health_lines[i].classList.add("hidden")
+                            health_lines[i].classList.remove("visible")
+                            conformation_scores[i].classList.add("visible")
+                            conformation_scores[i].classList.remove("hidden")
+                            conformation_lines[i].classList.add("visible")
+                            conformation_lines[i].classList.remove("hidden")
+                        }
+
+
+                    } else if (conformation_button.classList.contains("active_index_button")) {
+                        console.log("click the other one")
+                    }
+                }
+            }
+            catch(err) {
+                console.log(err)
+            }
+
         </script>
     </body>
 </html>

@@ -3,7 +3,7 @@
     <div class="columns">
         {% for attr, value in dog_health.items() %}
             <div class="column col-4" >
-                <div class="large_health_box {{ value }}">
+                <div class="large_health_box {{ value }} {{ genotype_phenotype_lookup[attr] }}">
                     <div class="large_health_box_trucated">{{ truncated_attrs_dict[attr] }}</div>
                     <div class="large_health_box_full">{{ attr.replace("_", " ") }}</div>
                 </div>

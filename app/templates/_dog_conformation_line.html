@@ -1,0 +1,7 @@
+<div id="conformation_line" class="hidden">
+    {% for attr, value in dog_conf.items() %}
+        <div class="conformation_line background_{{ value[1] }}">
+            <div>{{ value[1] }}</div>
+        </div>
+    {% endfor %}
+</div>
