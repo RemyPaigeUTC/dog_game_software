@@ -182,13 +182,19 @@
 .Carrier, .background_1, .background_-1 {
     background-color: #feb272;
 }
-
+.F_lowlight {
+    background-color: #f7d6e6 !important;
+}
+.M_lowlight {
+    background-color: #cfe2ff !important;
+}
 .F_highlight {
     background-color: #d63384 !important;
 }
 .M_highlight {
     background-color: #0d6efd !important;
 }
+
 .F {
     background-color: #efadce;
 }

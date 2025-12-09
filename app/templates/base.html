@@ -48,10 +48,14 @@
 
                         if (div.classList.contains("M_highlight")) {
                             div.classList.remove("M_highlight")
+                            div.classList.add("M_lowlight")
                             partner_1.style.visibility = "hidden"
                             partner_2.style.visibility = "hidden"
                             partner_1.style.display = "none"
                             partner_2.style.display = "none"
+                        }
+                        else if (div.classList.contains("M_lowlight")) {
+                            div.classList.remove("M_lowlight")
                         }
                         else if (!(div.classList.contains("M_highlight")) && (div.classList.contains("M"))) {
                             div.classList.add("M_highlight")
@@ -62,10 +66,14 @@
                         }
                         if (div.classList.contains("F_highlight")) {
                             div.classList.remove("F_highlight")
+                            div.classList.add("F_lowlight")
                             partner_1.style.visibility = "hidden"
                             partner_2.style.visibility = "hidden"
                             partner_1.style.display = "none"
                             partner_2.style.display = "none"
+                        }
+                        else if (div.classList.contains("F_lowlight")) {
+                            div.classList.remove("F_lowlight")
                         }
                         else if (!(div.classList.contains("F_highlight")) && (div.classList.contains("F"))) {
                             div.classList.add("F_highlight")

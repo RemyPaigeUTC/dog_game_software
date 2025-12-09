@@ -1,0 +1,17 @@
+{
+  "manifest_version": 3,
+  "name": "Dog Game",
+  "version": "1.0",
+  "description": "Send info to dog game database",
+  "action": {
+    "default_icon": "hello_extensions.png"
+  },
+  "content_scripts": [
+    {
+      "js": ["send_info.js"],
+      "matches": [
+        "https://dogbreedergame.com/*"
+      ]
+    }
+  ]
+}

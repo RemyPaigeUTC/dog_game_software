@@ -1,6 +1,7 @@
 from pprint import pprint
 
-from flask import render_template, flash, redirect, url_for, request
+from flask import render_template, flash, redirect, url_for, request, make_response, jsonify
+from flask_cors import cross_origin
 from flask_login import current_user, login_user, logout_user
 import sqlalchemy as sa
 from app import app, db
@@ -247,6 +248,7 @@ genotype_phenotype_lookup = {
 # TODO: add personality and job tracking
 @app.route('/',methods=['GET', 'POST'])
 def index():
+    print("hi")
     form = IndexFilterForm()
     global truncated_attrs_dict
     global genotype_phenotype_lookup
@@ -276,6 +278,10 @@ def index():
     return None
 
 
+@app.route('/receive_data',methods=['POST'])
+def receive_data():
+    print("hello")
+    return jsonify(message="POST request returned")
 @app.route('/add_dog', methods=['GET', 'POST'])
 def add_dog():
     form = AddDogForm()
